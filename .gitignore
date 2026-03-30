@@ -31,3 +31,5 @@ Pods/
 *.app
 *.zip
 scripts/*.log
+temp_build/
+tmp/

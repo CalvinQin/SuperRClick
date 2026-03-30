@@ -1,0 +1,1247 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		049AC370CB7CDC55B5C9E080 /* ExtensionStatusBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC14CF8B8AFD5386CDA284C5 /* ExtensionStatusBanner.swift */; };
+		0694EEA4B45F9B64C88B38B7 /* BuiltInActionCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311309AB982E82422E709413 /* BuiltInActionCatalogTests.swift */; };
+		07024FF44A856DC4CD846DDE /* DesktopSelectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418143AA4C67BF7BA2CFCF2B /* DesktopSelectionProvider.swift */; };
+		0B22D67C41BC4555B19D359B /* ExtensionStatusBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502E45F72BB4804BDB16376 /* ExtensionStatusBanner.swift */; };
+		0CAB7504BABBF994D0720C11 /* PlatformActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */; };
+		12F490F2BE6562C3C485B418 /* ExternalCommandCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6A2B03FA8916390BD9CF28 /* ExternalCommandCenter.swift */; };
+		214A8B972800D95487F994BD /* BatchRenamePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */; };
+		21DE52A58EA0BA5DD1224773 /* CreateActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */; };
+		265B06D1C4FBAD32B120751D /* ActionLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */; };
+		286560CCB5592D2DDC6CF285 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29BE228AE9C81F162D18999 /* PersistenceController.swift */; };
+		2C3A20432DADBFE7606E919B /* RealUserDirectories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355F719B3E1EFE80118F4C63 /* RealUserDirectories.swift */; };
+		2D9341998BA829448DC46067 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2AAEA77C0872866FF0AAF /* GeneralSettingsView.swift */; };
+		2E7EC107F8D355326F48CA01 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9820D7D3D960DD440442B04 /* Assets.xcassets */; };
+		3722318C3E594B68B93F1268 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		3CFFFF0868E1C125DB729AA5 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* Shared.framework */; };
+		4505A027822060BCA1F68669 /* WorkspaceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EDAFDB8BA8587C1F963B8 /* WorkspaceSettingsView.swift */; };
+		4AFED532135CE59012E4CFD5 /* ActionDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99C27578D83BA4952837B75 /* ActionDefinition.swift */; };
+		4BADE5FB7B279BDA6B3FD6A0 /* PinnedActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */; };
+		4C3ECC5E4B7C6C393B36411E /* PersistenceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D3EACD6E9BD755359CE2F /* PersistenceState.swift */; };
+		51DED55E4DDE3154D3C8FCF4 /* ActionVisibilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE778A70E3F33EE016DA8A2 /* ActionVisibilityView.swift */; };
+		54082CAC8D736693BE131A93 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* Shared.framework */; };
+		56F2CA08261CF3F92433354E /* BatchRenameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */; };
+		59B44C93B00787B53E1EA7CE /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5A1106D23B0B1A2780D654B3 /* GitHubUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E44BDFE6EB17EAE6C4D595F /* GitHubUpdater.swift */; };
+		5E391D76A7CD4831A21F9BEA /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		5F3A1026964B6A1936046297 /* SuperRClickRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F024A3F70B91E395A80EFC3C /* SuperRClickRootView.swift */; };
+		6DC0E12D860344B28A7B8103 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		712AB31DD2DE9FC609537888 /* SuperRClickUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1933F1EC316EB7F356F6AF4 /* SuperRClickUITests.swift */; };
+		72336C7A92C94D4203217BE3 /* SuperRClickFinderSync.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47E8E51C153F5D0B0E0EECAC /* SuperRClickFinderSync.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		733105127ADD030D2D794411 /* AppModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746C2969564BAF7DFB9589B /* AppModeManager.swift */; };
+		7A5D41970CD8E360590504B1 /* RecentActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3467F391E053B0685E9C20A4 /* RecentActivityView.swift */; };
+		7AB6F10613BA57AB52688FEC /* ActionEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C0A0E067D55231E9D219A1 /* ActionEngineTests.swift */; };
+		7AB778112B60672A385B162F /* SuperRClickIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCEB7E7BD1C8282444FF30C /* SuperRClickIntents.swift */; };
+		7F53D6AFD76910D8597F3087 /* ExternalCommandModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E4CF609EA4AACF0839864 /* ExternalCommandModels.swift */; };
+		81198136C4058F9ADB796D20 /* SuperRClickFinderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F888C931D654227FE60973 /* SuperRClickFinderContext.swift */; };
+		83E8AB6554380DFB5BC2B29D /* BatchRenamePlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8932CF96F9E47075902887D /* BatchRenamePlannerTests.swift */; };
+		84AC3F76A5A29992BFC181A7 /* SuperRClickFinderMenuComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC6092F121A36C29E11DE03 /* SuperRClickFinderMenuComposer.swift */; };
+		8983DBC7DBB1EABBB2434F77 /* BatchRenamePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F2F0ED4771C8642872E510 /* BatchRenamePlanner.swift */; };
+		8BDE50B621EE567F6BB9A4DB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE1A6CDC000571C33CD0CE2 /* SettingsView.swift */; };
+		9CC6671617FADB2A05057B75 /* ActionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109EEFA4562ACA80E41DC474 /* ActionEngine.swift */; };
+		9E555F5012A37AFE3C0300FC /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */; };
+		9F95E698F13851E8AB6BEA88 /* CustomAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB1A957747FF655D37FA68A /* CustomAction.swift */; };
+		A0F4890B741BBC49F34E0F75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA65AE53CEDAF56224ED55F3 /* Assets.xcassets */; };
+		A890C17A959D7E31C1B09732 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* Shared.framework */; };
+		AAF13AAD6B4C2392027682ED /* NewFileCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80AB4A10401A179897B42174 /* NewFileCatalog.swift */; };
+		AB15390966B877FE2EBBA6FA /* MenuBarRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79848B89445EAB92B070D57 /* MenuBarRootView.swift */; };
+		AE303C34F0E10FCE86A52C40 /* SetupCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2F1DD938396EF25A558BB3 /* SetupCenterView.swift */; };
+		B0C2F939DC11AA0E3BE8D86C /* DesktopBridgeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1343BF33B12A6DA8255499 /* DesktopBridgeManager.swift */; };
+		B1BA3C1452EE339BE8CD86DD /* SuperRClickServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC7FF42DAC0092045A4A0BD /* SuperRClickServices.swift */; };
+		B1BF5CCF3A88B44A980BA253 /* VisibilityRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6800F0D902763874975C3CCE /* VisibilityRule.swift */; };
+		B3538D08BF45A52760CB1E62 /* WorkspaceProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3837B53E59298FE975D7410 /* WorkspaceProfileView.swift */; };
+		B45E667621825D908CE82353 /* ActionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B89F144E77DABB08F6716DA /* ActionContext.swift */; };
+		B8F6D3F0A784CCEA5F85D501 /* PersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA7C69B6BC579CD02F1EAE4 /* PersistenceControllerTests.swift */; };
+		BC3D355004EF729737A4CD25 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C479E1F7ACFB120D764A9A08 /* ActionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2E8E2DA554BDABA1218234 /* ActionID.swift */; };
+		C5D1EFC0D08285C6F3CEEAAD /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838F1EEF6DEA91544B2CB202 /* LanguageManager.swift */; };
+		C5E7EA2A7D5AC1EA9177F007 /* ExternalCommandCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */; };
+		C7520B2C9B5A735DDBB5F45C /* SuperRClickFinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1894909FC3B2811CAA4F786E /* SuperRClickFinderSync.swift */; };
+		CFA9EA014E41A13A69DCECAD /* DesktopBridgeMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23AB1C5EA993244FB961C19 /* DesktopBridgeMenuBuilder.swift */; };
+		D87C98746BA14B599898AA60 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		E01E68C07986DCD2217727F8 /* BuiltInActionCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425D4629566F1A2C19027651 /* BuiltInActionCatalog.swift */; };
+		EAB94C71CC07E32899ADF988 /* SuperRClickApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CF4FB0F3953E8723EB15B5 /* SuperRClickApp.swift */; };
+		EB7CF90C4A636D85283F1AC3 /* ActionAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF06A9FEB1C9D93FFF83BC5 /* ActionAvailability.swift */; };
+		F47E5356D6BDEA562857EE23 /* AppGroupContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA21285AFDA8C24E9B1454F0 /* AppGroupContainer.swift */; };
+		F7E2B392B44A97F5FB70A4EC /* NewFileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BC2ABF378406D8E622BBCF /* NewFileData.swift */; };
+		F9A594C167DF4DB39EF0021B /* SharedCoreIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F141E51C50B34D1BDF59C652 /* SharedCoreIntegrationTests.swift */; };
+		FADDEA7873BF406787FAF71B /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		FCABC163DB7CF355521E294F /* ActionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A88ED992DBAB61AD3B2B20 /* ActionContextTests.swift */; };
+		FD5292708C4BDFD625997170 /* BatchRenameDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE7B5E15C74E38D57A01CA7 /* BatchRenameDraft.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3526DA6866D881FE3ACAFE3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DF243CDEF96BF337D9729E38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1CBA9A9ADE91613E8D3C059;
+			remoteInfo = SuperRClickCore;
+		};
+		5025529DBEA02CF4C39E8579 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DF243CDEF96BF337D9729E38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1CBA9A9ADE91613E8D3C059;
+			remoteInfo = SuperRClickCore;
+		};
+		5D3F639F5EB28BB71E422F62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DF243CDEF96BF337D9729E38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D0C751C16F82679900EFD33;
+			remoteInfo = SuperRClick;
+		};
+		8506A51253524668F67B13AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DF243CDEF96BF337D9729E38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ED92FE3AA7BB73668213333F;
+			remoteInfo = SuperRClickFinderSync;
+		};
+		A01C2E5080D8D3B3D6AD68AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DF243CDEF96BF337D9729E38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1CBA9A9ADE91613E8D3C059;
+			remoteInfo = SuperRClickCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1D8DBB059BE9F1F1C30E8534 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				72336C7A92C94D4203217BE3 /* SuperRClickFinderSync.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		86817A9E8EBFFF9664F0DFB3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BC3D355004EF729737A4CD25 /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCB200025C698BF401654167 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				59B44C93B00787B53E1EA7CE /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0F2E8E2DA554BDABA1218234 /* ActionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionID.swift; sourceTree = "<group>"; };
+		109EEFA4562ACA80E41DC474 /* ActionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionEngine.swift; sourceTree = "<group>"; };
+		1746C2969564BAF7DFB9589B /* AppModeManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppModeManager.swift; sourceTree = "<group>"; };
+		1894909FC3B2811CAA4F786E /* SuperRClickFinderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickFinderSync.swift; sourceTree = "<group>"; };
+		1EE1A6CDC000571C33CD0CE2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionLibraryView.swift; sourceTree = "<group>"; };
+		2C6EDAFDB8BA8587C1F963B8 /* WorkspaceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceSettingsView.swift; sourceTree = "<group>"; };
+		311309AB982E82422E709413 /* BuiltInActionCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInActionCatalogTests.swift; sourceTree = "<group>"; };
+		3467F391E053B0685E9C20A4 /* RecentActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityView.swift; sourceTree = "<group>"; };
+		355F719B3E1EFE80118F4C63 /* RealUserDirectories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealUserDirectories.swift; sourceTree = "<group>"; };
+		418143AA4C67BF7BA2CFCF2B /* DesktopSelectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopSelectionProvider.swift; sourceTree = "<group>"; };
+		41A2AAEA77C0872866FF0AAF /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		425D4629566F1A2C19027651 /* BuiltInActionCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInActionCatalog.swift; sourceTree = "<group>"; };
+		42F888C931D654227FE60973 /* SuperRClickFinderContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickFinderContext.swift; sourceTree = "<group>"; };
+		47E8E51C153F5D0B0E0EECAC /* SuperRClickFinderSync.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SuperRClickFinderSync.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48F2F0ED4771C8642872E510 /* BatchRenamePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenamePlanner.swift; sourceTree = "<group>"; };
+		4BE7B5E15C74E38D57A01CA7 /* BatchRenameDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameDraft.swift; sourceTree = "<group>"; };
+		4D2F1DD938396EF25A558BB3 /* SetupCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupCenterView.swift; sourceTree = "<group>"; };
+		516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenamePanelView.swift; sourceTree = "<group>"; };
+		57EF5505AD243DDE7E73C306 /* SuperRClickCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6800F0D902763874975C3CCE /* VisibilityRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityRule.swift; sourceTree = "<group>"; };
+		6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameModels.swift; sourceTree = "<group>"; };
+		6CC7FF42DAC0092045A4A0BD /* SuperRClickServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickServices.swift; sourceTree = "<group>"; };
+		7B89F144E77DABB08F6716DA /* ActionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionContext.swift; sourceTree = "<group>"; };
+		7EC6092F121A36C29E11DE03 /* SuperRClickFinderMenuComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickFinderMenuComposer.swift; sourceTree = "<group>"; };
+		80AB4A10401A179897B42174 /* NewFileCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileCatalog.swift; sourceTree = "<group>"; };
+		838F1EEF6DEA91544B2CB202 /* LanguageManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
+		846D3EACD6E9BD755359CE2F /* PersistenceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceState.swift; sourceTree = "<group>"; };
+		8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		8DB1ED5E7091B6FA179A0CF1 /* SuperRClick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperRClick.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformActionExecutor.swift; sourceTree = "<group>"; };
+		8E44BDFE6EB17EAE6C4D595F /* GitHubUpdater.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GitHubUpdater.swift; sourceTree = "<group>"; };
+		92C0A0E067D55231E9D219A1 /* ActionEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionEngineTests.swift; sourceTree = "<group>"; };
+		93BC2ABF378406D8E622BBCF /* NewFileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileData.swift; sourceTree = "<group>"; };
+		9BE778A70E3F33EE016DA8A2 /* ActionVisibilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionVisibilityView.swift; sourceTree = "<group>"; };
+		A2CF4FB0F3953E8723EB15B5 /* SuperRClickApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickApp.swift; sourceTree = "<group>"; };
+		A79848B89445EAB92B070D57 /* MenuBarRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarRootView.swift; sourceTree = "<group>"; };
+		A8932CF96F9E47075902887D /* BatchRenamePlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenamePlannerTests.swift; sourceTree = "<group>"; };
+		A96298551A87D913182C8DD1 /* SuperRClickUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedActionsView.swift; sourceTree = "<group>"; };
+		AB2E4CF609EA4AACF0839864 /* ExternalCommandModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCommandModels.swift; sourceTree = "<group>"; };
+		B23AB1C5EA993244FB961C19 /* DesktopBridgeMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopBridgeMenuBuilder.swift; sourceTree = "<group>"; };
+		B99C27578D83BA4952837B75 /* ActionDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDefinition.swift; sourceTree = "<group>"; };
+		BEB1A957747FF655D37FA68A /* CustomAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAction.swift; sourceTree = "<group>"; };
+		C1933F1EC316EB7F356F6AF4 /* SuperRClickUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickUITests.swift; sourceTree = "<group>"; };
+		C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateActionView.swift; sourceTree = "<group>"; };
+		C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCommandCenterTests.swift; sourceTree = "<group>"; };
+		C9626412859BCE61B05D5A63 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEF06A9FEB1C9D93FFF83BC5 /* ActionAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionAvailability.swift; sourceTree = "<group>"; };
+		D29BE228AE9C81F162D18999 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		D3837B53E59298FE975D7410 /* WorkspaceProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceProfileView.swift; sourceTree = "<group>"; };
+		D9820D7D3D960DD440442B04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DCCEB7E7BD1C8282444FF30C /* SuperRClickIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickIntents.swift; sourceTree = "<group>"; };
+		EA21285AFDA8C24E9B1454F0 /* AppGroupContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupContainer.swift; sourceTree = "<group>"; };
+		EA65AE53CEDAF56224ED55F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EC14CF8B8AFD5386CDA284C5 /* ExtensionStatusBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionStatusBanner.swift; sourceTree = "<group>"; };
+		EF6A2B03FA8916390BD9CF28 /* ExternalCommandCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCommandCenter.swift; sourceTree = "<group>"; };
+		F024A3F70B91E395A80EFC3C /* SuperRClickRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickRootView.swift; sourceTree = "<group>"; };
+		F141E51C50B34D1BDF59C652 /* SharedCoreIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedCoreIntegrationTests.swift; sourceTree = "<group>"; };
+		F502E45F72BB4804BDB16376 /* ExtensionStatusBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionStatusBanner.swift; sourceTree = "<group>"; };
+		F5A88ED992DBAB61AD3B2B20 /* ActionContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionContextTests.swift; sourceTree = "<group>"; };
+		FDA7C69B6BC579CD02F1EAE4 /* PersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceControllerTests.swift; sourceTree = "<group>"; };
+		FE1343BF33B12A6DA8255499 /* DesktopBridgeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopBridgeManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		34F15B21CF14333FA21159C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A890C17A959D7E31C1B09732 /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		415312625D1D658E6B0B91A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54082CAC8D736693BE131A93 /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7B1D538474A6EE0C2E200E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CFFFF0868E1C125DB729AA5 /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02DAE502C1ACFF5FFDC2493B /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				360367E609252C4E456AE693 /* Actions */,
+				0D0EDD402D1A7073D65062AC /* BatchRename */,
+				F52314A54E0537996C649C6E /* ExternalCommands */,
+				F02B039F9E1A14BD0FE91056 /* Models */,
+				F04F1A1FDBD87673D5FE7634 /* Persistence */,
+				5AF2FB91794DE72A672EBFC6 /* Support */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		0B9A3DB5B2D6DD74E57E718D /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				29FF86640CC99F06C6918055 /* Integration */,
+				CD1E22FB0BD97273B1D943C5 /* UI */,
+				896861E7CA35FBDEB17CBD5A /* Unit */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		0D0EDD402D1A7073D65062AC /* BatchRename */ = {
+			isa = PBXGroup;
+			children = (
+				6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */,
+				48F2F0ED4771C8642872E510 /* BatchRenamePlanner.swift */,
+			);
+			path = BatchRename;
+			sourceTree = "<group>";
+		};
+		29FF86640CC99F06C6918055 /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				F141E51C50B34D1BDF59C652 /* SharedCoreIntegrationTests.swift */,
+			);
+			path = Integration;
+			sourceTree = "<group>";
+		};
+		31AF4F7993060F3E31010461 /* FinderSync */ = {
+			isa = PBXGroup;
+			children = (
+				EA65AE53CEDAF56224ED55F3 /* Assets.xcassets */,
+				42F888C931D654227FE60973 /* SuperRClickFinderContext.swift */,
+				7EC6092F121A36C29E11DE03 /* SuperRClickFinderMenuComposer.swift */,
+				1894909FC3B2811CAA4F786E /* SuperRClickFinderSync.swift */,
+			);
+			path = FinderSync;
+			sourceTree = "<group>";
+		};
+		360367E609252C4E456AE693 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				109EEFA4562ACA80E41DC474 /* ActionEngine.swift */,
+				425D4629566F1A2C19027651 /* BuiltInActionCatalog.swift */,
+				80AB4A10401A179897B42174 /* NewFileCatalog.swift */,
+				93BC2ABF378406D8E622BBCF /* NewFileData.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		4CF1E0E8A0D19A8826FDDCA0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6CC7FF42DAC0092045A4A0BD /* SuperRClickServices.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4D49E5309DF79149871E9594 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F419D871E6C38F15C1ABE7FC /* AppIntents */,
+				31AF4F7993060F3E31010461 /* FinderSync */,
+				4CF1E0E8A0D19A8826FDDCA0 /* Services */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		520D97E2F89AEA72DFE32D68 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				A79848B89445EAB92B070D57 /* MenuBarRootView.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		5AF2FB91794DE72A672EBFC6 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				355F719B3E1EFE80118F4C63 /* RealUserDirectories.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		62F578C3AA4031FAE2D92A60 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */,
+				C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */,
+				A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */,
+				3467F391E053B0685E9C20A4 /* RecentActivityView.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		6A58D56E9AD98C9A17A8526F /* DesktopBridge */ = {
+			isa = PBXGroup;
+			children = (
+				FE1343BF33B12A6DA8255499 /* DesktopBridgeManager.swift */,
+				B23AB1C5EA993244FB961C19 /* DesktopBridgeMenuBuilder.swift */,
+				418143AA4C67BF7BA2CFCF2B /* DesktopSelectionProvider.swift */,
+			);
+			path = DesktopBridge;
+			sourceTree = "<group>";
+		};
+		6B29EE888B98343C8200A415 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				9BE778A70E3F33EE016DA8A2 /* ActionVisibilityView.swift */,
+				EC14CF8B8AFD5386CDA284C5 /* ExtensionStatusBanner.swift */,
+				41A2AAEA77C0872866FF0AAF /* GeneralSettingsView.swift */,
+				1EE1A6CDC000571C33CD0CE2 /* SettingsView.swift */,
+				D3837B53E59298FE975D7410 /* WorkspaceProfileView.swift */,
+				2C6EDAFDB8BA8587C1F963B8 /* WorkspaceSettingsView.swift */,
+				F502E45F72BB4804BDB16376 /* ExtensionStatusBanner.swift */,
+				838F1EEF6DEA91544B2CB202 /* LanguageManager.swift */,
+				1746C2969564BAF7DFB9589B /* AppModeManager.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		896861E7CA35FBDEB17CBD5A /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				F5A88ED992DBAB61AD3B2B20 /* ActionContextTests.swift */,
+				92C0A0E067D55231E9D219A1 /* ActionEngineTests.swift */,
+				A8932CF96F9E47075902887D /* BatchRenamePlannerTests.swift */,
+				311309AB982E82422E709413 /* BuiltInActionCatalogTests.swift */,
+				C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */,
+				FDA7C69B6BC579CD02F1EAE4 /* PersistenceControllerTests.swift */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
+		8FCFCB2C8D913E7EC0F8E37E = {
+			isa = PBXGroup;
+			children = (
+				D38F2B46FD01BA72931A2B02 /* App */,
+				4D49E5309DF79149871E9594 /* Extensions */,
+				02DAE502C1ACFF5FFDC2493B /* Shared */,
+				0B9A3DB5B2D6DD74E57E718D /* Tests */,
+				DFE33B5DF1D805925229D87A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A4324A261464AC1F050E1A23 /* Bootstrap */ = {
+			isa = PBXGroup;
+			children = (
+				8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */,
+				8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */,
+			);
+			path = Bootstrap;
+			sourceTree = "<group>";
+		};
+		B51394BA96702ED421B06384 /* BatchRename */ = {
+			isa = PBXGroup;
+			children = (
+				4BE7B5E15C74E38D57A01CA7 /* BatchRenameDraft.swift */,
+				516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */,
+			);
+			path = BatchRename;
+			sourceTree = "<group>";
+		};
+		CD1E22FB0BD97273B1D943C5 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				C1933F1EC316EB7F356F6AF4 /* SuperRClickUITests.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		D38F2B46FD01BA72931A2B02 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D9820D7D3D960DD440442B04 /* Assets.xcassets */,
+				A2CF4FB0F3953E8723EB15B5 /* SuperRClickApp.swift */,
+				F024A3F70B91E395A80EFC3C /* SuperRClickRootView.swift */,
+				A4324A261464AC1F050E1A23 /* Bootstrap */,
+				D8C4BB33623C114065A47E4F /* Features */,
+				520D97E2F89AEA72DFE32D68 /* MenuBar */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		D8C4BB33623C114065A47E4F /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				62F578C3AA4031FAE2D92A60 /* Actions */,
+				B51394BA96702ED421B06384 /* BatchRename */,
+				6A58D56E9AD98C9A17A8526F /* DesktopBridge */,
+				6B29EE888B98343C8200A415 /* Settings */,
+				F8692037BD3A52ABA6637198 /* Setup */,
+				F57111B5AF94A9046035D75B /* Update */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		DFE33B5DF1D805925229D87A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DB1ED5E7091B6FA179A0CF1 /* SuperRClick.app */,
+				C9626412859BCE61B05D5A63 /* Shared.framework */,
+				57EF5505AD243DDE7E73C306 /* SuperRClickCoreTests.xctest */,
+				47E8E51C153F5D0B0E0EECAC /* SuperRClickFinderSync.appex */,
+				A96298551A87D913182C8DD1 /* SuperRClickUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F02B039F9E1A14BD0FE91056 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CEF06A9FEB1C9D93FFF83BC5 /* ActionAvailability.swift */,
+				7B89F144E77DABB08F6716DA /* ActionContext.swift */,
+				B99C27578D83BA4952837B75 /* ActionDefinition.swift */,
+				0F2E8E2DA554BDABA1218234 /* ActionID.swift */,
+				BEB1A957747FF655D37FA68A /* CustomAction.swift */,
+				846D3EACD6E9BD755359CE2F /* PersistenceState.swift */,
+				6800F0D902763874975C3CCE /* VisibilityRule.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F04F1A1FDBD87673D5FE7634 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				EA21285AFDA8C24E9B1454F0 /* AppGroupContainer.swift */,
+				D29BE228AE9C81F162D18999 /* PersistenceController.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		F419D871E6C38F15C1ABE7FC /* AppIntents */ = {
+			isa = PBXGroup;
+			children = (
+				DCCEB7E7BD1C8282444FF30C /* SuperRClickIntents.swift */,
+			);
+			path = AppIntents;
+			sourceTree = "<group>";
+		};
+		F52314A54E0537996C649C6E /* ExternalCommands */ = {
+			isa = PBXGroup;
+			children = (
+				EF6A2B03FA8916390BD9CF28 /* ExternalCommandCenter.swift */,
+				AB2E4CF609EA4AACF0839864 /* ExternalCommandModels.swift */,
+			);
+			path = ExternalCommands;
+			sourceTree = "<group>";
+		};
+		F57111B5AF94A9046035D75B /* Update */ = {
+			isa = PBXGroup;
+			children = (
+				8E44BDFE6EB17EAE6C4D595F /* GitHubUpdater.swift */,
+			);
+			name = Update;
+			path = Update;
+			sourceTree = "<group>";
+		};
+		F8692037BD3A52ABA6637198 /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				4D2F1DD938396EF25A558BB3 /* SetupCenterView.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		444C1E4A38ED9F0EAE0FA353 /* SuperRClickCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 44EAEF5675B1CE0CFCCBC0F7 /* Build configuration list for PBXNativeTarget "SuperRClickCoreTests" */;
+			buildPhases = (
+				856CCBB04A2BDF6F4A1F07ED /* Sources */,
+				34F15B21CF14333FA21159C0 /* Frameworks */,
+				86817A9E8EBFFF9664F0DFB3 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A4F675C612D6EF8E2ACFD16E /* PBXTargetDependency */,
+			);
+			name = SuperRClickCoreTests;
+			productName = SuperRClickCoreTests;
+			productReference = 57EF5505AD243DDE7E73C306 /* SuperRClickCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4D0C751C16F82679900EFD33 /* SuperRClick */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3AAA6963FB4F370FF62625AE /* Build configuration list for PBXNativeTarget "SuperRClick" */;
+			buildPhases = (
+				9C8ED0F7847CA3DC73C73B27 /* Sources */,
+				506AA05401AFCB097066C670 /* Resources */,
+				C7B1D538474A6EE0C2E200E7 /* Frameworks */,
+				1D8DBB059BE9F1F1C30E8534 /* Embed Foundation Extensions */,
+				DCB200025C698BF401654167 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A4710901446BA6CFE0255339 /* PBXTargetDependency */,
+				7552BF8CB22C9B85D340BA46 /* PBXTargetDependency */,
+			);
+			name = SuperRClick;
+			productName = SuperRClick;
+			productReference = 8DB1ED5E7091B6FA179A0CF1 /* SuperRClick.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7344323C71D9F50296D2624E /* SuperRClickUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19C4D823AA60DB7B9FF31743 /* Build configuration list for PBXNativeTarget "SuperRClickUITests" */;
+			buildPhases = (
+				92DECD6BE451F49A122CA69F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3572FB08ACEE76F7E6EF639 /* PBXTargetDependency */,
+			);
+			name = SuperRClickUITests;
+			productName = SuperRClickUITests;
+			productReference = A96298551A87D913182C8DD1 /* SuperRClickUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		D1CBA9A9ADE91613E8D3C059 /* SuperRClickCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B571257AF74215F9837E657 /* Build configuration list for PBXNativeTarget "SuperRClickCore" */;
+			buildPhases = (
+				93616300EC1655C3C0AB3DC7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SuperRClickCore;
+			productName = SuperRClickCore;
+			productReference = C9626412859BCE61B05D5A63 /* Shared.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		ED92FE3AA7BB73668213333F /* SuperRClickFinderSync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AF3B3A9EE6C111FC436D0D8 /* Build configuration list for PBXNativeTarget "SuperRClickFinderSync" */;
+			buildPhases = (
+				7AEAC7A624BD5D5F5D8DCC5B /* Sources */,
+				2B1D9C23D31EE9EE1BC4A4B2 /* Resources */,
+				415312625D1D658E6B0B91A1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C3D0202249F746DFFD64A2F0 /* PBXTargetDependency */,
+			);
+			name = SuperRClickFinderSync;
+			productName = SuperRClickFinderSync;
+			productReference = 47E8E51C153F5D0B0E0EECAC /* SuperRClickFinderSync.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DF243CDEF96BF337D9729E38 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					7344323C71D9F50296D2624E = {
+						TestTargetID = 4D0C751C16F82679900EFD33;
+					};
+				};
+			};
+			buildConfigurationList = 51D50B14B2769ABE69B499AB /* Build configuration list for PBXProject "SuperRClick" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8FCFCB2C8D913E7EC0F8E37E;
+			minimizedProjectReferenceProxies = 1;
+			productRefGroup = DFE33B5DF1D805925229D87A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4D0C751C16F82679900EFD33 /* SuperRClick */,
+				D1CBA9A9ADE91613E8D3C059 /* SuperRClickCore */,
+				444C1E4A38ED9F0EAE0FA353 /* SuperRClickCoreTests */,
+				ED92FE3AA7BB73668213333F /* SuperRClickFinderSync */,
+				7344323C71D9F50296D2624E /* SuperRClickUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2B1D9C23D31EE9EE1BC4A4B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0F4890B741BBC49F34E0F75 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506AA05401AFCB097066C670 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E7EC107F8D355326F48CA01 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7AEAC7A624BD5D5F5D8DCC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81198136C4058F9ADB796D20 /* SuperRClickFinderContext.swift in Sources */,
+				84AC3F76A5A29992BFC181A7 /* SuperRClickFinderMenuComposer.swift in Sources */,
+				C7520B2C9B5A735DDBB5F45C /* SuperRClickFinderSync.swift in Sources */,
+				3722318C3E594B68B93F1268 /* BuildFile in Sources */,
+				0B22D67C41BC4555B19D359B /* ExtensionStatusBanner.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		856CCBB04A2BDF6F4A1F07ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCABC163DB7CF355521E294F /* ActionContextTests.swift in Sources */,
+				7AB6F10613BA57AB52688FEC /* ActionEngineTests.swift in Sources */,
+				83E8AB6554380DFB5BC2B29D /* BatchRenamePlannerTests.swift in Sources */,
+				0694EEA4B45F9B64C88B38B7 /* BuiltInActionCatalogTests.swift in Sources */,
+				C5E7EA2A7D5AC1EA9177F007 /* ExternalCommandCenterTests.swift in Sources */,
+				B8F6D3F0A784CCEA5F85D501 /* PersistenceControllerTests.swift in Sources */,
+				F9A594C167DF4DB39EF0021B /* SharedCoreIntegrationTests.swift in Sources */,
+				6DC0E12D860344B28A7B8103 /* BuildFile in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92DECD6BE451F49A122CA69F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				712AB31DD2DE9FC609537888 /* SuperRClickUITests.swift in Sources */,
+				5E391D76A7CD4831A21F9BEA /* BuildFile in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93616300EC1655C3C0AB3DC7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB7CF90C4A636D85283F1AC3 /* ActionAvailability.swift in Sources */,
+				B45E667621825D908CE82353 /* ActionContext.swift in Sources */,
+				4AFED532135CE59012E4CFD5 /* ActionDefinition.swift in Sources */,
+				9CC6671617FADB2A05057B75 /* ActionEngine.swift in Sources */,
+				C479E1F7ACFB120D764A9A08 /* ActionID.swift in Sources */,
+				F47E5356D6BDEA562857EE23 /* AppGroupContainer.swift in Sources */,
+				56F2CA08261CF3F92433354E /* BatchRenameModels.swift in Sources */,
+				8983DBC7DBB1EABBB2434F77 /* BatchRenamePlanner.swift in Sources */,
+				E01E68C07986DCD2217727F8 /* BuiltInActionCatalog.swift in Sources */,
+				9F95E698F13851E8AB6BEA88 /* CustomAction.swift in Sources */,
+				12F490F2BE6562C3C485B418 /* ExternalCommandCenter.swift in Sources */,
+				7F53D6AFD76910D8597F3087 /* ExternalCommandModels.swift in Sources */,
+				AAF13AAD6B4C2392027682ED /* NewFileCatalog.swift in Sources */,
+				F7E2B392B44A97F5FB70A4EC /* NewFileData.swift in Sources */,
+				286560CCB5592D2DDC6CF285 /* PersistenceController.swift in Sources */,
+				4C3ECC5E4B7C6C393B36411E /* PersistenceState.swift in Sources */,
+				2C3A20432DADBFE7606E919B /* RealUserDirectories.swift in Sources */,
+				B1BF5CCF3A88B44A980BA253 /* VisibilityRule.swift in Sources */,
+				D87C98746BA14B599898AA60 /* BuildFile in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9C8ED0F7847CA3DC73C73B27 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				265B06D1C4FBAD32B120751D /* ActionLibraryView.swift in Sources */,
+				51DED55E4DDE3154D3C8FCF4 /* ActionVisibilityView.swift in Sources */,
+				9E555F5012A37AFE3C0300FC /* AppCoordinator.swift in Sources */,
+				FD5292708C4BDFD625997170 /* BatchRenameDraft.swift in Sources */,
+				214A8B972800D95487F994BD /* BatchRenamePanelView.swift in Sources */,
+				21DE52A58EA0BA5DD1224773 /* CreateActionView.swift in Sources */,
+				B0C2F939DC11AA0E3BE8D86C /* DesktopBridgeManager.swift in Sources */,
+				CFA9EA014E41A13A69DCECAD /* DesktopBridgeMenuBuilder.swift in Sources */,
+				07024FF44A856DC4CD846DDE /* DesktopSelectionProvider.swift in Sources */,
+				049AC370CB7CDC55B5C9E080 /* ExtensionStatusBanner.swift in Sources */,
+				2D9341998BA829448DC46067 /* GeneralSettingsView.swift in Sources */,
+				AB15390966B877FE2EBBA6FA /* MenuBarRootView.swift in Sources */,
+				4BADE5FB7B279BDA6B3FD6A0 /* PinnedActionsView.swift in Sources */,
+				0CAB7504BABBF994D0720C11 /* PlatformActionExecutor.swift in Sources */,
+				7A5D41970CD8E360590504B1 /* RecentActivityView.swift in Sources */,
+				8BDE50B621EE567F6BB9A4DB /* SettingsView.swift in Sources */,
+				AE303C34F0E10FCE86A52C40 /* SetupCenterView.swift in Sources */,
+				EAB94C71CC07E32899ADF988 /* SuperRClickApp.swift in Sources */,
+				7AB778112B60672A385B162F /* SuperRClickIntents.swift in Sources */,
+				5F3A1026964B6A1936046297 /* SuperRClickRootView.swift in Sources */,
+				B1BA3C1452EE339BE8CD86DD /* SuperRClickServices.swift in Sources */,
+				B3538D08BF45A52760CB1E62 /* WorkspaceProfileView.swift in Sources */,
+				4505A027822060BCA1F68669 /* WorkspaceSettingsView.swift in Sources */,
+				FADDEA7873BF406787FAF71B /* BuildFile in Sources */,
+				C5D1EFC0D08285C6F3CEEAAD /* LanguageManager.swift in Sources */,
+				733105127ADD030D2D794411 /* AppModeManager.swift in Sources */,
+				5A1106D23B0B1A2780D654B3 /* GitHubUpdater.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7552BF8CB22C9B85D340BA46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ED92FE3AA7BB73668213333F /* SuperRClickFinderSync */;
+			targetProxy = 8506A51253524668F67B13AF /* PBXContainerItemProxy */;
+		};
+		A4710901446BA6CFE0255339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1CBA9A9ADE91613E8D3C059 /* SuperRClickCore */;
+			targetProxy = 5025529DBEA02CF4C39E8579 /* PBXContainerItemProxy */;
+		};
+		A4F675C612D6EF8E2ACFD16E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1CBA9A9ADE91613E8D3C059 /* SuperRClickCore */;
+			targetProxy = A01C2E5080D8D3B3D6AD68AE /* PBXContainerItemProxy */;
+		};
+		C3D0202249F746DFFD64A2F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1CBA9A9ADE91613E8D3C059 /* SuperRClickCore */;
+			targetProxy = 3526DA6866D881FE3ACAFE3A /* PBXContainerItemProxy */;
+		};
+		D3572FB08ACEE76F7E6EF639 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4D0C751C16F82679900EFD33 /* SuperRClick */;
+			targetProxy = 5D3F639F5EB28BB71E422F62 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		04E6B59FC0D00AD9E1FF8B55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		0DC603AD81A00F490502D873 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.Core;
+				PRODUCT_MODULE_NAME = Shared;
+				PRODUCT_NAME = Shared;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		559D763F39CC2093A86F70CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/SuperRClickFinderSync.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = AZGAVWNVB7;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Config/FinderSync-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.FinderSync;
+				PRODUCT_NAME = SuperRClickFinderSync;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		5B418EA186FE621FEB9CB2FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.UITests;
+				PRODUCT_NAME = SuperRClickUITests;
+				SDKROOT = macosx;
+				TEST_TARGET_NAME = SuperRClick;
+			};
+			name = Debug;
+		};
+		5B6323C5A7174760D732EDE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.UITests;
+				PRODUCT_NAME = SuperRClickUITests;
+				SDKROOT = macosx;
+				TEST_TARGET_NAME = SuperRClick;
+			};
+			name = Release;
+		};
+		86E4AD4B98A32E34B053CE32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/SuperRClick.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = AZGAVWNVB7;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "Config/App-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick;
+				PRODUCT_NAME = SuperRClick;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TEST_HOST = "";
+			};
+			name = Release;
+		};
+		955DDE259039232211664250 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.CoreTests;
+				PRODUCT_NAME = SuperRClickCoreTests;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A02F8BE9EE8F45A3502CDA83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		B23D9620D349DF8000A93FDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.CoreTests;
+				PRODUCT_NAME = SuperRClickCoreTests;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B68D174ADCD6F8431AF70C9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/SuperRClick.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = AZGAVWNVB7;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "Config/App-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick;
+				PRODUCT_NAME = SuperRClick;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TEST_HOST = "";
+			};
+			name = Debug;
+		};
+		F6392CCFCEEDB83C37418AB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/SuperRClickFinderSync.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = AZGAVWNVB7;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Config/FinderSync-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.FinderSync;
+				PRODUCT_NAME = SuperRClickFinderSync;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		F706EFCD501B6F1A4FAEC67F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoqiqin.SuperRClick.Core;
+				PRODUCT_MODULE_NAME = Shared;
+				PRODUCT_NAME = Shared;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		19C4D823AA60DB7B9FF31743 /* Build configuration list for PBXNativeTarget "SuperRClickUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B418EA186FE621FEB9CB2FA /* Debug */,
+				5B6323C5A7174760D732EDE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3AAA6963FB4F370FF62625AE /* Build configuration list for PBXNativeTarget "SuperRClick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B68D174ADCD6F8431AF70C9C /* Debug */,
+				86E4AD4B98A32E34B053CE32 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		44EAEF5675B1CE0CFCCBC0F7 /* Build configuration list for PBXNativeTarget "SuperRClickCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B23D9620D349DF8000A93FDE /* Debug */,
+				955DDE259039232211664250 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		51D50B14B2769ABE69B499AB /* Build configuration list for PBXProject "SuperRClick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04E6B59FC0D00AD9E1FF8B55 /* Debug */,
+				A02F8BE9EE8F45A3502CDA83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5AF3B3A9EE6C111FC436D0D8 /* Build configuration list for PBXNativeTarget "SuperRClickFinderSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				559D763F39CC2093A86F70CA /* Debug */,
+				F6392CCFCEEDB83C37418AB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5B571257AF74215F9837E657 /* Build configuration list for PBXNativeTarget "SuperRClickCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F706EFCD501B6F1A4FAEC67F /* Debug */,
+				0DC603AD81A00F490502D873 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DF243CDEF96BF337D9729E38 /* Project object */;
+}

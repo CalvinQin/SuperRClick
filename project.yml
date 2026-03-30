@@ -1,0 +1,119 @@
+name: SuperRClick
+options:
+  bundleIdPrefix: com.haoqiqin
+  createIntermediateGroups: true
+  deploymentTarget:
+    macOS: "26.0"
+configs:
+  Debug: debug
+  Release: release
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+    DEVELOPMENT_ASSET_PATHS: ""
+    ENABLE_HARDENED_RUNTIME: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    CLANG_ENABLE_MODULES: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+targets:
+  SuperRClickCore:
+    type: framework
+    platform: macOS
+    sources:
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.haoqiqin.SuperRClick.Core
+        PRODUCT_NAME: Shared
+        PRODUCT_MODULE_NAME: Shared
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+        DEFINES_MODULE: YES
+        SKIP_INSTALL: YES
+
+  SuperRClick:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+      - path: Extensions/Services
+      - path: Extensions/AppIntents
+    resources:
+      - path: App/Assets.xcassets
+    dependencies:
+      - target: SuperRClickCore
+      - target: SuperRClickFinderSync
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.haoqiqin.SuperRClick
+        PRODUCT_NAME: SuperRClick
+        INFOPLIST_FILE: Config/App-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Config/SuperRClick.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        SWIFT_EMIT_LOC_STRINGS: YES
+        TEST_HOST: ""
+
+  SuperRClickFinderSync:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Extensions/FinderSync
+    resources:
+      - path: Extensions/FinderSync/Assets.xcassets
+    dependencies:
+      - target: SuperRClickCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.haoqiqin.SuperRClick.FinderSync
+        PRODUCT_NAME: SuperRClickFinderSync
+        INFOPLIST_FILE: Config/FinderSync-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Config/SuperRClickFinderSync.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SKIP_INSTALL: YES
+        GENERATE_INFOPLIST_FILE: NO
+
+  SuperRClickCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/Unit
+      - path: Tests/Integration
+    dependencies:
+      - target: SuperRClickCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.haoqiqin.SuperRClick.CoreTests
+        PRODUCT_NAME: SuperRClickCoreTests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+
+  SuperRClickUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: Tests/UI
+    dependencies:
+      - target: SuperRClick
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.haoqiqin.SuperRClick.UITests
+        PRODUCT_NAME: SuperRClickUITests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+
+schemes:
+  SuperRClick:
+    build:
+      targets:
+        SuperRClick: all
+        SuperRClickFinderSync: all
+        SuperRClickCore: all
+    test:
+      targets:
+        - SuperRClickCoreTests
+        - SuperRClickUITests

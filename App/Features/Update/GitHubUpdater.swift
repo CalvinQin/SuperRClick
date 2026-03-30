@@ -12,7 +12,7 @@ struct GitHubRelease: Codable {
 @MainActor
 final class GitHubUpdater: ObservableObject {
     static let shared = GitHubUpdater()
-    private let repoURL = "https://api.github.com/repos/haoqiqin/SuperRClick/releases/latest"
+    private let repoURL = "https://api.github.com/repos/CalvinQin/SuperRClick/releases/latest"
 
     @Published var isChecking = false
 

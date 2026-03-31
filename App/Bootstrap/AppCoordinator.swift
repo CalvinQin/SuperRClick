@@ -393,6 +393,50 @@ final class AppCoordinator {
         }
     }
 
+    func quickJumpToDirectory() {
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = L("快速跳转目录", "Quick Jump to Directory")
+        alert.informativeText = L("输入或粘贴目录路径，将在访达中打开。", "Enter or paste a directory path to open in Finder.")
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: L("打开", "Open"))
+        alert.addButton(withTitle: L("取消", "Cancel"))
+
+        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 24))
+        textField.placeholderString = L("例如: ~/Downloads 或 /Users/...", "e.g. ~/Downloads or /Users/...")
+        textField.stringValue = "~/"
+        alert.accessoryView = textField
+        alert.window.initialFirstResponder = textField
+
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+
+        var path = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !path.isEmpty else { return }
+
+        // Expand ~ to home directory
+        if path.hasPrefix("~") {
+            path = (path as NSString).expandingTildeInPath
+        }
+
+        let url = URL(fileURLWithPath: path)
+        var isDir: ObjCBool = false
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir) {
+            if isDir.boolValue {
+                NSWorkspace.shared.open(url)
+            } else {
+                // If it's a file, reveal it in Finder
+                NSWorkspace.shared.activateFileViewerSelecting([url])
+            }
+        } else {
+            let errorAlert = NSAlert()
+            errorAlert.messageText = L("路径不存在", "Path Not Found")
+            errorAlert.informativeText = L("输入的路径不存在: \(path)", "The path does not exist: \(path)")
+            errorAlert.alertStyle = .warning
+            errorAlert.addButton(withTitle: L("确定", "OK"))
+            errorAlert.runModal()
+        }
+    }
+
     func togglePinned(_ action: ActionDefinition) {
         if let index = persistenceState.pinnedActions.firstIndex(where: { $0.actionID == action.id }) {
             persistenceState.pinnedActions.remove(at: index)

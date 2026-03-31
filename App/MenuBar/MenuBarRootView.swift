@@ -27,67 +27,79 @@ struct MenuBarRootView: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
 
-            // Main Actions
+            // Quick Actions
             VStack(alignment: .leading, spacing: 2) {
-                if coordinator.pinnedActions.isEmpty {
-                    Text(L("暂无固定动作", "No pinned actions"))
-                        .font(.callout)
-                        .foregroundStyle(.tertiary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, 6)
-                } else {
-                    ForEach(coordinator.pinnedActions.prefix(5)) { action in
-                        Button {
-                            coordinator.run(action)
-                        } label: {
-                            Label(action.title, systemImage: action.systemImageName ?? "bolt.fill")
-                                .symbolRenderingMode(.monochrome)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .buttonStyle(.plain)
-                        .padding(.vertical, 3)
-                        .padding(.horizontal, 14)
-                    }
-                }
-                
-                Divider().padding(.vertical, 2)
-
-                Button {
+                menuButton(
+                    title: L("批量重命名", "Batch Rename"),
+                    icon: "pencil.and.list.clipboard"
+                ) {
                     coordinator.openBatchRename()
-                } label: {
-                    Label(L("批量重命名", "Batch Rename"), systemImage: "pencil.and.list.clipboard")
-                        .symbolRenderingMode(.monochrome)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .buttonStyle(.plain)
-                .padding(.vertical, 3)
-                .padding(.horizontal, 14)
+
+                menuButton(
+                    title: L("压缩文件", "Compress Files"),
+                    icon: "archivebox"
+                ) {
+                    coordinator.runCompressFromToolbox()
+                }
+
+                menuButton(
+                    title: L("图片转换", "Convert Image"),
+                    icon: "photo.on.rectangle.angled"
+                ) {
+                    coordinator.runImageConversionFromToolbox()
+                }
+
+                menuButton(
+                    title: L("快速跳转目录", "Quick Jump to Directory"),
+                    icon: "arrow.right.circle"
+                ) {
+                    coordinator.quickJumpToDirectory()
+                }
+
+                menuButton(
+                    title: L("在终端打开", "Open Terminal"),
+                    icon: "terminal"
+                ) {
+                    coordinator.runOpenTerminalFromToolbox()
+                }
             }
             .padding(.vertical, 4)
 
             // Footer
             HStack {
-                    Button(L("偏好设置...", "Preferences...")) {
-                        openMainWindow()
-                    }
-                    .buttonStyle(.plain)
-                    .font(.caption.weight(.medium))
-
-                    Spacer()
-                    
-                    Button(L("退出", "Quit")) {
-                        NSApplication.shared.terminate(nil)
-                    }
-                    .buttonStyle(.plain)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.red)
+                Button(L("偏好设置...", "Preferences...")) {
+                    openMainWindow()
                 }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 6)
+                .buttonStyle(.plain)
+                .font(.caption.weight(.medium))
+
+                Spacer()
+                
+                Button(L("退出", "Quit")) {
+                    NSApplication.shared.terminate(nil)
+                }
+                .buttonStyle(.plain)
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.red)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 6)
         }
-        .frame(width: 280)
+        .frame(width: 260)
         .background(Color(nsColor: .windowBackgroundColor))
         .background(BatchRenamePanelHost(coordinator: coordinator))
+    }
+
+    private func menuButton(title: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: icon)
+                .symbolRenderingMode(.monochrome)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .padding(.vertical, 3)
+        .padding(.horizontal, 14)
     }
     
     private func openMainWindow() {

@@ -16,13 +16,9 @@ public struct AppGroupContainer: Sendable {
             return containerURL
         }
 
-        let appSupportDirectory = try fileManager.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
-        let fallbackDirectory = appSupportDirectory.appendingPathComponent(fallbackFolderName, isDirectory: true)
+        // Fallback to /Users/Shared to guarantee cross-process file sharing 
+        // even if App Group entitlements fail during local ad-hoc signing.
+        let fallbackDirectory = URL(fileURLWithPath: "/Users/Shared").appendingPathComponent(fallbackFolderName, isDirectory: true)
         try ensureDirectoryExists(fallbackDirectory, fileManager: fileManager)
         return fallbackDirectory
     }

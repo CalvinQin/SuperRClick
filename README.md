@@ -5,105 +5,141 @@
 <h1 align="center">Super RClick</h1>
 
 <p align="center">
-  macOS Finder 右键增强工具 · Supercharge your Finder right-click menu
+  <strong>The most powerful Finder right-click menu enhancer for macOS</strong><br/>
+  macOS Finder 右键增强工具 — 让你的文件操作更高效、更优雅
 </p>
 
 <p align="center">
-  <a href="#功能特性">中文</a> · <a href="#features">English</a>
+  <a href="https://github.com/CalvinQin/SuperRClick/releases/latest"><img src="https://img.shields.io/github/v/release/CalvinQin/SuperRClick?style=flat-square&color=blue" alt="Latest Release"/></a>
+  <a href="https://github.com/CalvinQin/SuperRClick/releases"><img src="https://img.shields.io/github/downloads/CalvinQin/SuperRClick/total?style=flat-square&color=green" alt="Downloads"/></a>
+  <img src="https://img.shields.io/badge/platform-macOS%2015+-black?style=flat-square" alt="macOS 15+"/>
+  <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat-square" alt="Swift"/>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/CalvinQin/SuperRClick?style=flat-square" alt="License"/></a>
+  <img src="https://img.shields.io/badge/language-中文%20%7C%20English-brightgreen?style=flat-square" alt="Bilingual"/>
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> ·
+  <a href="#功能特性">功能特性</a> ·
+  <a href="#installation">Install</a> ·
+  <a href="#screenshots">Screenshots</a>
 </p>
 
 ---
 
-## 功能特性
+## Why Super RClick?
 
-**Super RClick** 是一款专为 macOS 设计的 Finder 右键菜单增强工具，让你的文件操作更高效、更优雅。
+macOS Finder's right-click menu is limited. **Super RClick** transforms it into a productivity powerhouse — batch rename files, compress archives, convert images, create new files, open terminal, and more. All from one elegant right-click.
 
-### 🗂️ 文件操作
-- **复制路径** — 一键复制完整路径、POSIX 路径、Shell 转义路径
-- **在终端打开** — 直接在当前文件夹下打开终端
-- **压缩文件** — 快速压缩选中的文件和文件夹
-- **新建文件** — 支持创建 `.txt`、`.md`、`.py`、`.json`、`.html`、`.csv` 等多种格式
-
-### ✏️ 批量重命名
-- 支持**前缀**、**后缀**、**替换**三种重命名模式
-- 智能编号功能，可设置起始值、步进和补零
-- 实时预览重命名结果，带冲突检测
-- 支持从 Finder 右键直接触发，也可从菜单栏手动选择文件
-
-### 🖼️ 图片转换
-- 支持 **PNG / JPEG / WEBP / TIFF / HEIC** 五种格式互转
-- Finder 右键子菜单一键选择目标格式
-- 转换后的文件保存到原目录
-
-### ⚙️ 自定义与设置
-- 自定义动作可见性 — 按需显示/隐藏菜单项
-- 工作空间管理 — 监控和管理多个工作目录
-- 双语界面 — 完整支持中文和英文
-- 状态栏常驻 — 作为后台工具常驻运行，也可选择在 Dock 显示
+> 🆓 **Free & Open Source** — No subscriptions, no tracking, no nonsense.
 
 ---
 
 ## Features
 
-**Super RClick** is a powerful Finder context menu extension for macOS that supercharges your file operations.
-
 ### 🗂️ File Operations
-- **Copy Path** — Copy full path, POSIX path, or shell-escaped path
-- **Open Terminal Here** — Open terminal directly in any folder
-- **Compress Items** — Quick archive selected files & folders
-- **New File** — Create `.txt`, `.md`, `.py`, `.json`, `.html`, `.csv` and more
+- **Copy Path** — Copy full path, POSIX path, or shell-escaped path with one click
+- **Open Terminal Here** — Open Terminal directly in any Finder folder
+- **Compress Items** — Quickly archive selected files & folders to ZIP with progress bar
+- **Quick Jump to Directory** — Enter any path and jump directly in Finder
 
 ### ✏️ Batch Rename
-- Three rename modes: **prefix**, **suffix**, **replace**
+- Three rename modes: **prefix**, **suffix**, and **find & replace**
 - Smart numbering with customizable start, step, and zero-padding
 - Real-time preview with conflict detection
-- Triggered via Finder right-click or manually select files from menu bar
+- Works from Finder right-click or MenuBar with file picker
 
 ### 🖼️ Image Conversion
-- Convert between **PNG / JPEG / WEBP / TIFF / HEIC**
+- Convert between **PNG / JPEG / TIFF / HEIC** formats
 - One-click format selection via Finder submenu
-- Output saved to original directory
+- Progress indicator with completion notification
+- Output saved alongside original files
 
-### ⚙️ Customization & Settings
-- Toggle action visibility — show/hide menu items as needed
-- Workspace management — monitor and manage multiple directories
-- Bilingual UI — full Chinese and English support
-- Menu bar resident — runs as a background utility, optionally shown in Dock
+### 📄 New File Templates
+- Create files instantly: `.txt`, `.md`, `.py`, `.json`, `.html`, `.css`, `.js`, `.ts`, `.csv`, `.xml`, `.yaml`, `.sh`, `.swift`, `.java` and more
+- Organized submenu — no more creating files from Terminal
+
+### ⚙️ Customization
+- **Custom Actions** — Create your own right-click menu commands
+- **Toggle Visibility** — Show/hide menu items as needed
+- **Workspace Management** — Monitor and manage multiple directories
+- **MenuBar Quick Access** — All tools accessible from the menu bar
+- **Bilingual UI** — Full Chinese (中文) and English support
 
 ---
 
-## 安装 · Installation
+## 功能特性
 
-### 方式一：直接下载（推荐）
+**Super RClick** 是一款专为 macOS 设计的 Finder 右键菜单增强工具。
 
-前往 [Releases](../../releases) 下载最新的 `.dmg` 文件，打开后将应用拖入"应用程序"文件夹即可。
+| 功能 | 说明 |
+|------|------|
+| 📋 复制路径 | 完整路径、POSIX 路径、Shell 转义路径一键复制 |
+| 📦 压缩文件 | 选中文件/文件夹快速压缩，带进度条 |
+| ✏️ 批量重命名 | 前缀、后缀、替换 + 智能编号 + 实时预览 |
+| 🖼️ 图片转换 | PNG / JPEG / TIFF / HEIC 格式互转 |
+| 📄 新建文件 | 支持 20+ 种文件模板快速创建 |
+| 🚀 快速跳转 | 输入路径直达目标目录 |
+| 💻 在终端打开 | 当前目录一键打开 Terminal |
+| ⚙️ 自定义动作 | 创建你自己的右键菜单命令 |
 
-### 方式二：从源码构建
+---
+
+## Installation
+
+### Option 1: Download DMG (Recommended)
+
+1. Go to [**Releases**](https://github.com/CalvinQin/SuperRClick/releases/latest) and download the `.dmg` file
+2. Open the DMG and drag **Super RClick** into **Applications**
+3. Launch the app
+4. Enable the Finder extension: **System Settings → Privacy & Security → Extensions → Finder Extensions → Super RClick**
+
+### Option 2: Build from Source
 
 ```bash
 git clone https://github.com/CalvinQin/SuperRClick.git
 cd SuperRClick
 open SuperRClick.xcodeproj
+# Build & Run with Xcode (⌘R)
 ```
 
-用 Xcode 编译运行即可。
+---
+
+## Requirements
+
+- **macOS 15.0 (Sequoia)** or later
+- Enable Finder extension in System Settings after first launch
 
 ---
 
-## 系统要求 · Requirements
+## Screenshots
 
-- **macOS 15.0 (Sequoia)** 及以上
-- 需要在「系统设置 → 隐私与安全性 → 扩展 → Finder 扩展」中启用 Super RClick
-
----
-
-## 截图 · Screenshots
-
-> *Coming soon*
+> *Coming soon — Star the repo to stay updated!*
 
 ---
 
-## 许可 · License
+## Roadmap
+
+- [ ] Homebrew Cask support (`brew install --cask super-rclick`)
+- [ ] Keyboard shortcuts for menu actions
+- [ ] Plugin system for user-created extensions
+- [ ] Quick Look integration
+
+---
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+---
+
+## Star History
+
+If you find Super RClick useful, please ⭐ star this repo — it helps others discover it!
+
+---
+
+## License
 
 [MIT License](LICENSE)
 
@@ -112,3 +148,5 @@ open SuperRClick.xcodeproj
 <p align="center">
   Made with ❤️ by <a href="https://github.com/CalvinQin">@CalvinQin</a>
 </p>
+
+<!-- SEO keywords: macOS right click menu, mac finder extension, finder context menu, mac file manager, batch rename mac, image converter mac, macos productivity tool, finder right click enhancer, 右键菜单增强, mac右键工具, finder扩展, 批量重命名 -->

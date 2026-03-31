@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>The most powerful Finder right-click menu enhancer for macOS</strong><br/>
-  macOS Finder 右键增强工具 — 让你的文件操作更高效、更优雅
+  Batch rename, compress, convert images, create files, open terminal — all from one elegant right-click.
 </p>
 
 <p align="center">
@@ -15,14 +15,14 @@
   <img src="https://img.shields.io/badge/platform-macOS%2015+-black?style=flat-square" alt="macOS 15+"/>
   <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat-square" alt="Swift"/>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/CalvinQin/SuperRClick?style=flat-square" alt="License"/></a>
-  <img src="https://img.shields.io/badge/language-中文%20%7C%20English-brightgreen?style=flat-square" alt="Bilingual"/>
+  <img src="https://img.shields.io/badge/language-English-brightgreen?style=flat-square" alt="English"/>
 </p>
 
 <p align="center">
   <a href="#features">Features</a> ·
-  <a href="#功能特性">功能特性</a> ·
   <a href="#installation">Install</a> ·
-  <a href="#screenshots">Screenshots</a>
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="#contributing">Contributing</a>
 </p>
 
 ---
@@ -56,7 +56,8 @@ macOS Finder's right-click menu is limited. **Super RClick** transforms it into 
 - Output saved alongside original files
 
 ### 📄 New File Templates
-- Create files instantly: `.txt`, `.md`, `.py`, `.json`, `.html`, `.css`, `.js`, `.ts`, `.csv`, `.xml`, `.yaml`, `.sh`, `.swift`, `.java` and more
+- Create files instantly: `.txt`, `.md`, `.py`, `.json`, `.html`, `.css`, `.js`, `.ts`, `.csv`, `.xml`, `.yaml`, `.sh`, `.swift`, `.java`, `.docx`, `.xlsx`, `.pptx` and more
+- Supports **20+ file types** including Office documents, code files, and config files
 - Organized submenu — no more creating files from Terminal
 
 ### ⚙️ Customization
@@ -64,24 +65,7 @@ macOS Finder's right-click menu is limited. **Super RClick** transforms it into 
 - **Toggle Visibility** — Show/hide menu items as needed
 - **Workspace Management** — Monitor and manage multiple directories
 - **MenuBar Quick Access** — All tools accessible from the menu bar
-- **Bilingual UI** — Full Chinese (中文) and English support
-
----
-
-## 功能特性
-
-**Super RClick** 是一款专为 macOS 设计的 Finder 右键菜单增强工具。
-
-| 功能 | 说明 |
-|------|------|
-| 📋 复制路径 | 完整路径、POSIX 路径、Shell 转义路径一键复制 |
-| 📦 压缩文件 | 选中文件/文件夹快速压缩，带进度条 |
-| ✏️ 批量重命名 | 前缀、后缀、替换 + 智能编号 + 实时预览 |
-| 🖼️ 图片转换 | PNG / JPEG / TIFF / HEIC 格式互转 |
-| 📄 新建文件 | 支持 20+ 种文件模板快速创建 |
-| 🚀 快速跳转 | 输入路径直达目标目录 |
-| 💻 在终端打开 | 当前目录一键打开 Terminal |
-| ⚙️ 自定义动作 | 创建你自己的右键菜单命令 |
+- **Multilingual UI** — English and Chinese support
 
 ---
 
@@ -166,4 +150,4 @@ If you find Super RClick useful, please ⭐ star this repo — it helps others d
   Made with ❤️ by <a href="https://github.com/CalvinQin">@CalvinQin</a>
 </p>
 
-<!-- SEO keywords: macOS right click menu, mac finder extension, finder context menu, mac file manager, batch rename mac, image converter mac, macos productivity tool, finder right click enhancer, 右键菜单增强, mac右键工具, finder扩展, 批量重命名 -->
+<!-- SEO keywords: macOS right click menu, mac finder extension, finder context menu, mac file manager, batch rename mac, image converter mac, macos productivity tool, finder right click enhancer, mac context menu tool, create new file finder, mac zip compress, office template finder -->

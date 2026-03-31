@@ -83,6 +83,7 @@ final class AppCoordinator {
     var recentHistory: [ActionInvocationRecord] = []
     var persistenceState = PersistenceState()
     var statusBanner: StatusBanner?
+    var taskProgress: TaskProgressInfo?
     var isReady = false
     var hasCompletedSetup = UserDefaults.standard.bool(forKey: Constants.setupCompletedDefaultsKey)
     var isPresentingSetupCenter = false
@@ -282,8 +283,7 @@ final class AppCoordinator {
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         let selectedFormat = formats[popup.indexOfSelectedItem]
 
-        var enrichedContext = sampleContext
-        enrichedContext = ActionContext.finderSelection(
+        let enrichedContext = ActionContext.finderSelection(
             sampleContext.items,
             sourceApplicationBundleIdentifier: sampleContext.sourceApplicationBundleIdentifier,
             workspaceIdentifier: sampleContext.workspaceIdentifier,
@@ -291,12 +291,19 @@ final class AppCoordinator {
         )
 
         guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.convertImage.id) else { return }
+        let itemCount = sampleContext.items.count
 
-        Task {
-            let result = await actionEngine.execute(actionID: action.id, context: enrichedContext)
-            await persistInvocation(for: action, result: result, context: enrichedContext)
-            await refreshModel()
-            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+        executeWithProgress(
+            title: L("正在转换图片...", "Converting images..."),
+            totalItems: itemCount
+        ) { [self] onProgress in
+            await platformExecutor.execute(actionID: action.id, context: enrichedContext, onProgress: onProgress)
+        } completion: { [self] result in
+            Task {
+                await persistInvocation(for: action, result: result, context: enrichedContext)
+                await refreshModel()
+                statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+            }
         }
     }
 
@@ -346,11 +353,17 @@ final class AppCoordinator {
 
         guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.compressItems.id) else { return }
 
-        Task {
-            let result = await actionEngine.execute(actionID: action.id, context: context)
-            await persistInvocation(for: action, result: result, context: context)
-            await refreshModel()
-            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+        executeWithProgress(
+            title: L("正在压缩文件...", "Compressing files..."),
+            totalItems: items.count
+        ) { [self] onProgress in
+            await platformExecutor.execute(actionID: action.id, context: context, onProgress: onProgress)
+        } completion: { [self] result in
+            Task {
+                await persistInvocation(for: action, result: result, context: context)
+                await refreshModel()
+                statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+            }
         }
     }
 
@@ -549,18 +562,88 @@ final class AppCoordinator {
         }
 
         isApplyingBatchRename = true
+        let renamableCount = plan.previews.filter { $0.sourceURL.path != $0.proposedURL.path }.count
+
+        executeWithProgress(
+            title: L("正在重命名...", "Renaming files..."),
+            totalItems: renamableCount
+        ) { [self] onProgress in
+            await platformExecutor.applyBatchRename(plan: plan, onProgress: onProgress)
+        } completion: { [self] result in
+            Task {
+                await persistInvocation(for: action, result: result, context: context)
+                await refreshModel()
+
+                isApplyingBatchRename = false
+                statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+
+                if case .completed = result {
+                    dismissBatchRename()
+                }
+            }
+        }
+    }
+
+    // MARK: - Progress-tracked execution
+
+    func executeWithProgress(
+        title: String,
+        totalItems: Int,
+        operation: @escaping @Sendable (ProgressCallback?) async -> ActionExecutionResult,
+        completion: @escaping @MainActor (ActionExecutionResult) -> Void
+    ) {
+        taskProgress = TaskProgressInfo(
+            title: title,
+            detail: L("准备中...", "Preparing..."),
+            current: 0,
+            total: totalItems
+        )
+
+        let progressBinding = Binding<TaskProgressInfo?>(
+            get: { [weak self] in self?.taskProgress },
+            set: { [weak self] in self?.taskProgress = $0 }
+        )
+        TaskProgressWindowController.shared.show(info: progressBinding)
 
         Task {
-            let result = await platformExecutor.applyBatchRename(plan: plan)
-            await persistInvocation(for: action, result: result, context: context)
-            await refreshModel()
-
-            isApplyingBatchRename = false
-            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
-
-            if case .completed = result {
-                dismissBatchRename()
+            let onProgress: ProgressCallback = { @Sendable [weak self] current, total, detail in
+                Task { @MainActor [weak self] in
+                    self?.taskProgress?.current = current
+                    self?.taskProgress?.total = total
+                    self?.taskProgress?.detail = detail
+                }
             }
+
+            let result = await operation(onProgress)
+
+            let isSuccess: Bool
+            let resultMessage: String
+            switch result {
+            case .completed(let msg):
+                isSuccess = true
+                resultMessage = msg ?? L("操作完成", "Operation completed")
+            case .failed(let reason, _):
+                isSuccess = false
+                resultMessage = reason
+            case .blocked(let reason):
+                isSuccess = false
+                resultMessage = reason
+            default:
+                isSuccess = false
+                resultMessage = L("操作未知结果", "Unknown result")
+            }
+
+            taskProgress?.isComplete = true
+            taskProgress?.isSuccess = isSuccess
+            taskProgress?.resultMessage = resultMessage
+            taskProgress?.current = taskProgress?.total ?? 0
+
+            // Auto-close after 3 seconds on success
+            if isSuccess {
+                TaskProgressWindowController.shared.scheduleAutoClose(delay: 3.0)
+            }
+
+            completion(result)
         }
     }
 

@@ -14,7 +14,6 @@
 		0CAB7504BABBF994D0720C11 /* PlatformActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */; };
 		12F490F2BE6562C3C485B418 /* ExternalCommandCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6A2B03FA8916390BD9CF28 /* ExternalCommandCenter.swift */; };
 		214A8B972800D95487F994BD /* BatchRenamePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */; };
-		5CDB6A2119D541591BB2ED6D /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */; };
 		21DE52A58EA0BA5DD1224773 /* CreateActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */; };
 		265B06D1C4FBAD32B120751D /* ActionLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */; };
 		286560CCB5592D2DDC6CF285 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29BE228AE9C81F162D18999 /* PersistenceController.swift */; };
@@ -32,6 +31,7 @@
 		56F2CA08261CF3F92433354E /* BatchRenameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */; };
 		59B44C93B00787B53E1EA7CE /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A1106D23B0B1A2780D654B3 /* GitHubUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E44BDFE6EB17EAE6C4D595F /* GitHubUpdater.swift */; };
+		5CDB6A2119D541591BB2ED6D /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */; };
 		5E391D76A7CD4831A21F9BEA /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		5F3A1026964B6A1936046297 /* SuperRClickRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F024A3F70B91E395A80EFC3C /* SuperRClickRootView.swift */; };
 		6DC0E12D860344B28A7B8103 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
@@ -67,6 +67,7 @@
 		C5E7EA2A7D5AC1EA9177F007 /* ExternalCommandCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */; };
 		C7520B2C9B5A735DDBB5F45C /* SuperRClickFinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1894909FC3B2811CAA4F786E /* SuperRClickFinderSync.swift */; };
 		CFA9EA014E41A13A69DCECAD /* DesktopBridgeMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23AB1C5EA993244FB961C19 /* DesktopBridgeMenuBuilder.swift */; };
+		D1B421B9752B1E83CE8C019F /* TaskProgressWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC7864D9F90EDD76A9B1123 /* TaskProgressWindow.swift */; };
 		D87C98746BA14B599898AA60 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		E01E68C07986DCD2217727F8 /* BuiltInActionCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425D4629566F1A2C19027651 /* BuiltInActionCatalog.swift */; };
 		EAB94C71CC07E32899ADF988 /* SuperRClickApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CF4FB0F3953E8723EB15B5 /* SuperRClickApp.swift */; };
@@ -173,7 +174,6 @@
 		4BE7B5E15C74E38D57A01CA7 /* BatchRenameDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameDraft.swift; sourceTree = "<group>"; };
 		4D2F1DD938396EF25A558BB3 /* SetupCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupCenterView.swift; sourceTree = "<group>"; };
 		516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenamePanelView.swift; sourceTree = "<group>"; };
-		85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		57EF5505AD243DDE7E73C306 /* SuperRClickCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6800F0D902763874975C3CCE /* VisibilityRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityRule.swift; sourceTree = "<group>"; };
 		6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameModels.swift; sourceTree = "<group>"; };
@@ -183,6 +183,7 @@
 		80AB4A10401A179897B42174 /* NewFileCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileCatalog.swift; sourceTree = "<group>"; };
 		838F1EEF6DEA91544B2CB202 /* LanguageManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		846D3EACD6E9BD755359CE2F /* PersistenceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceState.swift; sourceTree = "<group>"; };
+		85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		8DB1ED5E7091B6FA179A0CF1 /* SuperRClick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperRClick.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformActionExecutor.swift; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 		A96298551A87D913182C8DD1 /* SuperRClickUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedActionsView.swift; sourceTree = "<group>"; };
 		AB2E4CF609EA4AACF0839864 /* ExternalCommandModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCommandModels.swift; sourceTree = "<group>"; };
+		AEC7864D9F90EDD76A9B1123 /* TaskProgressWindow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TaskProgressWindow.swift; sourceTree = "<group>"; };
 		B23AB1C5EA993244FB961C19 /* DesktopBridgeMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopBridgeMenuBuilder.swift; sourceTree = "<group>"; };
 		B99C27578D83BA4952837B75 /* ActionDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDefinition.swift; sourceTree = "<group>"; };
 		BEB1A957747FF655D37FA68A /* CustomAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAction.swift; sourceTree = "<group>"; };
@@ -299,6 +301,15 @@
 			path = FinderSync;
 			sourceTree = "<group>";
 		};
+		3376FA016FBF69DD009762DC /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				AEC7864D9F90EDD76A9B1123 /* TaskProgressWindow.swift */,
+			);
+			name = Progress;
+			path = Progress;
+			sourceTree = "<group>";
+		};
 		360367E609252C4E456AE693 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,6 +353,14 @@
 				355F719B3E1EFE80118F4C63 /* RealUserDirectories.swift */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		626ACD4E4B39343CB9A95951 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 		62F578C3AA4031FAE2D92A60 /* Actions */ = {
@@ -454,16 +473,9 @@
 				F8692037BD3A52ABA6637198 /* Setup */,
 				626ACD4E4B39343CB9A95951 /* Tools */,
 				F57111B5AF94A9046035D75B /* Update */,
+				3376FA016FBF69DD009762DC /* Progress */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		626ACD4E4B39343CB9A95951 /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */,
-			);
-			path = Tools;
 			sourceTree = "<group>";
 		};
 		DFE33B5DF1D805925229D87A /* Products */ = {
@@ -777,6 +789,7 @@
 				733105127ADD030D2D794411 /* AppModeManager.swift in Sources */,
 				5A1106D23B0B1A2780D654B3 /* GitHubUpdater.swift in Sources */,
 				5CDB6A2119D541591BB2ED6D /* ToolsView.swift in Sources */,
+				D1B421B9752B1E83CE8C019F /* TaskProgressWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

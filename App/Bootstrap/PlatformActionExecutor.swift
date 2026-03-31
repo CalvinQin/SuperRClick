@@ -2,8 +2,10 @@ import AppKit
 import Foundation
 import Shared
 
+typealias ProgressCallback = @Sendable (Int, Int, String) -> Void
+
 actor PlatformActionExecutor {
-    func execute(actionID: ActionID, context: ActionContext) async -> ActionExecutionResult {
+    func execute(actionID: ActionID, context: ActionContext, onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
         switch actionID.rawValue {
         case BuiltInActionCatalog.copyFullPath.id.rawValue:
             return await copyPaths(context.itemURLs, transform: \.path)
@@ -14,12 +16,12 @@ actor PlatformActionExecutor {
         case BuiltInActionCatalog.openTerminalHere.id.rawValue:
             return await openTerminalHere(for: context.itemURLs.first)
         case BuiltInActionCatalog.compressItems.id.rawValue:
-            return await compressItems(context.itemURLs)
+            return await compressItems(context.itemURLs, onProgress: onProgress)
         case BuiltInActionCatalog.batchRename.id.rawValue:
             return .blocked(reason: "Batch rename UI will land in the next milestone.")
         case BuiltInActionCatalog.convertImage.id.rawValue:
             let targetFormat = context.metadata["convertImage.format"] ?? "png"
-            return await convertImages(context.itemURLs, targetFormat: targetFormat)
+            return await convertImages(context.itemURLs, targetFormat: targetFormat, onProgress: onProgress)
         case BuiltInActionCatalog.copySelectedText.id.rawValue:
             return await copySelectedText(context.selectedText)
         default:
@@ -32,7 +34,7 @@ actor PlatformActionExecutor {
         }
     }
 
-    func applyBatchRename(plan: BatchRenamePlan) async -> ActionExecutionResult {
+    func applyBatchRename(plan: BatchRenamePlan, onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
         guard !plan.previews.isEmpty else {
             return .blocked(reason: "Select at least one file or folder to rename.")
         }
@@ -47,20 +49,25 @@ actor PlatformActionExecutor {
 
         let fileManager = FileManager.default
         var renamedCount = 0
+        let renamable = plan.previews.filter { $0.sourceURL.path != $0.proposedURL.path }
+        let total = renamable.count
 
-        for preview in plan.previews where preview.sourceURL.path != preview.proposedURL.path {
+        for preview in renamable {
             do {
+                onProgress?(renamedCount, total, preview.sourceName)
                 try fileManager.moveItem(at: preview.sourceURL, to: preview.proposedURL)
                 renamedCount += 1
             } catch {
                 return .failed(
-                    reason: "Stopped after renaming \(renamedCount) item(s): \(error.localizedDescription)",
+                    reason: L("重命名 \(renamedCount) 个后停止：\(error.localizedDescription)",
+                              "Stopped after renaming \(renamedCount) item(s): \(error.localizedDescription)"),
                     recoverable: true
                 )
             }
         }
+        onProgress?(renamedCount, total, "")
 
-        return .completed(message: "Renamed \(renamedCount) item(s).")
+        return .completed(message: L("已重命名 \(renamedCount) 个项目。", "Renamed \(renamedCount) item(s)."))
     }
 
     private func createNewFile(extension ext: String, context: ActionContext) async -> ActionExecutionResult {
@@ -145,19 +152,21 @@ actor PlatformActionExecutor {
         return .completed(message: "Opened Terminal at \(directory.path).")
     }
 
-    private func compressItems(_ urls: [URL]) async -> ActionExecutionResult {
+    private func compressItems(_ urls: [URL], onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
         guard !urls.isEmpty else {
-            return .blocked(reason: "Select at least one file or folder to compress.")
+            return .blocked(reason: L("请至少选择一个文件或文件夹进行压缩。", "Select at least one file or folder to compress."))
         }
 
         let parents = Set(urls.map { normalizedDirectory(for: $0).path })
         guard parents.count == 1, let parentPath = parents.first else {
-            return .blocked(reason: "Compression currently requires items from the same folder.")
+            return .blocked(reason: L("压缩功能要求所有文件在同一文件夹下。", "Compression currently requires items from the same folder."))
         }
 
         let parentDirectory = URL(fileURLWithPath: parentPath, isDirectory: true)
         let archiveName = "SuperRClick-\(timestamp()).zip"
         let archiveURL = parentDirectory.appendingPathComponent(archiveName)
+
+        onProgress?(0, urls.count, L("正在准备压缩...", "Preparing compression..."))
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/zip")
@@ -171,14 +180,16 @@ actor PlatformActionExecutor {
             return .failed(reason: error.localizedDescription, recoverable: true)
         }
 
+        onProgress?(urls.count, urls.count, archiveURL.lastPathComponent)
+
         guard process.terminationStatus == 0 else {
-            return .failed(reason: "zip exited with code \(process.terminationStatus).", recoverable: true)
+            return .failed(reason: L("zip 退出码 \(process.terminationStatus)。", "zip exited with code \(process.terminationStatus)."), recoverable: true)
         }
 
-        return .completed(message: "Created archive \(archiveURL.lastPathComponent).")
+        return .completed(message: L("已创建压缩包 \(archiveURL.lastPathComponent)。", "Created archive \(archiveURL.lastPathComponent)."))
     }
 
-    private func convertImages(_ urls: [URL], targetFormat: String) async -> ActionExecutionResult {
+    private func convertImages(_ urls: [URL], targetFormat: String, onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
         guard !urls.isEmpty else {
             return .blocked(reason: L("请至少选择一张图片进行转换。", "Select at least one image to convert."))
         }
@@ -208,8 +219,11 @@ actor PlatformActionExecutor {
             fileExtension = "png"
         }
 
+        let total = urls.count
         var convertedCount = 0
-        for inputURL in urls {
+        for (index, inputURL) in urls.enumerated() {
+            onProgress?(index, total, inputURL.lastPathComponent)
+
             let destinationURL = inputURL.deletingPathExtension().appendingPathExtension(fileExtension)
             let uniqueOutput = uniqueDestinationURL(preferredURL: destinationURL)
 
@@ -222,6 +236,7 @@ actor PlatformActionExecutor {
                 convertedCount += 1
             }
         }
+        onProgress?(total, total, "")
 
         guard convertedCount > 0 else {
             return .failed(reason: L("所选图片均无法转换。", "None of the selected images could be converted."), recoverable: true)

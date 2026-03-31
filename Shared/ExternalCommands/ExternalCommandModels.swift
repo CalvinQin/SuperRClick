@@ -8,15 +8,20 @@ public struct ExternalCommandItem: Codable, Hashable, Sendable {
     public var bookmarkData: Data
     public var displayName: String?
     public var isDirectory: Bool
+    /// Raw file path as fallback when security-scoped bookmark resolution fails
+    /// (e.g. during local development without proper code signing).
+    public var filePath: String?
 
     public init(
         bookmarkData: Data,
         displayName: String? = nil,
-        isDirectory: Bool
+        isDirectory: Bool,
+        filePath: String? = nil
     ) {
         self.bookmarkData = bookmarkData
         self.displayName = displayName
         self.isDirectory = isDirectory
+        self.filePath = filePath
     }
 }
 

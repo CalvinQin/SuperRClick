@@ -465,19 +465,23 @@ final class AppCoordinator {
 
     func ensureExternalCommandMonitoring() async {
         guard externalCommandObserver == nil else {
+            NSLog("[SuperRClick] ensureExternalCommandMonitoring: observer already exists, skipping")
             return
         }
 
+        NSLog("[SuperRClick] ensureExternalCommandMonitoring: setting up DistributedNotification observer")
         externalCommandObserver = DistributedNotificationCenter.default().addObserver(
             forName: Shared.ExternalCommandCenter.notificationName,
             object: nil,
             queue: .main
         ) { [weak self] _ in
+            NSLog("[SuperRClick] DistributedNotification RECEIVED — calling consumePendingExternalCommands")
             Task { @MainActor in
                 await self?.consumePendingExternalCommands()
             }
         }
 
+        NSLog("[SuperRClick] ensureExternalCommandMonitoring: checking for any pending commands on startup")
         await consumePendingExternalCommands()
     }
 
@@ -584,15 +588,25 @@ final class AppCoordinator {
     }
 
     func consumePendingExternalCommands() async {
+        NSLog("[SuperRClick] consumePendingExternalCommands: ENTER")
         do {
+            let storageDir = try appGroupContainer.resolveDirectory()
+            let filePath = storageDir.appendingPathComponent("pending-external-command.json").path
+            NSLog("[SuperRClick] consumePendingExternalCommands: looking for file at %@, exists=%d", filePath, FileManager.default.fileExists(atPath: filePath))
+
             guard let request = try externalCommandCenter.consumePendingRequest() else {
+                NSLog("[SuperRClick] consumePendingExternalCommands: no pending request found")
                 return
             }
 
+            NSLog("[SuperRClick] consumePendingExternalCommands: found request id=%@ kind=%@ items=%d", request.id.uuidString, request.kind.rawValue, request.items.count)
+
             let resolvedCommand = try externalCommandCenter.resolveBatchRenameRequest(request)
+            NSLog("[SuperRClick] consumePendingExternalCommands: resolved command, context items=%d", resolvedCommand.context.items.count)
             handleExternalBatchRenameRequest(resolvedCommand)
         } catch {
             let errorMsg = error.localizedDescription
+            NSLog("[SuperRClick] consumePendingExternalCommands: ERROR — %@", errorMsg)
             statusBanner = StatusBanner(
                 tone: .warning,
                 title: "Could not open pending Finder selection",
@@ -935,39 +949,34 @@ final class AppCoordinator {
     }
 
     private func handleExternalBatchRenameRequest(_ resolvedCommand: ResolvedExternalCommand) {
+        NSLog("[SuperRClick] handleExternalBatchRenameRequest: ENTER with id=%@", resolvedCommand.request.id.uuidString)
         guard handledExternalRequestIDs.insert(resolvedCommand.request.id).inserted else {
+            NSLog("[SuperRClick] handleExternalBatchRenameRequest: DUPLICATE id, skipping")
             return
         }
 
         guard resolvedCommand.context.hasFileItems else {
+            NSLog("[SuperRClick] handleExternalBatchRenameRequest: EMPTY context, no file items")
             statusBanner = StatusBanner(
                 tone: .warning,
                 title: "Ignored empty batch rename request",
                 detail: "Finder did not provide any files or folders to rename."
             )
-            NSApp.activate(ignoringOtherApps: true)
-            let alert = NSAlert()
-            alert.messageText = "Empty request"
-            alert.informativeText = "Finder did not provide any files or folders to rename."
-            alert.alertStyle = .warning
-            alert.runModal()
             return
         }
 
         if isPresentingBatchRename || isApplyingBatchRename {
+            NSLog("[SuperRClick] handleExternalBatchRenameRequest: already presenting, queuing")
             queuedExternalResolvedCommand = resolvedCommand
-            statusBanner = StatusBanner(
-                tone: .info,
-                title: "Queued batch rename request",
-                detail: "A new Finder selection arrived while another rename panel was open."
-            )
             return
         }
 
+        NSLog("[SuperRClick] handleExternalBatchRenameRequest: calling presentExternalBatchRename")
         presentExternalBatchRename(resolvedCommand)
     }
 
     private func presentExternalBatchRename(_ resolvedCommand: ResolvedExternalCommand) {
+        NSLog("[SuperRClick] presentExternalBatchRename: ENTER")
         let resolvedContext = resolvedCommand.context
         var resolvedDraft = BatchRenameDraft(context: resolvedContext)
         if resolvedDraft.token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -981,16 +990,13 @@ final class AppCoordinator {
         sampleContext = resolvedContext
         recalculateBatchRenamePlan()
         isPresentingBatchRename = true
+        NSLog("[SuperRClick] presentExternalBatchRename: about to call showBatchRenamePanel")
         showBatchRenamePanel()
+        NSLog("[SuperRClick] presentExternalBatchRename: showBatchRenamePanel returned, activating app")
+        NSApp.activate(ignoringOtherApps: true)
         Task {
             await refreshModel()
         }
-        statusBanner = StatusBanner(
-            tone: .success,
-            title: "Opened Finder batch rename request",
-            detail: "Super RClick received \(resolvedContext.items.count) item(s) from \(resolvedContext.sourceApplicationBundleIdentifier ?? "Finder")."
-        )
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - Batch Rename Panel Window Management

@@ -67,7 +67,8 @@ public struct ExternalCommandCenter: Sendable {
                 return ExternalCommandItem(
                     bookmarkData: try bookmarkEncoder(item.url),
                     displayName: item.displayName,
-                    isDirectory: item.isDirectory
+                    isDirectory: item.isDirectory,
+                    filePath: item.url.path
                 )
             } catch {
                 throw ExternalCommandError.bookmarkEncodingFailed(item.url, error)
@@ -118,30 +119,45 @@ public struct ExternalCommandCenter: Sendable {
     }
 
     public func resolveBatchRenameRequest(_ request: ExternalCommandRequest) throws -> ResolvedExternalCommand {
-        let restoredItems = try request.items.map { item in
-            do {
-                return (item, try bookmarkResolver(item.bookmarkData))
-            } catch {
-                throw ExternalCommandError.bookmarkResolutionFailed(error)
-            }
-        }
+        var validItems: [ActionItem] = []
+        var scopedURLs: [URL] = []
 
-        let validItems = restoredItems.map { storedItem, url in
-            ActionItem(
-                url: url.standardizedFileURL,
-                displayName: storedItem.displayName ?? url.lastPathComponent,
-                contentTypeIdentifier: nil,
-                isDirectory: storedItem.isDirectory
-            )
+        for item in request.items {
+            // Try security-scoped bookmark first
+            if let url = try? bookmarkResolver(item.bookmarkData) {
+                validItems.append(ActionItem(
+                    url: url.standardizedFileURL,
+                    displayName: item.displayName ?? url.lastPathComponent,
+                    contentTypeIdentifier: nil,
+                    isDirectory: item.isDirectory
+                ))
+                if securityScopeStarter(url) {
+                    scopedURLs.append(url)
+                }
+                continue
+            }
+
+            // Fallback: use raw file path (works in local dev without proper code signing)
+            if let filePath = item.filePath {
+                let url = URL(fileURLWithPath: filePath)
+                if FileManager.default.fileExists(atPath: filePath) {
+                    NSLog("[SuperRClick] resolveBatchRenameRequest: bookmark failed for %@, using filePath fallback", filePath)
+                    validItems.append(ActionItem(
+                        url: url.standardizedFileURL,
+                        displayName: item.displayName ?? url.lastPathComponent,
+                        contentTypeIdentifier: nil,
+                        isDirectory: item.isDirectory
+                    ))
+                    continue
+                }
+            }
+
+            NSLog("[SuperRClick] resolveBatchRenameRequest: could not resolve item %@", item.displayName ?? "unknown")
         }
 
         guard !validItems.isEmpty else {
             throw ExternalCommandError.noResolvableItems
         }
-
-        let scopedURLs = restoredItems
-            .map(\.1)
-            .filter { securityScopeStarter($0) }
 
         let workspaceIdentifier = request.workspaceIdentifier
             ?? validItems.first?.url.deletingLastPathComponent().path(percentEncoded: false)

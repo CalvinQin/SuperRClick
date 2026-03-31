@@ -43,6 +43,13 @@ macOS Finder's right-click menu is limited. **Super RClick** transforms it into 
 - **Compress Items** — Quickly archive selected files & folders to ZIP with progress bar
 - **Quick Jump to Directory** — Enter any path and jump directly in Finder
 
+### 🤖 AI Smart Actions
+- **AI File Processing** — Analyze file contents and auto-generate intelligent filenames or tags based on context
+- **LLM Provider Integration** — Natively integrate Cloud AI streams including OpenAI, Zhipu, Moonshot, custom endpoints, and Local Ollama servers
+- **Local On-Device AI** — Complete offline privacy utilizing built-in macOS Vision/CoreML frameworks
+- **Local Image OCR** — Extract text directly from images securely without uploading to the cloud
+- **Local Background Removal** — Effortlessly extract objects from images with transparent backgrounds completely offline
+
 ### ✏️ Batch Rename
 - Three rename modes: **prefix**, **suffix**, and **find & replace**
 - Smart numbering with customizable start, step, and zero-padding

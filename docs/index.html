@@ -3,322 +3,590 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Super RClick — The Best Free Finder Right-Click Menu Enhancer for macOS</title>
-  <meta name="description" content="Super RClick is a free, open-source macOS Finder extension that supercharges your right-click menu. Batch rename, compress, convert images, create files, and more. Download now.">
-  <meta name="keywords" content="macOS right click menu, finder extension, context menu enhancer, batch rename mac, image converter mac, mac file manager, finder right click, mac productivity tool, 右键菜单增强, mac右键工具">
+  <title>Super RClick — macOS Right-Click Menu Enhancer</title>
+  <meta name="description" content="Super RClick supercharges your macOS Finder right-click. Batch rename, local AI OCR, text background removal, image conversion, and custom file templates from one elegant menu.">
   <meta name="author" content="CalvinQin">
-  <meta property="og:title" content="Super RClick — Supercharge your macOS Finder right-click menu">
-  <meta property="og:description" content="Free, open-source Finder extension. Batch rename, compress, convert images, create new files, open terminal. All from one elegant right-click.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://calvinqin.github.io/SuperRClick/">
-  <meta property="og:image" content="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png">
-  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --card: #1a1a26;
-      --border: #2a2a3a;
-      --text: #e8e8f0;
-      --text-secondary: #8888a0;
-      --accent: #5b7fff;
-      --accent-glow: rgba(91, 127, 255, 0.3);
-      --green: #34d399;
-      --orange: #f97316;
-      --purple: #a78bfa;
+      --bg: #050505;
+      --bg-surface: #0a0a0a;
+      --border: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.25);
+      --text: #ffffff;
+      --text-muted: #888888;
+      
+      --accent-1: #6E56CF;
+      --accent-2: #3E63DD;
+      --accent-gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      
+      --card-bg: rgba(255, 255, 255, 0.02);
+      --card-hover: rgba(255, 255, 255, 0.04);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Inter', -apple-system, system-ui, sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Glow background */
-    .glow-bg {
-      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 600px;
-      background: radial-gradient(ellipse, var(--accent-glow), transparent 70%);
-      pointer-events: none; z-index: 0;
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: absolute;
+      top: -20vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      height: 80vh;
+      background: radial-gradient(ellipse at top, rgba(110, 86, 207, 0.15), transparent 60%);
+      pointer-events: none;
+      z-index: -1;
+      filter: blur(80px);
     }
 
-    /* Nav */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      backdrop-filter: blur(20px);
-      background: rgba(10, 10, 15, 0.8);
+    /* Layout & Utilities */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .glass-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: rgba(5, 5, 5, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
     }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto; padding: 0 24px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
-    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
-    .nav-brand span { font-weight: 700; font-size: 18px; }
-    .nav-links { display: flex; gap: 24px; align-items: center; }
-    .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
 
-    /* Hero */
-    .hero {
-      position: relative; z-index: 1;
-      text-align: center; padding: 100px 24px 80px;
-      max-width: 900px; margin: 0 auto;
+    .nav-content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid transparent;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 180px 0 100px;
+      text-align: center;
+      position: relative;
+    }
+
     .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 16px; border-radius: 100px;
-      background: rgba(91, 127, 255, 0.1);
-      border: 1px solid rgba(91, 127, 255, 0.2);
-      font-size: 13px; font-weight: 500; color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(110, 86, 207, 0.1);
+      border: 1px solid rgba(110, 86, 207, 0.3);
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #9b8af0;
       margin-bottom: 24px;
     }
+
     .hero h1 {
-      font-size: clamp(36px, 6vw, 64px); font-weight: 800;
-      line-height: 1.1; margin-bottom: 20px;
-      background: linear-gradient(135deg, #fff 30%, var(--accent));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(to bottom right, #ffffff 40%, #888888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+
     .hero p {
-      font-size: 18px; color: var(--text-secondary);
-      max-width: 600px; margin: 0 auto 36px;
+      font-size: clamp(1.125rem, 2vw, 1.35rem);
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      letter-spacing: -0.01em;
     }
-    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 12px;
-      font-weight: 600; font-size: 15px; text-decoration: none;
-      transition: all 0.3s ease;
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
     }
-    .btn-primary {
-      background: var(--accent); color: #fff;
-      box-shadow: 0 4px 20px var(--accent-glow);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
-    .btn-secondary {
-      background: var(--card); color: var(--text);
+
+    /* Visual Showcase */
+    .visual-showcase {
+      margin: 60px auto 120px;
+      max-width: 900px;
+      border-radius: 20px;
       border: 1px solid var(--border);
+      background: var(--bg-surface);
+      position: relative;
+      border-radius: 24px;
+      padding: 8px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      transform: perspective(1000px) rotateX(2deg);
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .btn-secondary:hover { border-color: var(--accent); background: var(--surface); }
 
-    /* Features */
-    .features {
-      max-width: 1100px; margin: 0 auto;
-      padding: 80px 24px;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+    .visual-showcase:hover {
+      transform: perspective(1000px) rotateX(0deg);
     }
-    .feature-card {
-      background: var(--card);
+
+    .visual-showcase img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      display: block;
+    }
+
+    /* Core Features Grid */
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 120px;
+    }
+
+    /* Glowing Hover Cards */
+    .card {
+      position: relative;
+      background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px; padding: 28px;
+      border-radius: 20px;
+      padding: 32px;
       transition: all 0.3s ease;
+      overflow: hidden;
     }
-    .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
-    .feature-icon { font-size: 32px; margin-bottom: 16px; }
-    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
 
-    /* Highlights */
-    .highlights {
-      max-width: 900px; margin: 0 auto;
-      padding: 60px 24px; text-align: center;
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 0;
+      pointer-events: none;
     }
-    .highlights h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
-    .highlights .sub { color: var(--text-secondary); margin-bottom: 48px; font-size: 16px; }
-    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .stat {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 32px 20px;
-    }
-    .stat-num { font-size: 40px; font-weight: 800; color: var(--accent); }
-    .stat-label { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
 
-    /* CTA */
-    .cta {
-      text-align: center; padding: 80px 24px;
-      max-width: 700px; margin: 0 auto;
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
     }
-    .cta h2 { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
-    .cta p { color: var(--text-secondary); margin-bottom: 32px; font-size: 16px; }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 24px;
+      display: inline-block;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Highlighted AI Section */
+    .ai-section {
+      background: linear-gradient(180deg, rgba(110, 86, 207, 0.05) 0%, transparent 100%);
+      border: 1px solid rgba(110, 86, 207, 0.2);
+      border-radius: 24px;
+      padding: 60px 40px;
+      margin-bottom: 120px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-section::after {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(62, 99, 221, 0.15) 0%, transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ai-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ai-content h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .ai-features {
+      list-style: none;
+      margin-top: 32px;
+    }
+
+    .ai-features li {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .ai-features li svg {
+      color: var(--accent-1);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Stats Grid */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 120px;
+    }
+
+    .stat-box {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
 
     /* Footer */
     footer {
-      text-align: center; padding: 40px 24px;
       border-top: 1px solid var(--border);
-      color: var(--text-secondary); font-size: 13px;
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
-    footer a { color: var(--accent); text-decoration: none; }
 
-    /* Showcase */
-    .showcase {
-      max-width: 1100px; margin: 0 auto;
-      padding: 80px 24px; text-align: center;
+    footer a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
     }
-    .showcase h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
-    .showcase .sub { color: var(--text-secondary); margin-bottom: 48px; font-size: 16px; }
-    .showcase-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-    .showcase-item {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px; text-align: center;
-      transition: all 0.3s ease;
-    }
-    .showcase-item:hover { border-color: var(--accent); transform: translateY(-4px); }
-    .showcase-item img {
-      width: 100%; border-radius: 10px; margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .showcase-item h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .showcase-item p { font-size: 13px; color: var(--text-secondary); }
-    .showcase-item.small img { max-width: 240px; }
 
-    @media (max-width: 600px) {
-      .stat-grid { grid-template-columns: 1fr; }
-      .showcase-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 32px; }
-      .hero-actions { flex-direction: column; align-items: center; }
+    footer a:hover {
+      color: var(--accent-1);
+    }
+
+    /* Scroll Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 800px) {
+      .ai-section { grid-template-columns: 1fr; padding: 40px 24px; }
+      .stats { grid-template-columns: 1fr; }
+      .hero-buttons { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<div class="glow-bg"></div>
+  <div class="ambient-glow"></div>
 
-<nav>
-  <div class="nav-inner">
-    <a class="nav-brand" href="#">
-      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png" alt="Super RClick">
-      <span>Super RClick</span>
-    </a>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="https://github.com/CalvinQin/SuperRClick" target="_blank">GitHub</a>
-      <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary" style="padding:8px 18px; font-size:13px;">Download Free</a>
+  <nav class="glass-nav">
+    <div class="container nav-content">
+      <a href="#" class="logo">
+        <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png" alt="Super RClick Icon">
+        Super RClick
+      </a>
+      <div style="display: flex; gap: 16px;">
+        <a href="https://github.com/CalvinQin/SuperRClick" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">GitHub</a>
+        <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">Download</a>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<section class="hero">
-  <div class="hero-badge">✨ Free & Open Source — MIT License</div>
-  <h1>Supercharge your Finder right-click menu</h1>
-  <p>
-    The most powerful Finder context menu extension for macOS.
-    Batch rename, compress, convert images, create files, jump to directories — all from one elegant right-click.
-  </p>
-  <div class="hero-actions">
-    <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary">
-      ⬇ Download DMG
-    </a>
-    <a href="https://github.com/CalvinQin/SuperRClick" class="btn btn-secondary">
-      ⭐ Star on GitHub
-    </a>
-  </div>
-</section>
+  <main class="container">
+    
+    <section class="hero reveal">
+      <div class="hero-badge">v0.2.1 Release — Native AI & macOS Integration</div>
+      <h1>Supercharge your<br/>right-click menu.</h1>
+      <p>Transform your macOS Finder. Batch rename, local AI OCR, text background removal, image conversion, and custom file templates from one elegant menu.</p>
+      <div class="hero-buttons">
+        <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary">Download DMG Free</a>
+        <a href="https://github.com/CalvinQin/SuperRClick" class="btn btn-secondary">View Documentation</a>
+      </div>
+    </section>
 
-<section class="features" id="features">
-  <div class="feature-card">
-    <div class="feature-icon">📋</div>
-    <h3>Copy Path</h3>
-    <p>Copy full path, POSIX path, or shell-escaped path with a single right-click. No more Terminal commands just to get a file path.</p>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">✏️</div>
-    <h3>Batch Rename</h3>
-    <p>Rename multiple files at once with prefix, suffix, or find-and-replace. Smart numbering with real-time preview and conflict detection.</p>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">📦</div>
-    <h3>Compress Files</h3>
-    <p>Archive selected files and folders to ZIP instantly. Progress bar, completion notifications — no third-party apps needed.</p>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">🖼️</div>
-    <h3>Image Conversion</h3>
-    <p>Convert between PNG, JPEG, TIFF, and HEIC formats. One-click format selection right from the Finder context menu.</p>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">📄</div>
-    <h3>New File Templates</h3>
-    <p>Create 20+ file types instantly from Finder: Markdown, Python, JSON, HTML, Swift, YAML, and more. No more Terminal touch commands.</p>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">🚀</div>
-    <h3>Quick Jump & Terminal</h3>
-    <p>Jump to any directory by entering a path. Open Terminal in the current folder. Quick navigation without leaving Finder.</p>
-  </div>
-</section>
+    <section class="visual-showcase reveal">
+      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/main-app.png" alt="Super RClick UI Showcase">
+    </section>
 
-<section class="showcase" id="showcase">
-  <h2>See It in Action</h2>
-  <p class="sub">Seamless integration with macOS Finder — feels like it's always been there.</p>
+    <!-- AI Core Module Highlight -->
+    <section class="ai-section reveal">
+      <div class="ai-content">
+        <h2>Intelligence, built-in.</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;">
+          Execute complex machine learning tasks directly from Finder. Unprecedented integration of local neural engines and cloud LLM providers natively within macOS.
+        </p>
+        <ul class="ai-features">
+          <li>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 10 0 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span><strong>Native LLM Providers:</strong> Fully integrated OpenAI, Zhipu, Moonshot, Custom APIs, and Local Ollama servers.</span>
+          </li>
+          <li>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 10 0 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span><strong>Local On-Device AI:</strong> Extract text (OCR) or perfectly remove image backgrounds 100% offline using Apple Vision.</span>
+          </li>
+          <li>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 10 0 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span><strong>Contextual Smart Actions:</strong> AI instantly analyzes your files to rename them logically or auto-tag them based on visual content.</span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/finder-context-menu.png" style="width: 100%; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5);" alt="Finder AI Smart Menu">
+      </div>
+    </section>
 
-  <div class="showcase-grid">
-    <div class="showcase-item">
-      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/finder-context-menu.png" alt="Finder Context Menu" loading="lazy"/>
-      <h4>Finder Right-Click Menu</h4>
-      <p>All tools accessible from one right-click</p>
+    <div class="reveal">
+      <h2 class="section-title">Everything you need.</h2>
+      <p class="section-subtitle">No bloat, no electron. Just powerful native features that feel like Apple built them.</p>
     </div>
-    <div class="showcase-item">
-      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/main-app.png" alt="Main App Window" loading="lazy"/>
-      <h4>Main App</h4>
-      <p>Manage actions, templates & settings</p>
-    </div>
-    <div class="showcase-item">
-      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/batch-rename.png" alt="Batch Rename" loading="lazy"/>
-      <h4>Batch Rename</h4>
-      <p>Real-time preview with conflict detection</p>
-    </div>
-    <div class="showcase-item small">
-      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/menubar-quick-actions.png" alt="MenuBar" loading="lazy"/>
-      <h4>MenuBar Quick Access</h4>
-      <p>Always one click away</p>
-    </div>
-  </div>
-</section>
 
-<section class="highlights">
-  <h2>Built for Power Users</h2>
-  <p class="sub">Lightweight, fast, and native. No Electron, no bloat.</p>
-  <div class="stat-grid">
-    <div class="stat">
-      <div class="stat-num">&lt;4MB</div>
-      <div class="stat-label">App Size</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">Native</div>
-      <div class="stat-label">Swift + SwiftUI</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">100%</div>
-      <div class="stat-label">Free Forever</div>
-    </div>
-  </div>
-</section>
+    <section class="features-grid">
+      <div class="card reveal" style="transition-delay: 0.1s">
+        <div class="card-content">
+          <div class="card-icon">✏️</div>
+          <h3>Batch Rename</h3>
+          <p>Rename multiple files instantly. Use prefix, suffix, regular expressions, or simple find-and-replace strings with live conflict detection.</p>
+        </div>
+      </div>
+      
+      <div class="card reveal" style="transition-delay: 0.2s">
+        <div class="card-content">
+          <div class="card-icon">📦</div>
+          <h3>One-Click Packing</h3>
+          <p>Compress files and folders quickly to ZIP with a beautiful native progress bar, bypassing standard slow archiving utilities.</p>
+        </div>
+      </div>
 
-<section class="cta">
-  <h2>Ready to upgrade your Finder?</h2>
-  <p>Download Super RClick now and transform your macOS workflow. It's free, open-source, and takes under 30 seconds to install.</p>
-  <div class="hero-actions">
-    <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary">
-      ⬇ Download v0.1.0
-    </a>
-  </div>
-</section>
+      <div class="card reveal" style="transition-delay: 0.3s">
+        <div class="card-content">
+          <div class="card-icon">🖼️</div>
+          <h3>Image Conversion</h3>
+          <p>Seamlessly process and convert imagery between WebP, PNG, JPEG, TIFF, and HEIC natively within the Finder context.</p>
+        </div>
+      </div>
 
-<footer>
-  <p>Made with ❤️ by <a href="https://github.com/CalvinQin">@CalvinQin</a> · <a href="https://github.com/CalvinQin/SuperRClick">View on GitHub</a></p>
-  <p style="margin-top:8px;">macOS right-click menu enhancer · Finder extension · Batch rename · Image converter · Mac productivity tool</p>
-</footer>
+      <div class="card reveal" style="transition-delay: 0.4s">
+        <div class="card-content">
+          <div class="card-icon">📄</div>
+          <h3>Instant File Creation</h3>
+          <p>Generate precise code templates (Markdown, Swift, TypeScript, JSON, HTML) and Office documents intuitively without opening terminal.</p>
+        </div>
+      </div>
 
+      <div class="card reveal" style="transition-delay: 0.5s">
+        <div class="card-content">
+          <div class="card-icon">🚀</div>
+          <h3>Quick Terminal Jump</h3>
+          <p>A true lifesaver for developers. Instantly trigger your default terminal in any directory, or copy the absolute macOS POSIX path.</p>
+        </div>
+      </div>
+      
+      <div class="card reveal" style="transition-delay: 0.6s">
+        <div class="card-content">
+          <div class="card-icon">🛠️</div>
+          <h3>Custom Action Builder</h3>
+          <p>Wire up custom powerful terminal scripts as direct custom menu actions and bind them securely within the Action Library.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Performance Block -->
+    <section class="stats reveal">
+      <div class="stat-box">
+        <div class="stat-value">&lt;4MB</div>
+        <div class="stat-label">Total App Bundle Size</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">Swift 6</div>
+        <div class="stat-label">Completely Native Code</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Free & Open Source</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="margin-bottom: 8px;">Super RClick — macOS right-click menu enhancer. Built for macOS 15.0+ Core OS Extensions.</p>
+      <p>Made with ❤️ by <a href="https://github.com/CalvinQin" target="_blank">@CalvinQin</a>. <a href="https://github.com/CalvinQin/SuperRClick" target="_blank">Source Code</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach((el) => {
+      observer.observe(el);
+    });
+
+    // Mouse tracking for glowing cards
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+  </script>
 </body>
 </html>

@@ -264,7 +264,7 @@ final class AppCoordinator {
     }
 
     func runImageConversionWithFormatPicker() {
-        let formats = ["png", "jpeg", "webp", "tiff", "heic"]
+        let formats = ["png", "jpeg", "tiff", "heic"]
 
         NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()

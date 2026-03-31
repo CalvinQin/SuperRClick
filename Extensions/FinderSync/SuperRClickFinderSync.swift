@@ -2,6 +2,7 @@ import AppKit
 import FinderSync
 import Foundation
 import Shared
+import UserNotifications
 
 public final class SuperRClickFinderSync: FIFinderSync {
     private enum Constants {
@@ -396,17 +397,35 @@ public final class SuperRClickFinderSync: FIFinderSync {
 
         let parents = Set(urls.map { normalizedDirectory(for: $0).path })
         guard parents.count == 1, let parentPath = parents.first else {
-            logPlaceholder("Compress requires items from the same folder", context: currentContext())
+            postResultNotification(
+                title: L("压缩失败", "Compression Failed"),
+                body: L("压缩功能要求所有文件在同一文件夹下。", "Compression requires items from the same folder."),
+                success: false
+            )
             return
         }
 
         let parentDirectory = URL(fileURLWithPath: parentPath, isDirectory: true)
         let archiveName = "SuperRClick-\(timestamp()).zip"
-        _ = runProcess(
+        let exitCode = runProcess(
             launchPath: "/usr/bin/zip",
             arguments: ["-r", archiveName] + urls.map(\.lastPathComponent),
             currentDirectoryURL: parentDirectory
         )
+
+        if exitCode == 0 {
+            postResultNotification(
+                title: L("压缩完成", "Compression Complete"),
+                body: L("已创建压缩包 \(archiveName)。", "Created archive \(archiveName)."),
+                success: true
+            )
+        } else {
+            postResultNotification(
+                title: L("压缩失败", "Compression Failed"),
+                body: L("zip 退出码 \(exitCode)。", "zip exited with code \(exitCode)."),
+                success: false
+            )
+        }
     }
 
     private func convertImages(_ urls: [URL], targetFormat: String = "png") {
@@ -428,20 +447,42 @@ public final class SuperRClickFinderSync: FIFinderSync {
             sipsFormat = "heic"
             fileExtension = "heic"
         case "webp":
-            sipsFormat = "com.google.webp"
-            fileExtension = "webp"
+            postResultNotification(
+                title: L("转换失败", "Conversion Failed"),
+                body: L("macOS 不支持通过 sips 导出 WebP 格式。请选择 PNG/JPEG/HEIC/TIFF。", "macOS does not support WebP export via sips. Please choose PNG/JPEG/HEIC/TIFF."),
+                success: false
+            )
+            return
         default:
             sipsFormat = "png"
             fileExtension = "png"
         }
 
+        var convertedCount = 0
         for inputURL in urls {
             let destinationURL = uniqueDestinationURL(
                 preferredURL: inputURL.deletingPathExtension().appendingPathExtension(fileExtension)
             )
-            _ = runProcess(
+            let exitCode = runProcess(
                 launchPath: "/usr/bin/sips",
                 arguments: ["-s", "format", sipsFormat, inputURL.path, "--out", destinationURL.path]
+            )
+            if exitCode == 0 {
+                convertedCount += 1
+            }
+        }
+
+        if convertedCount > 0 {
+            postResultNotification(
+                title: L("转换完成", "Conversion Complete"),
+                body: L("已将 \(convertedCount) 张图片转换为 \(targetFormat.uppercased())。", "Converted \(convertedCount) image(s) to \(targetFormat.uppercased())."),
+                success: true
+            )
+        } else {
+            postResultNotification(
+                title: L("转换失败", "Conversion Failed"),
+                body: L("所选图片均无法转换。", "None of the selected images could be converted."),
+                success: false
             )
         }
     }
@@ -449,6 +490,25 @@ public final class SuperRClickFinderSync: FIFinderSync {
     private func logPlaceholder(_ actionName: String, context: SuperRClickFinderContext) {
         let selectionCount = context.effectiveSelectionURLs.count
         NSLog("Super RClick placeholder action '%@' invoked for %ld item(s)", actionName, selectionCount)
+    }
+
+    private func postResultNotification(title: String, body: String, success: Bool) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = success ? .default : UNNotificationSound(named: UNNotificationSoundName("Basso"))
+
+        let request = UNNotificationRequest(
+            identifier: "superrclick-result-\(UUID().uuidString)",
+            content: content,
+            trigger: nil
+        )
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error {
+                NSLog("Super RClick notification error: %@", error.localizedDescription)
+            }
+        }
     }
 
     private func withSecurityScopedAccess(

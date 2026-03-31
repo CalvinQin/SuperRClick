@@ -120,7 +120,6 @@ public final class SuperRClickFinderMenuComposer {
                 let formats = [
                     ("PNG", "convert-image:png"),
                     ("JPEG", "convert-image:jpeg"),
-                    ("WEBP", "convert-image:webp"),
                     ("TIFF", "convert-image:tiff"),
                     ("HEIC", "convert-image:heic"),
                 ]

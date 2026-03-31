@@ -211,9 +211,7 @@ actor PlatformActionExecutor {
             sipsFormat = "heic"
             fileExtension = "heic"
         case "webp":
-            // sips doesn't support webp natively; try using it, but it may fail on older macOS
-            sipsFormat = "com.google.webp"
-            fileExtension = "webp"
+            return .blocked(reason: L("macOS 不支持通过 sips 导出 WebP 格式。请选择 PNG/JPEG/HEIC/TIFF。", "macOS does not support WebP export via sips. Please choose PNG/JPEG/HEIC/TIFF."))
         default:
             sipsFormat = "png"
             fileExtension = "png"

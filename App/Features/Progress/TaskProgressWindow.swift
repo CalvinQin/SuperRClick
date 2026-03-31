@@ -2,6 +2,12 @@ import AppKit
 import Shared
 import SwiftUI
 
+// MARK: - Custom Panel
+
+private final class KeyablePanel: NSPanel {
+    override var canBecomeKey: Bool { true }
+}
+
 // MARK: - Progress Info Model
 
 struct TaskProgressInfo: Identifiable, Equatable {
@@ -51,9 +57,9 @@ final class TaskProgressWindowController {
         let windowRect = NSRect(x: 0, y: 0, width: 340, height: 130)
         hostingView.frame = windowRect
 
-        let win = NSWindow(
+        let win = KeyablePanel(
             contentRect: windowRect,
-            styleMask: [.borderless],
+            styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -68,8 +74,7 @@ final class TaskProgressWindowController {
         self.window = win
         self.hostingView = hostingView
 
-        NSApp.activate(ignoringOtherApps: true)
-        win.makeKeyAndOrderFront(nil)
+        win.orderFrontRegardless()
     }
 
     func scheduleAutoClose(delay: TimeInterval = 3.0) {

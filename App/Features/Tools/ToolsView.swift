@@ -36,7 +36,7 @@ struct ToolsView: View {
                         icon: "photo.on.rectangle.angled",
                         color: .purple
                     ) {
-                        coordinator.runImageConversionWithFormatPicker()
+                        coordinator.runImageConversionFromToolbox()
                     }
 
                     ToolCard(
@@ -46,9 +46,7 @@ struct ToolsView: View {
                         icon: "archivebox",
                         color: .orange
                     ) {
-                        if let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.compressItems.id) {
-                            coordinator.run(action)
-                        }
+                        coordinator.runCompressFromToolbox()
                     }
 
                     ToolCard(
@@ -58,9 +56,7 @@ struct ToolsView: View {
                         icon: "terminal",
                         color: .green
                     ) {
-                        if let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.openTerminalHere.id) {
-                            coordinator.run(action)
-                        }
+                        coordinator.runOpenTerminalFromToolbox()
                     }
                 }
 

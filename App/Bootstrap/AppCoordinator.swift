@@ -3,6 +3,7 @@ import Foundation
 import Observation
 import Shared
 import SwiftUI
+import UniformTypeIdentifiers
 
 @MainActor
 @Observable
@@ -293,6 +294,83 @@ final class AppCoordinator {
         Task {
             let result = await actionEngine.execute(actionID: action.id, context: enrichedContext)
             await persistInvocation(for: action, result: result, context: enrichedContext)
+            await refreshModel()
+            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+        }
+    }
+
+    // MARK: - Toolbox Actions (with file pickers)
+
+    func runImageConversionFromToolbox() {
+        let panel = NSOpenPanel()
+        panel.title = L("选择要转换的图片", "Select images to convert")
+        panel.prompt = L("选择", "Select")
+        panel.message = L("请选择一个或多个图片文件进行格式转换。", "Select one or more image files to convert.")
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = true
+        panel.canCreateDirectories = false
+        panel.allowedContentTypes = [.png, .jpeg, .tiff, .heic, .webP, .image]
+
+        guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
+
+        let items = panel.urls.map { url in
+            ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: false)
+        }
+        sampleContext = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
+
+        runImageConversionWithFormatPicker()
+    }
+
+    func runCompressFromToolbox() {
+        let panel = NSOpenPanel()
+        panel.title = L("选择要压缩的文件", "Select files to compress")
+        panel.prompt = L("选择", "Select")
+        panel.message = L("请选择一个或多个文件/文件夹进行压缩。", "Select one or more files or folders to compress.")
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = true
+        panel.canCreateDirectories = false
+
+        guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
+
+        let items = panel.urls.map { url in
+            var isDir: ObjCBool = false
+            FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+            return ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: isDir.boolValue)
+        }
+        let context = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
+
+        guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.compressItems.id) else { return }
+
+        Task {
+            let result = await actionEngine.execute(actionID: action.id, context: context)
+            await persistInvocation(for: action, result: result, context: context)
+            await refreshModel()
+            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+        }
+    }
+
+    func runOpenTerminalFromToolbox() {
+        let panel = NSOpenPanel()
+        panel.title = L("选择要在终端打开的文件夹", "Select folder to open in Terminal")
+        panel.prompt = L("选择", "Select")
+        panel.message = L("请选择一个文件夹，将在该目录打开终端。", "Select a folder to open Terminal in that directory.")
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+
+        let items = [ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: true)]
+        let context = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
+
+        guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.openTerminalHere.id) else { return }
+
+        Task {
+            let result = await actionEngine.execute(actionID: action.id, context: context)
+            await persistInvocation(for: action, result: result, context: context)
             await refreshModel()
             statusBanner = AppCoordinator.statusBanner(for: action, result: result)
         }

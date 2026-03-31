@@ -37,32 +37,40 @@ final class BatchRenameWindowController {
             return
         }
 
+        NSLog("[SuperRClick] BatchRenameWindowController.show: creating new window")
+
         let content = BatchRenamePanelView(coordinator: coordinator)
             .environment(\.locale, LanguageManager.shared.locale ?? Locale.current)
 
         let hostingView = NSHostingView(rootView: AnyView(content))
-        hostingView.frame = NSRect(x: 0, y: 0, width: 680, height: 560)
 
-        let panel = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 680, height: 560),
-            styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
+        // Match the SwiftUI view's minimum dimensions to avoid layout conflicts
+        let windowRect = NSRect(x: 0, y: 0, width: 780, height: 700)
+        hostingView.frame = windowRect
+
+        let win = NSWindow(
+            contentRect: windowRect,
+            styleMask: [.titled, .closable, .resizable],
             backing: .buffered,
             defer: false
         )
-        panel.title = L("批量重命名", "Batch Rename")
-        panel.contentView = hostingView
-        panel.center()
-        panel.isReleasedWhenClosed = false
+        win.title = L("批量重命名", "Batch Rename")
+        win.contentView = hostingView
+        win.center()
+        win.isReleasedWhenClosed = false
+        win.minSize = NSSize(width: 780, height: 700)
 
         // When user closes the window via the red button, dismiss the coordinator state
-        panel.delegate = BatchRenamePanelDelegate.shared
+        win.delegate = BatchRenamePanelDelegate.shared
         BatchRenamePanelDelegate.shared.coordinator = coordinator
 
-        self.window = panel
+        self.window = win
         self.hostingView = hostingView
 
-        panel.makeKeyAndOrderFront(nil)
+        NSLog("[SuperRClick] BatchRenameWindowController.show: about to makeKeyAndOrderFront")
         NSApp.activate(ignoringOtherApps: true)
+        win.makeKeyAndOrderFront(nil)
+        NSLog("[SuperRClick] BatchRenameWindowController.show: window is now visible")
     }
 
     func close() {
@@ -88,6 +96,7 @@ struct BatchRenamePanelView: View {
     @Bindable var coordinator: AppCoordinator
     @State private var draft = BatchRenameDraft()
     @FocusState private var isTokenFocused: Bool
+    @State private var didInitialSync = false
 
     private let planner = BatchRenamePlanner()
 
@@ -118,6 +127,7 @@ struct BatchRenamePanelView: View {
         )
         .onAppear(perform: syncDraftFromCoordinator)
         .onChange(of: draft) { _, newValue in
+            guard didInitialSync else { return }
             coordinator.updateBatchRenameDraft(newValue)
         }
     }
@@ -126,7 +136,7 @@ struct BatchRenamePanelView: View {
         if draft.items.isEmpty {
             draft = coordinator.batchRenameDraft
         }
-        coordinator.updateBatchRenameDraft(draft)
+        didInitialSync = true
     }
 
     private func headerCard(plan: BatchRenamePlan) -> some View {

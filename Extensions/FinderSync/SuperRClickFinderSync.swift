@@ -501,12 +501,11 @@ public final class SuperRClickFinderSync: FIFinderSync {
             _ = try commandCenter.storeBatchRenameRequest(for: actionContext)
             DistributedNotificationCenter.default().post(name: Shared.ExternalCommandCenter.notificationName, object: nil)
             activateMainApp()
-            NSLog(
-                "Super RClick queued batch rename for %ld item(s) and activated the main app.",
-                actionContext.items.count
-            )
+            let msg = "Super RClick queued batch rename for \(actionContext.items.count) item(s) and activated the main app."
+            NSLog("%@", msg)
         } catch {
-            NSLog("Super RClick failed to queue batch rename: %@", error.localizedDescription)
+            let err = "Super RClick failed to queue batch rename: \(error.localizedDescription)"
+            NSLog("%@", err)
         }
     }
 

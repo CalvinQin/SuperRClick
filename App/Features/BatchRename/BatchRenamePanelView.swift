@@ -24,15 +24,15 @@ struct BatchRenamePanelHost: View {
 final class BatchRenameWindowController {
     static let shared = BatchRenameWindowController()
 
-    private var panel: NSPanel?
+    private var window: NSWindow?
     private var hostingView: NSHostingView<AnyView>?
 
     private init() {}
 
     func show(coordinator: AppCoordinator) {
-        // If panel already exists, just bring it forward
-        if let panel, panel.isVisible {
-            panel.makeKeyAndOrderFront(nil)
+        // If window already exists, just bring it forward
+        if let window, window.isVisible {
+            window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
             return
         }
@@ -43,25 +43,22 @@ final class BatchRenameWindowController {
         let hostingView = NSHostingView(rootView: AnyView(content))
         hostingView.frame = NSRect(x: 0, y: 0, width: 680, height: 560)
 
-        let panel = NSPanel(
+        let panel = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 680, height: 560),
-            styleMask: [.titled, .closable, .resizable, .nonactivatingPanel],
+            styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
         panel.title = L("批量重命名", "Batch Rename")
         panel.contentView = hostingView
-        panel.isFloatingPanel = true
-        panel.becomesKeyOnlyIfNeeded = false
-        panel.level = .floating
         panel.center()
         panel.isReleasedWhenClosed = false
 
-        // When user closes the panel via the red button, dismiss the coordinator state
+        // When user closes the window via the red button, dismiss the coordinator state
         panel.delegate = BatchRenamePanelDelegate.shared
         BatchRenamePanelDelegate.shared.coordinator = coordinator
 
-        self.panel = panel
+        self.window = panel
         self.hostingView = hostingView
 
         panel.makeKeyAndOrderFront(nil)
@@ -69,8 +66,8 @@ final class BatchRenameWindowController {
     }
 
     func close() {
-        panel?.close()
-        panel = nil
+        window?.close()
+        window = nil
         hostingView = nil
     }
 }

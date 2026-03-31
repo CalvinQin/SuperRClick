@@ -314,17 +314,14 @@ final class AppCoordinator {
         panel.canCreateDirectories = false
         panel.allowedContentTypes = [.png, .jpeg, .tiff, .heic, .webP, .image]
 
-        panel.begin { response in
-            guard response == .OK, !panel.urls.isEmpty else { return }
-            
-            Task { @MainActor in
-                let items = panel.urls.map { url in
-                    ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: false)
-                }
-                self.sampleContext = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
-                self.runImageConversionWithFormatPicker()
-            }
+        guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
+
+        let items = panel.urls.map { url in
+            ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: false)
         }
+        sampleContext = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
+
+        runImageConversionWithFormatPicker()
     }
 
     func runCompressFromToolbox() {
@@ -338,24 +335,22 @@ final class AppCoordinator {
         panel.allowsMultipleSelection = true
         panel.canCreateDirectories = false
 
-        panel.begin { response in
-            guard response == .OK, !panel.urls.isEmpty else { return }
-            
-            Task { @MainActor in
-                let items = panel.urls.map { url in
-                    var isDir: ObjCBool = false
-                    FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
-                    return ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: isDir.boolValue)
-                }
-                let context = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
+        guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
 
-                guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.compressItems.id) else { return }
+        let items = panel.urls.map { url in
+            var isDir: ObjCBool = false
+            FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+            return ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: isDir.boolValue)
+        }
+        let context = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
 
-                let result = await self.actionEngine.execute(actionID: action.id, context: context)
-                await self.persistInvocation(for: action, result: result, context: context)
-                await self.refreshModel()
-                self.statusBanner = AppCoordinator.statusBanner(for: action, result: result)
-            }
+        guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.compressItems.id) else { return }
+
+        Task {
+            let result = await actionEngine.execute(actionID: action.id, context: context)
+            await persistInvocation(for: action, result: result, context: context)
+            await refreshModel()
+            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
         }
     }
 
@@ -370,20 +365,18 @@ final class AppCoordinator {
         panel.allowsMultipleSelection = false
         panel.canCreateDirectories = false
 
-        panel.begin { response in
-            guard response == .OK, let url = panel.url else { return }
-            
-            Task { @MainActor in
-                let items = [ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: true)]
-                let context = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
+        guard panel.runModal() == .OK, let url = panel.url else { return }
 
-                guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.openTerminalHere.id) else { return }
+        let items = [ActionItem(url: url, displayName: url.lastPathComponent, contentTypeIdentifier: nil, isDirectory: true)]
+        let context = ActionContext.finderSelection(items, sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick")
 
-                let result = await self.actionEngine.execute(actionID: action.id, context: context)
-                await self.persistInvocation(for: action, result: result, context: context)
-                await self.refreshModel()
-                self.statusBanner = AppCoordinator.statusBanner(for: action, result: result)
-            }
+        guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.openTerminalHere.id) else { return }
+
+        Task {
+            let result = await actionEngine.execute(actionID: action.id, context: context)
+            await persistInvocation(for: action, result: result, context: context)
+            await refreshModel()
+            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
         }
     }
 
@@ -441,37 +434,33 @@ final class AppCoordinator {
         panel.allowsMultipleSelection = true
         panel.canCreateDirectories = false
 
-        panel.begin { response in
-            guard response == .OK, !panel.urls.isEmpty else {
-                return
-            }
-
-            Task { @MainActor in
-                let items = panel.urls.map { url in
-                    var isDir: ObjCBool = false
-                    FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
-                    return ActionItem(
-                        url: url,
-                        displayName: url.lastPathComponent,
-                        contentTypeIdentifier: nil,
-                        isDirectory: isDir.boolValue
-                    )
-                }
-
-                let resolvedContext = ActionContext.finderSelection(
-                    items,
-                    sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick"
-                )
-                self.batchRenameContext = resolvedContext
-                self.batchRenameDraft = BatchRenameDraft(context: resolvedContext)
-                if self.batchRenameDraft.token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    self.batchRenameDraft.token = "Renamed"
-                }
-                self.recalculateBatchRenamePlan()
-                self.isPresentingBatchRename = true
-                self.showBatchRenamePanel()
-            }
+        guard panel.runModal() == .OK, !panel.urls.isEmpty else {
+            return
         }
+
+        let items = panel.urls.map { url in
+            var isDir: ObjCBool = false
+            FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+            return ActionItem(
+                url: url,
+                displayName: url.lastPathComponent,
+                contentTypeIdentifier: nil,
+                isDirectory: isDir.boolValue
+            )
+        }
+
+        let resolvedContext = ActionContext.finderSelection(
+            items,
+            sourceApplicationBundleIdentifier: "com.haoqiqin.SuperRClick"
+        )
+        batchRenameContext = resolvedContext
+        batchRenameDraft = BatchRenameDraft(context: resolvedContext)
+        if batchRenameDraft.token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            batchRenameDraft.token = "Renamed"
+        }
+        recalculateBatchRenamePlan()
+        isPresentingBatchRename = true
+        showBatchRenamePanel()
     }
 
     func ensureExternalCommandMonitoring() async {
@@ -603,11 +592,18 @@ final class AppCoordinator {
             let resolvedCommand = try externalCommandCenter.resolveBatchRenameRequest(request)
             handleExternalBatchRenameRequest(resolvedCommand)
         } catch {
+            let errorMsg = error.localizedDescription
             statusBanner = StatusBanner(
                 tone: .warning,
                 title: "Could not open pending Finder selection",
-                detail: error.localizedDescription
+                detail: errorMsg
             )
+            NSApp.activate(ignoringOtherApps: true)
+            let alert = NSAlert()
+            alert.messageText = "Failed to open Finder selection"
+            alert.informativeText = errorMsg
+            alert.alertStyle = .critical
+            alert.runModal()
         }
     }
 
@@ -949,6 +945,12 @@ final class AppCoordinator {
                 title: "Ignored empty batch rename request",
                 detail: "Finder did not provide any files or folders to rename."
             )
+            NSApp.activate(ignoringOtherApps: true)
+            let alert = NSAlert()
+            alert.messageText = "Empty request"
+            alert.informativeText = "Finder did not provide any files or folders to rename."
+            alert.alertStyle = .warning
+            alert.runModal()
             return
         }
 

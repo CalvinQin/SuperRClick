@@ -14,14 +14,16 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
     public let baseURL: String
     public let defaultModel: String
     public let models: [String]
+    public let iconName: String
     
-    public init(id: String, type: LLMProviderType, name: String, baseURL: String, defaultModel: String, models: [String]) {
+    public init(id: String, type: LLMProviderType, name: String, baseURL: String, defaultModel: String, models: [String], iconName: String) {
         self.id = id
         self.type = type
         self.name = name
         self.baseURL = baseURL
         self.defaultModel = defaultModel
         self.models = models
+        self.iconName = iconName
     }
     
     // MARK: - Provider Presets (verified against official docs 2026-03-31)
@@ -39,7 +41,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
             models: [
                 "deepseek-chat",
                 "deepseek-reasoner"
-            ]
+            ],
+            iconName: "brain.head.profile"
         ),
         // ── OpenAI ───────────────────────────────────────────────
         // https://platform.openai.com/docs/models
@@ -56,7 +59,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "gpt-5.4-nano",
                 "gpt-5.4-mini",
                 "gpt-5.4"
-            ]
+            ],
+            iconName: "sparkles"
         ),
         // ── Anthropic Claude ─────────────────────────────────────
         // https://docs.anthropic.com/en/docs/about-claude/models
@@ -71,7 +75,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "claude-haiku-4-5-20250512",
                 "claude-sonnet-4-6-20260217",
                 "claude-opus-4-6-20260205"
-            ]
+            ],
+            iconName: "cpu"
         ),
         // ── Google Gemini ────────────────────────────────────────
         // https://ai.google.dev/gemini-api/docs/models
@@ -87,7 +92,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "gemini-2.5-pro",
                 "gemini-3-flash-preview",
                 "gemini-3.1-pro-preview"
-            ]
+            ],
+            iconName: "star.fill"
         ),
         // ── 智谱 GLM ────────────────────────────────────────────
         // https://bigmodel.cn/dev/api/normal-model/glm-5
@@ -104,7 +110,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "glm-5",
                 "glm-z1-air",
                 "glm-z1-airx"
-            ]
+            ],
+            iconName: "cube.transparent"
         ),
         // ── 通义千问 (Qwen) ──────────────────────────────────────
         // https://help.aliyun.com/zh/model-studio/getting-started/models
@@ -122,7 +129,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "qwen3-max",
                 "qwen3.5-plus",
                 "qwen3.5-flash"
-            ]
+            ],
+            iconName: "cloud.fill"
         ),
         // ── Moonshot (Kimi) ──────────────────────────────────────
         // https://platform.moonshot.cn/docs/api/chat
@@ -136,7 +144,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
             models: [
                 "kimi-k2.5",
                 "kimi-k2"
-            ]
+            ],
+            iconName: "moon.stars.fill"
         ),
         // ── Ollama (Local) ───────────────────────────────────────
         // https://ollama.com/library
@@ -153,7 +162,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "deepseek-r1",
                 "glm-5",
                 "mistral"
-            ]
+            ],
+            iconName: "server.rack"
         ),
         // ── Custom ───────────────────────────────────────────────
         LLMProviderPreset(
@@ -162,7 +172,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
             name: "自定义 (OpenAI 兼容)",
             baseURL: "https://api.example.com/v1",
             defaultModel: "",
-            models: []
+            models: [],
+            iconName: "gearshape.2"
         )
     ]
     

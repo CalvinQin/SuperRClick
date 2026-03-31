@@ -23,7 +23,7 @@ public struct AISettingsView: View {
             Section {
                 Picker(L("服务商", "Provider"), selection: $config.providerID) {
                     ForEach(LLMProviderPreset.all) { preset in
-                        Text(preset.name).tag(preset.id)
+                        Label(preset.name, systemImage: preset.iconName).tag(preset.id)
                     }
                 }
                 .onChange(of: config.providerID) { _, newValue in

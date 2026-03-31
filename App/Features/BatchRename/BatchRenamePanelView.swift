@@ -1,3 +1,4 @@
+import AppKit
 import Observation
 import Shared
 import SwiftUI
@@ -7,22 +8,82 @@ struct BatchRenamePanelHost: View {
 
     var body: some View {
         Color.clear
-            .sheet(isPresented: presentBinding) {
-                BatchRenamePanelView(coordinator: coordinator)
-            }
-    }
-
-    private var presentBinding: Binding<Bool> {
-        Binding(
-            get: { coordinator.isPresentingBatchRename },
-            set: { isPresented in
-                if isPresented {
-                    coordinator.presentBatchRename()
+            .onChange(of: coordinator.isPresentingBatchRename) { _, isPresenting in
+                if isPresenting {
+                    BatchRenameWindowController.shared.show(coordinator: coordinator)
                 } else {
-                    coordinator.dismissBatchRename()
+                    BatchRenameWindowController.shared.close()
                 }
             }
+    }
+}
+
+// MARK: - Standalone NSPanel for batch rename
+
+@MainActor
+final class BatchRenameWindowController {
+    static let shared = BatchRenameWindowController()
+
+    private var panel: NSPanel?
+    private var hostingView: NSHostingView<AnyView>?
+
+    private init() {}
+
+    func show(coordinator: AppCoordinator) {
+        // If panel already exists, just bring it forward
+        if let panel, panel.isVisible {
+            panel.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let content = BatchRenamePanelView(coordinator: coordinator)
+            .environment(\.locale, LanguageManager.shared.locale ?? Locale.current)
+
+        let hostingView = NSHostingView(rootView: AnyView(content))
+        hostingView.frame = NSRect(x: 0, y: 0, width: 680, height: 560)
+
+        let panel = NSPanel(
+            contentRect: NSRect(x: 0, y: 0, width: 680, height: 560),
+            styleMask: [.titled, .closable, .resizable, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
         )
+        panel.title = L("批量重命名", "Batch Rename")
+        panel.contentView = hostingView
+        panel.isFloatingPanel = true
+        panel.becomesKeyOnlyIfNeeded = false
+        panel.level = .floating
+        panel.center()
+        panel.isReleasedWhenClosed = false
+
+        // When user closes the panel via the red button, dismiss the coordinator state
+        panel.delegate = BatchRenamePanelDelegate.shared
+        BatchRenamePanelDelegate.shared.coordinator = coordinator
+
+        self.panel = panel
+        self.hostingView = hostingView
+
+        panel.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    func close() {
+        panel?.close()
+        panel = nil
+        hostingView = nil
+    }
+}
+
+// MARK: - Panel delegate to handle close button
+
+@MainActor
+final class BatchRenamePanelDelegate: NSObject, NSWindowDelegate {
+    static let shared = BatchRenamePanelDelegate()
+    weak var coordinator: AppCoordinator?
+
+    func windowWillClose(_ notification: Notification) {
+        coordinator?.dismissBatchRename()
     }
 }
 

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icon.png" width="128" alt="Super RClick Icon"/>
+  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png" width="128" alt="Super RClick Icon"/>
 </p>
 
 <h1 align="center">Super RClick</h1>
@@ -81,7 +81,7 @@
 ### 方式二：从源码构建
 
 ```bash
-git clone https://github.com/haoqiqin/SuperRClick.git
+git clone https://github.com/CalvinQin/SuperRClick.git
 cd SuperRClick
 open SuperRClick.xcodeproj
 ```
@@ -110,5 +110,5 @@ open SuperRClick.xcodeproj
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/haoqiqin">@haoqiqin</a>
+  Made with ❤️ by <a href="https://github.com/CalvinQin">@CalvinQin</a>
 </p>

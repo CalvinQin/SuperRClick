@@ -8,6 +8,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
     case actionLibrary
     case pinned
     case recent
+    case tools
     case workspaces
     case settings
 
@@ -18,6 +19,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .actionLibrary: L("动作库", "Actions")
         case .pinned: L("已固定", "Pinned")
         case .recent: L("最近使用", "Recent")
+        case .tools: L("工具箱", "Toolbox")
         case .workspaces: L("工作空间", "Workspaces")
         case .settings: L("设置", "Settings")
         }
@@ -28,6 +30,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .actionLibrary: "square.grid.2x2"
         case .pinned: "pin"
         case .recent: "clock.arrow.circlepath"
+        case .tools: "wrench.and.screwdriver"
         case .workspaces: "folder"
         case .settings: "gearshape"
         }
@@ -38,6 +41,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .actionLibrary: .blue
         case .pinned: .blue
         case .recent: .blue
+        case .tools: .orange
         case .workspaces: .blue
         case .settings: .secondary
         }
@@ -99,6 +103,10 @@ struct SuperRClickRootView: View {
                 ForEach([SidebarSection.actionLibrary, .pinned, .recent], id: \.self) { section in
                     sidebarRow(section)
                 }
+            }
+
+            Section(L("工具", "Tools")) {
+                sidebarRow(.tools)
             }
 
             Section(L("系统", "System")) {
@@ -186,6 +194,8 @@ struct SuperRClickRootView: View {
             PinnedActionsView(coordinator: coordinator)
         case .recent:
             RecentActivityView(coordinator: coordinator)
+        case .tools:
+            ToolsView(coordinator: coordinator)
         case .workspaces:
             WorkspaceSettingsView(coordinator: coordinator)
         case .settings:

@@ -14,6 +14,7 @@
 		0CAB7504BABBF994D0720C11 /* PlatformActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */; };
 		12F490F2BE6562C3C485B418 /* ExternalCommandCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6A2B03FA8916390BD9CF28 /* ExternalCommandCenter.swift */; };
 		214A8B972800D95487F994BD /* BatchRenamePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */; };
+		5CDB6A2119D541591BB2ED6D /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */; };
 		21DE52A58EA0BA5DD1224773 /* CreateActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */; };
 		265B06D1C4FBAD32B120751D /* ActionLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */; };
 		286560CCB5592D2DDC6CF285 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29BE228AE9C81F162D18999 /* PersistenceController.swift */; };
@@ -172,6 +173,7 @@
 		4BE7B5E15C74E38D57A01CA7 /* BatchRenameDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameDraft.swift; sourceTree = "<group>"; };
 		4D2F1DD938396EF25A558BB3 /* SetupCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupCenterView.swift; sourceTree = "<group>"; };
 		516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenamePanelView.swift; sourceTree = "<group>"; };
+		85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		57EF5505AD243DDE7E73C306 /* SuperRClickCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6800F0D902763874975C3CCE /* VisibilityRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityRule.swift; sourceTree = "<group>"; };
 		6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameModels.swift; sourceTree = "<group>"; };
@@ -450,9 +452,18 @@
 				6A58D56E9AD98C9A17A8526F /* DesktopBridge */,
 				6B29EE888B98343C8200A415 /* Settings */,
 				F8692037BD3A52ABA6637198 /* Setup */,
+				626ACD4E4B39343CB9A95951 /* Tools */,
 				F57111B5AF94A9046035D75B /* Update */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		626ACD4E4B39343CB9A95951 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				85A0D3FDCE46BD33B833FBEB /* ToolsView.swift */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 		DFE33B5DF1D805925229D87A /* Products */ = {
@@ -765,6 +776,7 @@
 				C5D1EFC0D08285C6F3CEEAAD /* LanguageManager.swift in Sources */,
 				733105127ADD030D2D794411 /* AppModeManager.swift in Sources */,
 				5A1106D23B0B1A2780D654B3 /* GitHubUpdater.swift in Sources */,
+				5CDB6A2119D541591BB2ED6D /* ToolsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

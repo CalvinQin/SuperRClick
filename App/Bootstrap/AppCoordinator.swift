@@ -261,7 +261,7 @@ final class AppCoordinator {
         }
     }
 
-    private func runImageConversionWithFormatPicker() {
+    func runImageConversionWithFormatPicker() {
         let formats = ["png", "jpeg", "webp", "tiff", "heic"]
 
         let alert = NSAlert()
@@ -333,6 +333,7 @@ final class AppCoordinator {
             }
             recalculateBatchRenamePlan()
             isPresentingBatchRename = true
+            showBatchRenamePanel()
             return
         }
 
@@ -376,6 +377,7 @@ final class AppCoordinator {
         }
         recalculateBatchRenamePlan()
         isPresentingBatchRename = true
+        showBatchRenamePanel()
     }
 
     func ensureExternalCommandMonitoring() async {
@@ -401,6 +403,7 @@ final class AppCoordinator {
         isApplyingBatchRename = false
         batchRenameContext = nil
         batchRenamePlan = nil
+        closeBatchRenamePanel()
         releaseActiveExternalSecurityScopes()
 
         if let queuedResolvedCommand = queuedExternalResolvedCommand {
@@ -881,6 +884,7 @@ final class AppCoordinator {
         sampleContext = resolvedContext
         recalculateBatchRenamePlan()
         isPresentingBatchRename = true
+        showBatchRenamePanel()
         Task {
             await refreshModel()
         }
@@ -890,6 +894,16 @@ final class AppCoordinator {
             detail: "Super RClick received \(resolvedContext.items.count) item(s) from \(resolvedContext.sourceApplicationBundleIdentifier ?? "Finder")."
         )
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    // MARK: - Batch Rename Panel Window Management
+
+    private func showBatchRenamePanel() {
+        BatchRenameWindowController.shared.show(coordinator: self)
+    }
+
+    private func closeBatchRenamePanel() {
+        BatchRenameWindowController.shared.close()
     }
 
     private func releaseActiveExternalSecurityScopes() {

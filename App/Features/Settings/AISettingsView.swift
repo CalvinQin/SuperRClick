@@ -15,15 +15,33 @@ public struct AISettingsView: View {
     }
     
     public var body: some View {
-        Form {
+        Group {
             Section {
                 Toggle(L("启用 AI 功能", "Enable AI Features"), isOn: $config.isEnabled)
+            } header: {
+                Text(L("AI 设置", "AI Settings"))
             }
             
             Section {
                 Picker(L("服务商", "Provider"), selection: $config.providerID) {
                     ForEach(LLMProviderPreset.all) { preset in
-                        Label(preset.name, systemImage: preset.iconName).tag(preset.id)
+                        HStack {
+                            if let domain = preset.logoDomain, let url = URL(string: "https://logo.clearbit.com/\(domain)?size=32") {
+                                AsyncImage(url: url) { phase in
+                                    if let image = phase.image {
+                                        image.resizable().aspectRatio(contentMode: .fit)
+                                    } else {
+                                        Image(systemName: preset.iconName)
+                                    }
+                                }
+                                .frame(width: 16, height: 16)
+                                .cornerRadius(4)
+                            } else {
+                                Image(systemName: preset.iconName)
+                            }
+                            Text(preset.name)
+                        }
+                        .tag(preset.id)
                     }
                 }
                 .onChange(of: config.providerID) { _, newValue in
@@ -126,7 +144,7 @@ public struct AISettingsView: View {
                     .foregroundColor(.secondary)
             }
         }
-        .formStyle(.grouped)
+
         .onAppear {
             loadAPIKey()
         }

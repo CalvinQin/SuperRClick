@@ -33,3 +33,4 @@ Pods/
 scripts/*.log
 temp_build/
 tmp/
+output/

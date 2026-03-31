@@ -1022,16 +1022,17 @@ final class AppCoordinator {
         await actionEngine.reloadDefinitions()
         allDefinitions = await actionEngine.allDefinitions() + NewFileCatalog.all
         
-        var combinedSections = await actionEngine.groupedAvailableActions(for: sampleContext).map { group in
-            let filteredActions = group.actions.filter { action in
-                !(sampleContext.isFinderDesktopSurface && action.id == BuiltInActionCatalog.batchRename.id)
+        // Group all definitions regardless of current context visibility so Action Library shows everything
+        let groupedDefinitions = Dictionary(grouping: allDefinitions, by: \.section)
+        
+        var combinedSections = groupedDefinitions.keys.sorted().map { section in
+            let actionsInSection = (groupedDefinitions[section] ?? []).sorted { lhs, rhs in
+                if lhs.sortOrder != rhs.sortOrder { return lhs.sortOrder < rhs.sortOrder }
+                return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
             }
-            return ActionSectionSnapshot(section: group.section, actions: filteredActions)
+            return ActionSectionSnapshot(section: section, actions: actionsInSection)
         }
         
-        // Add new file section manually since it's not in ActionEngine defaults
-        let newFileSnapshot = ActionSectionSnapshot(section: .newFile, actions: NewFileCatalog.all)
-        combinedSections.append(newFileSnapshot)
         combinedSections.sort { $0.section < $1.section }
         
         actionSections = combinedSections.filter { !$0.actions.isEmpty }

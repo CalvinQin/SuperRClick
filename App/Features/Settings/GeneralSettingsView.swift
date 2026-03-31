@@ -12,6 +12,11 @@ struct GeneralSettingsView: View {
         Form {
             aboutSection
             generalPreferencesSection
+            
+            AISettingsView(config: $coordinator.persistenceState.aiConfig) {
+                coordinator.saveAIConfig()
+            }
+            
             actionVisibilitySection
             dangerZone
         }

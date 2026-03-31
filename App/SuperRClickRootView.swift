@@ -9,7 +9,6 @@ enum SidebarSection: String, CaseIterable, Identifiable {
     case pinned
     case recent
     case tools
-    case aiSettings
     case workspaces
     case settings
 
@@ -21,7 +20,6 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .pinned: L("已固定", "Pinned")
         case .recent: L("最近使用", "Recent")
         case .tools: L("工具箱", "Toolbox")
-        case .aiSettings: L("AI 配置", "AI Settings")
         case .workspaces: L("工作空间", "Workspaces")
         case .settings: L("设置", "Settings")
         }
@@ -33,7 +31,6 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .pinned: "pin.fill"
         case .recent: "clock.arrow.circlepath"
         case .tools: "wrench.and.screwdriver.fill"
-        case .aiSettings: "sparkles"
         case .workspaces: "folder.fill"
         case .settings: "gearshape.fill"
         }
@@ -45,7 +42,6 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .pinned: .orange
         case .recent: .secondary
         case .tools: .purple
-        case .aiSettings: .purple
         case .workspaces: .teal
         case .settings: .secondary
         }
@@ -109,7 +105,6 @@ struct SuperRClickRootView: View {
 
             Section(L("工具", "Tools")) {
                 sidebarRow(.tools)
-                sidebarRow(.aiSettings)
             }
 
             Section(L("系统", "System")) {
@@ -194,10 +189,6 @@ struct SuperRClickRootView: View {
             RecentActivityView(coordinator: coordinator)
         case .tools:
             ToolsView(coordinator: coordinator)
-        case .aiSettings:
-            AISettingsView(config: $coordinator.persistenceState.aiConfig) {
-                coordinator.saveAIConfig()
-            }
         case .workspaces:
             WorkspaceSettingsView(coordinator: coordinator)
         case .settings:

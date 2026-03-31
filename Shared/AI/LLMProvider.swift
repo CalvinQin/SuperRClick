@@ -15,8 +15,9 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
     public let defaultModel: String
     public let models: [String]
     public let iconName: String
+    public let logoDomain: String?
     
-    public init(id: String, type: LLMProviderType, name: String, baseURL: String, defaultModel: String, models: [String], iconName: String) {
+    public init(id: String, type: LLMProviderType, name: String, baseURL: String, defaultModel: String, models: [String], iconName: String, logoDomain: String? = nil) {
         self.id = id
         self.type = type
         self.name = name
@@ -24,6 +25,7 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
         self.defaultModel = defaultModel
         self.models = models
         self.iconName = iconName
+        self.logoDomain = logoDomain
     }
     
     // MARK: - Provider Presets (verified against official docs 2026-03-31)
@@ -42,7 +44,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "deepseek-chat",
                 "deepseek-reasoner"
             ],
-            iconName: "brain.head.profile"
+            iconName: "brain.head.profile",
+            logoDomain: "deepseek.com"
         ),
         // ── OpenAI ───────────────────────────────────────────────
         // https://platform.openai.com/docs/models
@@ -60,7 +63,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "gpt-5.4-mini",
                 "gpt-5.4"
             ],
-            iconName: "sparkles"
+            iconName: "sparkles",
+            logoDomain: "openai.com"
         ),
         // ── Anthropic Claude ─────────────────────────────────────
         // https://docs.anthropic.com/en/docs/about-claude/models
@@ -76,7 +80,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "claude-sonnet-4-6-20260217",
                 "claude-opus-4-6-20260205"
             ],
-            iconName: "cpu"
+            iconName: "cpu",
+            logoDomain: "anthropic.com"
         ),
         // ── Google Gemini ────────────────────────────────────────
         // https://ai.google.dev/gemini-api/docs/models
@@ -93,7 +98,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "gemini-3-flash-preview",
                 "gemini-3.1-pro-preview"
             ],
-            iconName: "star.fill"
+            iconName: "star.fill",
+            logoDomain: "google.com"
         ),
         // ── 智谱 GLM ────────────────────────────────────────────
         // https://bigmodel.cn/dev/api/normal-model/glm-5
@@ -111,7 +117,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "glm-z1-air",
                 "glm-z1-airx"
             ],
-            iconName: "cube.transparent"
+            iconName: "cube.transparent",
+            logoDomain: "zhipuai.cn"
         ),
         // ── 通义千问 (Qwen) ──────────────────────────────────────
         // https://help.aliyun.com/zh/model-studio/getting-started/models
@@ -130,7 +137,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "qwen3.5-plus",
                 "qwen3.5-flash"
             ],
-            iconName: "cloud.fill"
+            iconName: "cloud.fill",
+            logoDomain: "aliyun.com"
         ),
         // ── Moonshot (Kimi) ──────────────────────────────────────
         // https://platform.moonshot.cn/docs/api/chat
@@ -145,7 +153,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "kimi-k2.5",
                 "kimi-k2"
             ],
-            iconName: "moon.stars.fill"
+            iconName: "moon.stars.fill",
+            logoDomain: "moonshot.cn"
         ),
         // ── Ollama (Local) ───────────────────────────────────────
         // https://ollama.com/library
@@ -163,7 +172,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
                 "glm-5",
                 "mistral"
             ],
-            iconName: "server.rack"
+            iconName: "server.rack",
+            logoDomain: "ollama.com"
         ),
         // ── Custom ───────────────────────────────────────────────
         LLMProviderPreset(
@@ -173,7 +183,8 @@ public struct LLMProviderPreset: Identifiable, Hashable, Sendable {
             baseURL: "https://api.example.com/v1",
             defaultModel: "",
             models: [],
-            iconName: "gearshape.2"
+            iconName: "gearshape.2",
+            logoDomain: "github.com"
         )
     ]
     

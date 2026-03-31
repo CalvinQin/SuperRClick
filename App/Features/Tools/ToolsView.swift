@@ -7,18 +7,20 @@ struct ToolsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text(L("工具箱", "Toolbox"))
-                    .font(.largeTitle.weight(.bold))
-                    .padding(.bottom, 4)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L("工具箱", "Toolbox"))
+                        .font(.largeTitle.weight(.bold))
 
-                Text(L("常用文件操作工具，也可通过 Finder 右键菜单使用。",
-                       "Frequently used file tools. Also available via Finder right-click menu."))
-                    .foregroundStyle(.secondary)
+                    Text(L("常用文件操作工具，也可通过 Finder 右键菜单使用。",
+                           "Frequently used file tools. Also available via Finder right-click menu."))
+                        .foregroundStyle(.secondary)
+                        .font(.callout)
+                }
 
                 LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 16),
-                    GridItem(.flexible(), spacing: 16)
-                ], spacing: 16) {
+                    GridItem(.flexible(), spacing: 14),
+                    GridItem(.flexible(), spacing: 14)
+                ], spacing: 14) {
                     ToolCard(
                         title: L("批量重命名", "Batch Rename"),
                         subtitle: L("支持前缀/后缀/替换三种模式，智能编号",
@@ -43,7 +45,7 @@ struct ToolsView: View {
                         title: L("压缩文件", "Compress"),
                         subtitle: L("将选中的文件和文件夹压缩为 ZIP 归档",
                                     "Archive selected files and folders into ZIP"),
-                        icon: "archivebox",
+                        icon: "archivebox.fill",
                         color: .orange
                     ) {
                         coordinator.runCompressFromToolbox()
@@ -53,25 +55,32 @@ struct ToolsView: View {
                         title: L("在终端打开", "Open in Terminal"),
                         subtitle: L("在当前目录打开终端窗口",
                                     "Open terminal in the current directory"),
-                        icon: "terminal",
+                        icon: "terminal.fill",
                         color: .green
                     ) {
                         coordinator.runOpenTerminalFromToolbox()
                     }
                 }
 
-                // Hint
                 HStack(spacing: 8) {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundStyle(.blue)
+                    Image(systemName: "lightbulb.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.callout)
                     Text(L("提示：在 Finder 中选中文件后右键，也可以直接使用这些工具。",
                            "Tip: You can also access these tools by right-clicking files in Finder."))
-                        .font(.callout)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.top, 8)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.yellow.opacity(0.06), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(Color.yellow.opacity(0.15), lineWidth: 0.5)
+                )
             }
-            .padding(32)
+            .padding(28)
+            .padding(.top, 8)
         }
     }
 }
@@ -92,39 +101,50 @@ private struct ToolCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Image(systemName: icon)
-                        .font(.title2)
+                        .font(.title3.weight(.medium))
                         .foregroundStyle(color)
                         .frame(width: 40, height: 40)
-                        .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+                        .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
                     Spacer()
-                    Image(systemName: "arrow.right.circle.fill")
-                        .font(.title3)
+                    Image(systemName: "arrow.right")
+                        .font(.caption.weight(.semibold))
                         .foregroundStyle(isHovered ? color : Color.gray.opacity(0.3))
+                        .padding(6)
+                        .background(isHovered ? color.opacity(0.08) : Color.clear, in: Circle())
                 }
 
-                Text(title)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
 
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
+                    Text(subtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(Color(nsColor: .controlBackgroundColor))
-                    .shadow(color: .black.opacity(isHovered ? 0.1 : 0.04), radius: isHovered ? 8 : 4, y: 2)
+                    .shadow(
+                        color: isHovered ? color.opacity(0.1) : .black.opacity(0.03),
+                        radius: isHovered ? 10 : 4,
+                        y: isHovered ? 4 : 2
+                    )
             }
             .overlay {
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(isHovered ? color.opacity(0.4) : Color.clear, lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(
+                        isHovered ? color.opacity(0.3) : Color(nsColor: .separatorColor).opacity(0.25),
+                        lineWidth: isHovered ? 1.2 : 0.5
+                    )
             }
             .scaleEffect(isHovered ? 1.02 : 1.0)
-            .animation(.easeInOut(duration: 0.15), value: isHovered)
+            .animation(.easeOut(duration: 0.15), value: isHovered)
         }
         .buttonStyle(.plain)
         .onHover { hovering in

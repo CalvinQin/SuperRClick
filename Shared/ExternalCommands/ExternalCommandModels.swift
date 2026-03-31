@@ -2,6 +2,7 @@ import Foundation
 
 public enum ExternalCommandKind: String, Codable, Hashable, Sendable {
     case presentBatchRename
+    case runAction
 }
 
 public struct ExternalCommandItem: Codable, Hashable, Sendable {

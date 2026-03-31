@@ -88,6 +88,44 @@ public struct ExternalCommandCenter: Sendable {
         return request
     }
 
+    public func storeRunActionRequest(
+        actionID: String,
+        for context: ActionContext,
+        fileManager: FileManager = .default
+    ) throws -> ExternalCommandRequest {
+        guard context.kind == .finderSelection || context.kind == .mixedSelection || context.kind == .custom else {
+            throw ExternalCommandError.unsupportedContext(context.kind)
+        }
+
+        let items = try context.items.map { item in
+            do {
+                return ExternalCommandItem(
+                    bookmarkData: try bookmarkEncoder(item.url),
+                    displayName: item.displayName,
+                    isDirectory: item.isDirectory,
+                    filePath: item.url.path
+                )
+            } catch {
+                throw ExternalCommandError.bookmarkEncodingFailed(item.url, error)
+            }
+        }
+
+        var metadata = context.metadata
+        metadata["target.action.id"] = actionID
+
+        let request = ExternalCommandRequest(
+            kind: .runAction,
+            sourceApplicationBundleIdentifier: context.sourceApplicationBundleIdentifier,
+            workspaceIdentifier: context.workspaceIdentifier,
+            metadata: metadata,
+            items: items
+        )
+
+        let data = try JSONEncoder().encode(request)
+        try data.write(to: storageFileURL(fileManager: fileManager), options: .atomic)
+        return request
+    }
+
     public func loadPendingRequest(fileManager: FileManager = .default) throws -> ExternalCommandRequest? {
         let fileURL = try storageFileURL(fileManager: fileManager)
         guard fileManager.fileExists(atPath: fileURL.path) else {
@@ -118,7 +156,7 @@ public struct ExternalCommandCenter: Sendable {
         try fileManager.removeItem(at: fileURL)
     }
 
-    public func resolveBatchRenameRequest(_ request: ExternalCommandRequest) throws -> ResolvedExternalCommand {
+    public func resolveRequest(_ request: ExternalCommandRequest) throws -> ResolvedExternalCommand {
         var validItems: [ActionItem] = []
         var scopedURLs: [URL] = []
 
@@ -141,7 +179,7 @@ public struct ExternalCommandCenter: Sendable {
             if let filePath = item.filePath {
                 let url = URL(fileURLWithPath: filePath)
                 if FileManager.default.fileExists(atPath: filePath) {
-                    NSLog("[SuperRClick] resolveBatchRenameRequest: bookmark failed for %@, using filePath fallback", filePath)
+                    NSLog("[SuperRClick] resolveRequest: bookmark failed for %@, using filePath fallback", filePath)
                     validItems.append(ActionItem(
                         url: url.standardizedFileURL,
                         displayName: item.displayName ?? url.lastPathComponent,
@@ -152,7 +190,7 @@ public struct ExternalCommandCenter: Sendable {
                 }
             }
 
-            NSLog("[SuperRClick] resolveBatchRenameRequest: could not resolve item %@", item.displayName ?? "unknown")
+            NSLog("[SuperRClick] resolveRequest: could not resolve item %@", item.displayName ?? "unknown")
         }
 
         guard !validItems.isEmpty else {

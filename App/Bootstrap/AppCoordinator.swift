@@ -72,6 +72,7 @@ final class AppCoordinator {
     @ObservationIgnored private let appGroupContainer: AppGroupContainer
     @ObservationIgnored private let externalCommandCenter: Shared.ExternalCommandCenter
     @ObservationIgnored private let platformExecutor: PlatformActionExecutor
+    @ObservationIgnored private let aiExecutor: AIActionExecutor
     @ObservationIgnored private var externalCommandObserver: NSObjectProtocol?
     @ObservationIgnored private var activeExternalSecurityScopedURLs: [URL] = []
     @ObservationIgnored private var handledExternalRequestIDs: Set<UUID> = []
@@ -109,12 +110,14 @@ final class AppCoordinator {
     init(
         actionEngine: ActionEngine = ActionEngine(),
         appGroupContainer: AppGroupContainer = AppGroupContainer(groupIdentifier: Constants.appGroupID),
-        platformExecutor: PlatformActionExecutor = PlatformActionExecutor()
+        platformExecutor: PlatformActionExecutor = PlatformActionExecutor(),
+        aiExecutor: AIActionExecutor = AIActionExecutor()
     ) {
         self.actionEngine = actionEngine
         self.appGroupContainer = appGroupContainer
         self.externalCommandCenter = appGroupContainer.makeExternalCommandCenter()
         self.platformExecutor = platformExecutor
+        self.aiExecutor = aiExecutor
         self.sampleContext = AppCoordinator.makeDefaultContext()
 
         Task {
@@ -256,10 +259,32 @@ final class AppCoordinator {
         }
 
         Task {
-            let result = await actionEngine.execute(actionID: action.id, context: sampleContext)
-            await persistInvocation(for: action, result: result, context: sampleContext)
-            await refreshModel()
-            statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+            if AIActionCatalog.all.contains(where: { $0.id == action.id }) {
+                let localCount = sampleContext.items.count
+                let localSnapshot = sampleContext.snapshot
+                let localConfig = persistenceState.aiConfig
+                
+                executeWithProgress(title: action.title, totalItems: localCount) { [self] onProgress in
+                    let reporter = AIProgressWrapper(callback: onProgress, totalItems: localCount)
+                    do {
+                        try await self.aiExecutor.execute(actionID: action.id, context: localSnapshot, aiConfig: localConfig, progressReporter: reporter)
+                        return .completed(message: L("AI 操作成功", "AI operation succeeded"))
+                    } catch {
+                        return .failed(reason: error.localizedDescription, recoverable: true)
+                    }
+                } completion: { [self] result in
+                    Task {
+                        await persistInvocation(for: action, result: result, context: sampleContext)
+                        await refreshModel()
+                        statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+                    }
+                }
+            } else {
+                let result = await actionEngine.execute(actionID: action.id, context: sampleContext)
+                await persistInvocation(for: action, result: result, context: sampleContext)
+                await refreshModel()
+                statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+            }
         }
     }
 
@@ -735,9 +760,18 @@ final class AppCoordinator {
 
             NSLog("[SuperRClick] consumePendingExternalCommands: found request id=%@ kind=%@ items=%d", request.id.uuidString, request.kind.rawValue, request.items.count)
 
-            let resolvedCommand = try externalCommandCenter.resolveBatchRenameRequest(request)
+            let resolvedCommand = try externalCommandCenter.resolveRequest(request)
             NSLog("[SuperRClick] consumePendingExternalCommands: resolved command, context items=%d", resolvedCommand.context.items.count)
-            handleExternalBatchRenameRequest(resolvedCommand)
+            
+            if request.kind == .presentBatchRename {
+                handleExternalBatchRenameRequest(resolvedCommand)
+            } else if request.kind == .runAction, let actionIDRaw = request.metadata["target.action.id"] {
+                let actionID = ActionID(rawValue: actionIDRaw)
+                if let action = BuiltInActionCatalog.definition(for: actionID) ?? AIActionCatalog.all.first(where: { $0.id == actionID }) {
+                    self.sampleContext = resolvedCommand.context
+                    self.run(action)
+                }
+            }
         } catch {
             let errorMsg = error.localizedDescription
             NSLog("[SuperRClick] consumePendingExternalCommands: ERROR — %@", errorMsg)
@@ -1049,6 +1083,10 @@ final class AppCoordinator {
                 detail: error.localizedDescription
             )
         }
+    }
+    
+    func saveAIConfig() {
+        persistState()
     }
 
     private func defaultPinnedActions() -> [PinnedAction] {
@@ -1529,5 +1567,14 @@ final class AppCoordinator {
                 detail: L("缺少动作实现：\(actionID.rawValue)", "Missing action implementation for \(actionID.rawValue).")
             )
         }
+    }
+}
+
+struct AIProgressWrapper: ProgressReporting {
+    let callback: ProgressCallback?
+    let totalItems: Int
+
+    func updateProgress(fractionCompleted: Double, message: String?) {
+        callback?(Int(fractionCompleted * Double(totalItems)), totalItems, message ?? "")
     }
 }

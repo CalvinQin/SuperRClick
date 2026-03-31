@@ -35,8 +35,14 @@ public final class SuperRClickFinderMenuComposer {
                 .map { $0.toActionDefinition() }
             
             allDefinitions.append(contentsOf: customDefinitions)
+            
+            if !state.aiConfig.isEnabled {
+                allDefinitions.removeAll { def in
+                    def.section == .ai && def.id != AIActionCatalog.ocrExtract && def.id != AIActionCatalog.removeBackground
+                }
+            }
         } catch {
-            NSLog("[SuperRClick] Failed to load custom actions: \(error)")
+            NSLog("[SuperRClick] Failed to load custom actions or AI config: \(error)")
         }
 
         let availableDefinitions = allDefinitions.filter { definition in
@@ -49,10 +55,7 @@ public final class SuperRClickFinderMenuComposer {
         for (index, section) in orderedSections.enumerated() {
             let definitions = (groupedDefinitions[section] ?? []).sorted(by: definitionSort)
             
-            let newFileDefs = definitions.filter { $0.id.rawValue.hasPrefix("new-") }
-            let normalDefs = definitions.filter { !$0.id.rawValue.hasPrefix("new-") }
-            
-            if !newFileDefs.isEmpty {
+            if section == .newFile {
                 let newFileSubMenu = NSMenu(title: SharedLocale.isChinese ? "新建" : "New")
                 let newFileItem = NSMenuItem(
                     title: SharedLocale.isChinese ? "新建文件" : "New File",
@@ -63,10 +66,22 @@ public final class SuperRClickFinderMenuComposer {
                 newFileItem.submenu = newFileSubMenu
                 menu.addItem(newFileItem)
                 
-                append(definitions: newFileDefs, to: newFileSubMenu, target: target)
+                append(definitions: definitions, to: newFileSubMenu, target: target)
+            } else if section == .ai {
+                let aiSubMenu = NSMenu(title: "AI")
+                let aiItem = NSMenuItem(
+                    title: SharedLocale.isChinese ? "🤖 AI 工具" : "🤖 AI Actions",
+                    action: nil,
+                    keyEquivalent: ""
+                )
+                aiItem.image = coloredMenuImage(symbolName: "sparkles", color: .systemPurple)
+                aiItem.submenu = aiSubMenu
+                menu.addItem(aiItem)
+                
+                append(definitions: definitions, to: aiSubMenu, target: target)
+            } else {
+                append(definitions: definitions, to: menu, target: target)
             }
-
-            append(definitions: normalDefs, to: menu, target: target)
         }
     }
 
@@ -189,6 +204,8 @@ public final class SuperRClickFinderMenuComposer {
             return SharedLocale.isChinese ? "新建" : "New"
         case .text:
             return SharedLocale.isChinese ? "文本" : "Text"
+        case .ai:
+            return SharedLocale.isChinese ? "AI 工具" : "AI Actions"
         case .automation:
             return SharedLocale.isChinese ? "自动化" : "Automation"
         case .system:
@@ -251,6 +268,8 @@ public final class SuperRClickFinderMenuComposer {
             }
         case .newFile:
             return .systemGreen
+        case .ai:
+            return .systemPurple
         case .text:
             return .systemIndigo
         case .automation:

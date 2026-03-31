@@ -109,6 +109,7 @@ public struct PersistenceState: Codable, Hashable, Sendable {
     public var monitoredFolders: [MonitoredFolder]
     public var actionHistory: [ActionInvocationRecord]
     public var customActions: [CustomAction]
+    public var aiConfig: AIConfig
 
     public init(
         pinnedActions: [PinnedAction] = [],
@@ -116,7 +117,8 @@ public struct PersistenceState: Codable, Hashable, Sendable {
         workspaceProfiles: [WorkspaceProfile] = [],
         monitoredFolders: [MonitoredFolder] = [],
         actionHistory: [ActionInvocationRecord] = [],
-        customActions: [CustomAction] = []
+        customActions: [CustomAction] = [],
+        aiConfig: AIConfig = AIConfig()
     ) {
         self.pinnedActions = pinnedActions
         self.visibilityRules = visibilityRules
@@ -124,6 +126,7 @@ public struct PersistenceState: Codable, Hashable, Sendable {
         self.monitoredFolders = monitoredFolders
         self.actionHistory = actionHistory
         self.customActions = customActions
+        self.aiConfig = aiConfig
     }
 
     enum CodingKeys: String, CodingKey {
@@ -133,6 +136,7 @@ public struct PersistenceState: Codable, Hashable, Sendable {
         case monitoredFolders
         case actionHistory
         case customActions
+        case aiConfig
     }
 
     public init(from decoder: Decoder) throws {
@@ -143,6 +147,7 @@ public struct PersistenceState: Codable, Hashable, Sendable {
         monitoredFolders = try container.decodeIfPresent([MonitoredFolder].self, forKey: .monitoredFolders) ?? []
         actionHistory = try container.decodeIfPresent([ActionInvocationRecord].self, forKey: .actionHistory) ?? []
         customActions = try container.decodeIfPresent([CustomAction].self, forKey: .customActions) ?? []
+        aiConfig = try container.decodeIfPresent(AIConfig.self, forKey: .aiConfig) ?? AIConfig()
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -153,5 +158,31 @@ public struct PersistenceState: Codable, Hashable, Sendable {
         try container.encode(monitoredFolders, forKey: .monitoredFolders)
         try container.encode(actionHistory, forKey: .actionHistory)
         try container.encode(customActions, forKey: .customActions)
+        try container.encode(aiConfig, forKey: .aiConfig)
+    }
+}
+
+public struct AIConfig: Codable, Hashable, Sendable {
+    public var providerID: String
+    public var providerType: LLMProviderType
+    public var providerName: String
+    public var baseURL: String
+    public var model: String
+    public var isEnabled: Bool
+    
+    public init(
+        providerID: String = "deepseek",
+        providerType: LLMProviderType = .openaiCompatible,
+        providerName: String = "DeepSeek",
+        baseURL: String = "https://api.deepseek.com/v1",
+        model: String = "deepseek-chat",
+        isEnabled: Bool = true
+    ) {
+        self.providerID = providerID
+        self.providerType = providerType
+        self.providerName = providerName
+        self.baseURL = baseURL
+        self.model = model
+        self.isEnabled = isEnabled
     }
 }

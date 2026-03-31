@@ -31,7 +31,11 @@ final class LanguageManager {
     var currentLanguage: AppLanguage {
         didSet {
             UserDefaults.standard.set(currentLanguage.rawValue, forKey: languageKey)
-            UserDefaults.standard.set([currentLanguage.rawValue], forKey: "AppleLanguages")
+            if currentLanguage == .system {
+                UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+            } else {
+                UserDefaults.standard.set([currentLanguage.rawValue], forKey: "AppleLanguages")
+            }
             // Sync to App Group so Finder extension can read it
             UserDefaults(suiteName: "group.com.haoqiqin.superrclick")?
                 .set(currentLanguage.rawValue, forKey: languageKey)

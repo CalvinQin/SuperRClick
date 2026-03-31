@@ -25,6 +25,7 @@ public func L(_ zh: String, _ en: String) -> String {
 
 public enum ActionSection: String, Codable, Hashable, Sendable, Comparable {
     case file
+    case ai
     case newFile
     case text
     case automation
@@ -37,10 +38,11 @@ public enum ActionSection: String, Codable, Hashable, Sendable, Comparable {
     private static func order(for section: ActionSection) -> Int {
         switch section {
         case .file: return 0
-        case .newFile: return 1
-        case .text: return 2
-        case .automation: return 3
-        case .system: return 4
+        case .ai: return 1
+        case .newFile: return 2
+        case .text: return 3
+        case .automation: return 4
+        case .system: return 5
         }
     }
 }

@@ -9,6 +9,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
     case pinned
     case recent
     case tools
+    case aiSettings
     case workspaces
     case settings
 
@@ -20,6 +21,7 @@ enum SidebarSection: String, CaseIterable, Identifiable {
         case .pinned: L("已固定", "Pinned")
         case .recent: L("最近使用", "Recent")
         case .tools: L("工具箱", "Toolbox")
+        case .aiSettings: L("AI 配置", "AI Settings")
         case .workspaces: L("工作空间", "Workspaces")
         case .settings: L("设置", "Settings")
         }
@@ -27,22 +29,24 @@ enum SidebarSection: String, CaseIterable, Identifiable {
 
     var systemImage: String {
         switch self {
-        case .actionLibrary: "square.grid.2x2"
-        case .pinned: "pin"
+        case .actionLibrary: "square.grid.2x2.fill"
+        case .pinned: "pin.fill"
         case .recent: "clock.arrow.circlepath"
-        case .tools: "wrench.and.screwdriver"
-        case .workspaces: "folder"
-        case .settings: "gearshape"
+        case .tools: "wrench.and.screwdriver.fill"
+        case .aiSettings: "sparkles"
+        case .workspaces: "folder.fill"
+        case .settings: "gearshape.fill"
         }
     }
     
     var iconColor: Color {
         switch self {
         case .actionLibrary: .blue
-        case .pinned: .blue
-        case .recent: .blue
-        case .tools: .orange
-        case .workspaces: .blue
+        case .pinned: .orange
+        case .recent: .secondary
+        case .tools: .purple
+        case .aiSettings: .purple
+        case .workspaces: .teal
         case .settings: .secondary
         }
     }
@@ -59,14 +63,12 @@ struct SuperRClickRootView: View {
     var body: some View {
         NavigationSplitView {
             sidebar
-                // Shift down to avoid traffic lights since titlebar is hidden
                 .toolbar {
                     ToolbarItem(placement: .navigation) {
-                        Spacer() // Preserves space for window controls
+                        Spacer()
                     }
                 }
         } detail: {
-            // Apply subtle background effect to the detail side
             detailView
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(nsColor: .windowBackgroundColor))
@@ -107,6 +109,7 @@ struct SuperRClickRootView: View {
 
             Section(L("工具", "Tools")) {
                 sidebarRow(.tools)
+                sidebarRow(.aiSettings)
             }
 
             Section(L("系统", "System")) {
@@ -127,26 +130,21 @@ struct SuperRClickRootView: View {
             HStack {
                 Text(section.title)
                 Spacer()
-                if section == .pinned {
+                // Only show badge for pinned when count > 0
+                if section == .pinned, coordinator.pinnedActions.count > 0 {
                     Text("\(coordinator.pinnedActions.count)")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(.white)
+                        .font(.caption2.weight(.semibold))
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(section.iconColor, in: Capsule())
-                }
-                if section == .recent {
-                    Text("\(coordinator.recentHistory.count)")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(section.iconColor, in: Capsule())
+                        .background(Color.secondary.opacity(0.12), in: Capsule())
                 }
             }
         } icon: {
             Image(systemName: section.systemImage)
                 .foregroundStyle(section.iconColor)
+                .symbolRenderingMode(.hierarchical)
         }
         .tag(section)
     }
@@ -154,28 +152,28 @@ struct SuperRClickRootView: View {
     private var sidebarFooter: some View {
         VStack(spacing: 8) {
             Divider()
+                .padding(.horizontal, 12)
+            
             Button {
                 isPresentingCreateAction = true
             } label: {
-                Label(L("新建动作", "New Action"), systemImage: "plus")
+                Label(L("新建动作", "New Action"), systemImage: "plus.circle.fill")
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.callout.weight(.medium))
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
-            .padding(.bottom, 10)
-            
-            // Hover effect on new action button could be implemented with custom ButtonStyle,
-            // but for native mac feel, plain + hover state or just simple text label is enough.
+            .padding(.bottom, 6)
 
-            // 状态指示
             if coordinator.isReady {
                 HStack(spacing: 6) {
                     Circle()
                         .fill(Color.green)
-                        .frame(width: 8, height: 8)
+                        .frame(width: 7, height: 7)
+                        .shadow(color: .green.opacity(0.5), radius: 3)
                     Text(L("就绪", "Ready"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
                 }
                 .padding(.bottom, 10)
             }
@@ -196,6 +194,10 @@ struct SuperRClickRootView: View {
             RecentActivityView(coordinator: coordinator)
         case .tools:
             ToolsView(coordinator: coordinator)
+        case .aiSettings:
+            AISettingsView(config: $coordinator.persistenceState.aiConfig) {
+                coordinator.saveAIConfig()
+            }
         case .workspaces:
             WorkspaceSettingsView(coordinator: coordinator)
         case .settings:

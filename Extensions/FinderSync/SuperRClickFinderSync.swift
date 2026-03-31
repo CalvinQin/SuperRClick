@@ -186,6 +186,11 @@ public final class SuperRClickFinderSync: FIFinderSync {
             }
         case BuiltInActionCatalog.batchRename.id.rawValue:
             triggerBatchRename(from: context)
+        case AIActionCatalog.smartRename.rawValue,
+             AIActionCatalog.autoTag.rawValue,
+             AIActionCatalog.ocrExtract.rawValue,
+             AIActionCatalog.removeBackground.rawValue:
+            triggerAIAction(actionID: actionRawValue, context: context)
         case BuiltInActionCatalog.compressItems.id.rawValue:
             withSecurityScopedAccess(to: context.effectiveSelectionURLs) {
                 compressItems(context.effectiveSelectionURLs)
@@ -565,6 +570,26 @@ public final class SuperRClickFinderSync: FIFinderSync {
             NSLog("%@", msg)
         } catch {
             let err = "Super RClick failed to queue batch rename: \(error.localizedDescription)"
+            NSLog("%@", err)
+        }
+    }
+
+    private func triggerAIAction(actionID: String, context: SuperRClickFinderContext) {
+        let actionContext = context.actionContext
+        guard !actionContext.items.isEmpty else {
+            NSLog("Super RClick AI action skipped because no actionable Finder items were available.")
+            return
+        }
+
+        do {
+            let commandCenter = AppGroupContainer(groupIdentifier: Constants.appGroupID).makeExternalCommandCenter()
+            _ = try commandCenter.storeRunActionRequest(actionID: actionID, for: actionContext)
+            DistributedNotificationCenter.default().post(name: Shared.ExternalCommandCenter.notificationName, object: nil)
+            activateMainApp()
+            let msg = "Super RClick queued AI action \(actionID) for \(actionContext.items.count) item(s) and activated the main app."
+            NSLog("%@", msg)
+        } catch {
+            let err = "Super RClick failed to queue AI action: \(error.localizedDescription)"
             NSLog("%@", err)
         }
     }

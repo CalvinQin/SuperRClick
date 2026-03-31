@@ -7,15 +7,15 @@ struct PinnedActionsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 20) {
                 if coordinator.pinnedActions.isEmpty {
                     emptyState
                 } else {
                     pinnedList
                 }
             }
-            .padding(24)
-            .padding(.top, 10)
+            .padding(28)
+            .padding(.top, 8)
         }
         .navigationTitle(L("已固定", "Pinned"))
         .toolbar {
@@ -30,10 +30,18 @@ struct PinnedActionsView: View {
     }
 
     private var pinnedList: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(L("快速执行你收藏的动作", "Quickly run your favorite actions"))
-                .font(.title3.weight(.bold))
-                .foregroundStyle(.primary)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 8) {
+                Text(L("快速执行你收藏的动作", "Quickly run your favorite actions"))
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(.primary)
+                
+                Spacer()
+                
+                Text(L("\(coordinator.pinnedActions.count) 个动作", "\(coordinator.pinnedActions.count) actions"))
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+            }
 
             ForEach(coordinator.pinnedActions) { action in
                 pinnedRow(action)
@@ -42,19 +50,78 @@ struct PinnedActionsView: View {
     }
 
     private func pinnedRow(_ action: ActionDefinition) -> some View {
-        HStack(spacing: 16) {
-            Image(systemName: action.systemImageName ?? "bolt.fill")
-                .font(.title)
-                .foregroundStyle(.primary)
-                .frame(width: 40, height: 40)
-                .background(Color.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        PinnedRowView(
+            title: action.title,
+            subtitle: action.subtitle,
+            systemImage: action.systemImageName ?? "bolt.fill",
+            onRun: { coordinator.run(action) },
+            onUnpin: { coordinator.togglePinned(action) }
+        )
+    }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(action.title)
-                    .font(.headline)
-                if let subtitle = action.subtitle {
+    private var emptyState: some View {
+        VStack(spacing: 20) {
+            ZStack {
+                Circle()
+                    .fill(Color.orange.opacity(0.08))
+                    .frame(width: 88, height: 88)
+                Image(systemName: "pin.fill")
+                    .font(.system(size: 36))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.orange)
+                    .rotationEffect(.degrees(-15))
+            }
+            
+            VStack(spacing: 6) {
+                Text(L("还没有固定的动作", "No pinned actions"))
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(.primary)
+                Text(L("在动作库中右键点击任意动作，选择「固定到面板」即可添加。", "Right-click any action in the library and choose \"Pin to Panel\" to add it here."))
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 360)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(60)
+        .background {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
+                .shadow(color: .black.opacity(0.03), radius: 4, y: 2)
+        }
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(Color(nsColor: .separatorColor).opacity(0.3), lineWidth: 0.5)
+        )
+    }
+}
+
+// MARK: - Pinned Row Component
+
+private struct PinnedRowView: View {
+    let title: String
+    let subtitle: String?
+    let systemImage: String
+    let onRun: () -> Void
+    let onUnpin: () -> Void
+
+    @State private var isHovered = false
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: systemImage)
+                .font(.title3.weight(.medium))
+                .foregroundStyle(.blue)
+                .frame(width: 38, height: 38)
+                .background(.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                if let subtitle {
                     Text(subtitle)
-                        .font(.caption)
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
@@ -62,52 +129,41 @@ struct PinnedActionsView: View {
 
             Spacer()
 
-            Button(L("执行", "Run")) {
-                coordinator.run(action)
+            Button(action: onRun) {
+                Label(L("执行", "Run"), systemImage: "play.fill")
+                    .font(.caption.weight(.medium))
             }
             .buttonStyle(.bordered)
-            .controlSize(.regular)
+            .controlSize(.small)
+            .tint(.blue)
 
-            Button {
-                coordinator.togglePinned(action)
-            } label: {
-                Image(systemName: "pin.slash")
-                    .font(.body)
+            Button(action: onUnpin) {
+                Image(systemName: "pin.slash.fill")
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-            .padding(6)
-            .background(Color.secondary.opacity(0.1), in: Circle())
+            .padding(7)
+            .background(Color.secondary.opacity(isHovered ? 0.15 : 0.06), in: Circle())
             .help(L("取消固定", "Unpin"))
         }
-        .padding(16)
-        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.quaternary, lineWidth: 1)
-        )
-    }
-
-    private var emptyState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "pin.fill")
-                .font(.system(size: 48))
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(.secondary)
-            Text(L("还没有固定的动作", "No pinned actions"))
-                .font(.title2.weight(.bold))
-                .foregroundStyle(.primary)
-            Text(L("在动作库中右键点击任意动作，选择「固定到面板」即可添加。", "Right-click any action in the library and choose \"Pin to Panel\" to add it here."))
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+        .padding(14)
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
+                .shadow(color: .black.opacity(isHovered ? 0.06 : 0.025), radius: isHovered ? 6 : 3, y: 1.5)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(60)
-        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .strokeBorder(.quaternary, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(
+                    isHovered ? Color.blue.opacity(0.2) : Color(nsColor: .separatorColor).opacity(0.3),
+                    lineWidth: 0.5
+                )
         )
+        .scaleEffect(isHovered ? 1.008 : 1.0)
+        .animation(.easeOut(duration: 0.12), value: isHovered)
+        .onHover { hovering in
+            isHovered = hovering
+        }
     }
 }

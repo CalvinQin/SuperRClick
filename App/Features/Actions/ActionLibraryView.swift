@@ -8,12 +8,12 @@ struct ActionLibraryView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 28) {
                 headerSection
                 actionSections
             }
-            .padding(24)
-            .padding(.top, 10)
+            .padding(28)
+            .padding(.top, 8)
         }
         .searchable(text: $searchText, prompt: L("查找动作...", "Search actions..."))
         .navigationTitle(L("动作库", "Actions"))
@@ -31,7 +31,7 @@ struct ActionLibraryView: View {
     // MARK: - Header
 
     private var headerSection: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 14) {
             statChip(
                 title: L("内置", "Built-in"),
                 value: "\(coordinator.allDefinitions.count)",
@@ -42,13 +42,13 @@ struct ActionLibraryView: View {
                 title: L("自定义", "Custom"),
                 value: "\(coordinator.persistenceState.customActions.count)",
                 icon: "hammer.fill",
-                tint: .secondary
+                tint: .orange
             )
             statChip(
                 title: L("已固定", "Pinned"),
                 value: "\(coordinator.pinnedActions.count)",
                 icon: "pin.fill",
-                tint: .secondary
+                tint: .purple
             )
         }
     }
@@ -56,15 +56,24 @@ struct ActionLibraryView: View {
     // MARK: - Action Sections
 
     private var actionSections: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // 内置动作 - 按 Section 分组
+        VStack(alignment: .leading, spacing: 24) {
             ForEach(filteredBuiltInSections) { section in
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(sectionDisplayName(section.section))
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack(spacing: 8) {
+                        Text(sectionDisplayName(section.section))
+                            .font(.title3.weight(.bold))
+                            .foregroundStyle(.primary)
+                        
+                        Text("\(section.actions.count)")
+                            .font(.caption2.weight(.semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Color.secondary.opacity(0.1), in: Capsule())
+                    }
 
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 14)], spacing: 14) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 12)], spacing: 12) {
                         ForEach(section.actions) { action in
                             actionCard(action)
                         }
@@ -72,14 +81,23 @@ struct ActionLibraryView: View {
                 }
             }
 
-            // 自定义动作
             if !filteredCustomActions.isEmpty {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(L("自定义动作", "Custom Actions"))
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack(spacing: 8) {
+                        Text(L("自定义动作", "Custom Actions"))
+                            .font(.title3.weight(.bold))
+                            .foregroundStyle(.primary)
+                        
+                        Text("\(filteredCustomActions.count)")
+                            .font(.caption2.weight(.semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Color.secondary.opacity(0.1), in: Capsule())
+                    }
 
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 14)], spacing: 14) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 12)], spacing: 12) {
                         ForEach(filteredCustomActions) { custom in
                             customActionCard(custom)
                         }
@@ -93,42 +111,14 @@ struct ActionLibraryView: View {
 
     private func actionCard(_ action: ActionDefinition) -> some View {
         let isPinned = coordinator.isPinned(action)
+        let tint = sectionTint(action.section)
 
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: action.systemImageName ?? "bolt.fill")
-                    .font(.title2)
-                    .foregroundStyle(.primary)
-                    .frame(width: 30, height: 30)
-                Spacer()
-                if isPinned {
-                    Image(systemName: "pin.fill")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .padding(6)
-                        .background(Color.secondary.opacity(0.1), in: Circle())
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(action.title)
-                    .font(.headline)
-                    .lineLimit(1)
-
-                if let subtitle = action.subtitle {
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.quaternary, lineWidth: 1)
+        return ActionCardView(
+            title: action.title,
+            subtitle: action.subtitle,
+            systemImage: action.systemImageName ?? "bolt.fill",
+            tint: tint,
+            isPinned: isPinned
         )
         .contextMenu {
             Button(isPinned ? L("取消固定", "Unpin") : L("固定到面板", "Pin to Panel")) {
@@ -141,40 +131,13 @@ struct ActionLibraryView: View {
     }
 
     private func customActionCard(_ custom: CustomAction) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: custom.systemImageName)
-                    .font(.title2)
-                    .foregroundStyle(.primary)
-                    .frame(width: 30, height: 30)
-                Spacer()
-                Text(custom.actionType.displayName)
-                    .font(.caption2.weight(.bold))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.secondary.opacity(0.1), in: Capsule())
-                    .foregroundStyle(.secondary)
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(custom.name)
-                    .font(.headline)
-                    .lineLimit(1)
-
-                if !custom.subtitle.isEmpty {
-                    Text(custom.subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.orange.opacity(0.3), lineWidth: 1)
+        ActionCardView(
+            title: custom.name,
+            subtitle: custom.subtitle.isEmpty ? nil : custom.subtitle,
+            systemImage: custom.systemImageName,
+            tint: .orange,
+            isPinned: false,
+            badge: custom.actionType.displayName
         )
         .contextMenu {
             Button(L("删除动作", "Delete Action"), role: .destructive) {
@@ -188,21 +151,32 @@ struct ActionLibraryView: View {
     private func statChip(title: String, value: String, icon: String, tint: Color) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.title)
-                .foregroundStyle(.primary)
+                .font(.title2)
+                .foregroundStyle(tint)
+                .frame(width: 36, height: 36)
+                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 1) {
                 Text(value)
                     .font(.title2.weight(.heavy))
+                    .monospacedDigit()
                 Text(title)
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
+                .shadow(color: .black.opacity(0.04), radius: 3, y: 1.5)
+        }
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(.quaternary, lineWidth: 0.5)
+        )
     }
 
     private func sectionDisplayName(_ section: ActionSection) -> String {
@@ -212,6 +186,18 @@ struct ActionLibraryView: View {
         case .text: L("文本处理", "Text Processing")
         case .automation: L("自动化与工作流", "Automation & Workflows")
         case .system: L("系统控制", "System")
+        case .ai: L("AI 智能辅助", "AI Actions")
+        }
+    }
+
+    private func sectionTint(_ section: ActionSection) -> Color {
+        switch section {
+        case .file: .blue
+        case .newFile: .teal
+        case .text: .indigo
+        case .automation: .green
+        case .system: .secondary
+        case .ai: .purple
         }
     }
 
@@ -234,6 +220,85 @@ struct ActionLibraryView: View {
         return customs.filter {
             $0.name.localizedCaseInsensitiveContains(searchText) ||
             $0.subtitle.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+}
+
+// MARK: - Extracted Action Card Component
+
+private struct ActionCardView: View {
+    let title: String
+    let subtitle: String?
+    let systemImage: String
+    let tint: Color
+    let isPinned: Bool
+    var badge: String? = nil
+
+    @State private var isHovered = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: systemImage)
+                    .font(.title3.weight(.medium))
+                    .foregroundStyle(tint)
+                    .frame(width: 34, height: 34)
+                    .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                
+                Spacer()
+                
+                if isPinned {
+                    Image(systemName: "pin.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.orange)
+                        .rotationEffect(.degrees(-15))
+                }
+                
+                if let badge {
+                    Text(badge)
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(.orange)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 3)
+                        .background(.orange.opacity(0.1), in: Capsule())
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .lineLimit(1)
+
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
+                .shadow(
+                    color: isHovered ? tint.opacity(0.08) : .black.opacity(0.03),
+                    radius: isHovered ? 8 : 3,
+                    y: isHovered ? 3 : 1.5
+                )
+        }
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(
+                    isHovered ? tint.opacity(0.25) : Color(nsColor: .separatorColor).opacity(0.3),
+                    lineWidth: isHovered ? 1.2 : 0.5
+                )
+        )
+        .scaleEffect(isHovered ? 1.015 : 1.0)
+        .animation(.easeOut(duration: 0.15), value: isHovered)
+        .onHover { hovering in
+            isHovered = hovering
         }
     }
 }

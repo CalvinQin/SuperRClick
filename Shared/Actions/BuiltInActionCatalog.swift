@@ -147,7 +147,7 @@ public enum BuiltInActionCatalog {
     }
 
     public static var all: [ActionDefinition] {
-        fileActions + textActions
+        fileActions + textActions + AIActionCatalog.all
     }
 
     public static func definition(for actionID: ActionID) -> ActionDefinition? {

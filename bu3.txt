@@ -1,0 +1,291 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme SuperRClick CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build
+
+Build settings from command line:
+    CODE_SIGN_IDENTITY = 
+    CODE_SIGNING_ALLOWED = NO
+    CODE_SIGNING_REQUIRED = NO
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008142-000C68512EF1401C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008142-000C68512EF1401C, name:My Mac }
+{ platform:macOS, name:Any Mac }
+note: Using codesigning identity override: 
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'SuperRClick' in project 'SuperRClick'
+        ➜ Explicit dependency on target 'SuperRClickCore' in project 'SuperRClick'
+        ➜ Explicit dependency on target 'SuperRClickFinderSync' in project 'SuperRClick'
+    Target 'SuperRClickFinderSync' in project 'SuperRClick'
+        ➜ Explicit dependency on target 'SuperRClickCore' in project 'SuperRClick'
+    Target 'SuperRClickCore' in project 'SuperRClick' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C57-00fa09913b459cbbc988d1f6730289ae.sdkstatcache
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick/SuperRClick.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C57-00fa09913b459cbbc988d1f6730289ae.sdkstatcache
+
+ProcessInfoPlistFile /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/Shared.framework/Versions/A/Resources/Info.plist /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickCore.build/empty-Shared.plist (in target 'SuperRClickCore' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    builtin-infoPlistUtility /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickCore.build/empty-Shared.plist -producttype com.apple.product-type.framework -expandbuildsettings -platform macosx -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/Shared.framework/Versions/A/Resources/Info.plist
+
+SwiftDriver SuperRClick normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SuperRClick -Onone -enforce-exclusivity\=checked @/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-macos26.0 -g -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -F /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -emit-localized-strings -emit-localized-strings-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64 -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C57-00fa09913b459cbbc988d1f6730289ae.sdkstatcache -output-file-map /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick_const_extract_protocols.json -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-generated-files.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-own-target-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick-f596fc6d9629c21433160a2f03474c4e-VFS/all-product-headers.yaml -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-project-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/include -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources-normal/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick-Swift.h -working-directory /Users/haoqiqin/VibeCoding/Super\ RClick -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver SuperRClickFinderSync normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SuperRClickFinderSync' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SuperRClickFinderSync -Onone -enforce-exclusivity\=checked @/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-macos26.0 -g -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -application-extension -enable-testing -index-store-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -F /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C57-00fa09913b459cbbc988d1f6730289ae.sdkstatcache -output-file-map /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync_const_extract_protocols.json -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-generated-files.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-own-target-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick-f596fc6d9629c21433160a2f03474c4e-VFS/all-product-headers.yaml -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-project-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/include -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/DerivedSources-normal/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/DerivedSources/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync-Swift.h -working-directory /Users/haoqiqin/VibeCoding/Super\ RClick -experimental-emit-module-separately -disable-cmo
+
+ProcessInfoPlistFile /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/SuperRClickFinderSync.appex/Contents/Info.plist /Users/haoqiqin/VibeCoding/Super\ RClick/Config/FinderSync-Info.plist (in target 'SuperRClickFinderSync' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    builtin-infoPlistUtility /Users/haoqiqin/VibeCoding/Super\ RClick/Config/FinderSync-Info.plist -producttype com.apple.product-type.app-extension -expandbuildsettings -platform macosx -additionalcontentfile /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/assetcatalog_generated_info.plist -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/SuperRClickFinderSync.appex/Contents/Info.plist
+
+SwiftDriver\ Compilation SuperRClickFinderSync normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SuperRClickFinderSync' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SuperRClickFinderSync -Onone -enforce-exclusivity\=checked @/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-macos26.0 -g -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -application-extension -enable-testing -index-store-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -F /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C57-00fa09913b459cbbc988d1f6730289ae.sdkstatcache -output-file-map /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync_const_extract_protocols.json -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-generated-files.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-own-target-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick-f596fc6d9629c21433160a2f03474c4e-VFS/all-product-headers.yaml -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/SuperRClickFinderSync-project-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/include -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/DerivedSources-normal/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/DerivedSources/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync-Swift.h -working-directory /Users/haoqiqin/VibeCoding/Super\ RClick -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/SuperRClickFinderSync.appex/Contents/MacOS/SuperRClickFinderSync.debug.dylib normal (in target 'SuperRClickFinderSync' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos26.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -O0 -L/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -F/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -filelist /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync.LinkFileList -install_name @rpath/SuperRClickFinderSync.debug.dylib -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -rpath -Xlinker @executable_path/../../../../Frameworks -Xlinker -object_path_lto -Xlinker /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync_dependency_info.dat -fapplication-extension -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync.swiftmodule @/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClickFinderSync.build/Objects-normal/arm64/SuperRClickFinderSync-linker-args.resp -Xlinker -alias -Xlinker _NSExtensionMain -Xlinker ___debug_main_executable_dylib_entry_point -framework Shared -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/SuperRClickFinderSync.appex/Contents/MacOS/SuperRClickFinderSync.debug.dylib
+
+SwiftCompile normal arm64 Compiling\ AIActionExecutor.swift,\ AIResultWindow.swift,\ AISettingsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIActionExecutor.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIResultWindow.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/AISettingsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c -primary-file /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIActionExecutor.swift -primary-file /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIResultWindow.swift -primary-file /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/AISettingsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/ActionLibraryView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/ActionVisibilityView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Bootstrap/AppCoordinator.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/AppModeManager.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/BatchRename/BatchRenameDraft.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/BatchRename/BatchRenamePanelView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/CreateActionView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/DesktopBridge/DesktopBridgeManager.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/DesktopBridge/DesktopBridgeMenuBuilder.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/DesktopBridge/DesktopSelectionProvider.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/ExtensionStatusBanner.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/GeneralSettingsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Update/GitHubUpdater.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/LanguageManager.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/MenuBar/MenuBarRootView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/PinnedActionsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Bootstrap/PlatformActionExecutor.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/ProgressReporting.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/RecentActivityView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/SettingsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Setup/SetupCenterView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/SuperRClickApp.swift /Users/haoqiqin/VibeCoding/Super\ RClick/Extensions/AppIntents/SuperRClickIntents.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/SuperRClickRootView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/Extensions/Services/SuperRClickServices.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Progress/TaskProgressWindow.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Tools/ToolsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/WorkspaceProfileView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/WorkspaceSettingsView.swift /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/supplementaryOutputs-1 -emit-localized-strings -emit-localized-strings-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64 -target arm64-apple-macos26.0 -module-can-import-version DeveloperToolsSupport 23.0.4 23.0.4 -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libAppIntentsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#AppIntentsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -I /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -F /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=5 -module-cache-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -swift-version 6 -enforce-exclusivity\=checked -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/SuperRClick_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/haoqiqin/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/haoqiqin/VibeCoding/Super\ RClick -enable-anonymous-context-mangled-names -file-compilation-dir /Users/haoqiqin/VibeCoding/Super\ RClick -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C57-00fa09913b459cbbc988d1f6730289ae.sdkstatcache -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-generated-files.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-own-target-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick-f596fc6d9629c21433160a2f03474c4e-VFS/all-product-headers.yaml -Xcc -iquote -Xcc /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/SuperRClick-project-headers.hmap -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Products/Debug/include -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources-normal/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources/arm64 -Xcc -I/Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name SuperRClick -frontend-parseable-output -disable-clang-spi -target-sdk-version 26.2 -target-sdk-name macosx26.2 -clang-target arm64-apple-macos26.2 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/AIActionExecutor.o -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/AIResultWindow.o -o /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/AISettingsView.o -index-unit-output-path /SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/AIActionExecutor.o -index-unit-output-path /SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/AIResultWindow.o -index-unit-output-path /SuperRClick.build/Debug/SuperRClick.build/Objects-normal/arm64/AISettingsView.o -index-store-path /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Index.noindex/DataStore -index-system-modules
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIActionExecutor.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:47:33: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        guard let url = context.effectiveSelectionURLs.first else { return }
+                        ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:62:36: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        let total = Double(context.effectiveSelectionURLs.count)
+                           ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:63:37: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        for (index, url) in context.effectiveSelectionURLs.enumerated() {
+                            ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:76:65: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        NSWorkspace.shared.activateFileViewerSelecting([context.effectiveSelectionURLs.first!])
+                                                        ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:98:33: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        guard let url = context.effectiveSelectionURLs.first else { return }
+                        ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:116:33: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        guard let url = context.effectiveSelectionURLs.first else { return }
+                        ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:133:36: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        let total = Double(context.effectiveSelectionURLs.count)
+                           ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:135:37: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        for (index, url) in context.effectiveSelectionURLs.enumerated() {
+                            ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:147:67: error: cannot infer contextual base in reference to member 'whitespacesAndNewlines'
+            suggestedName = suggestedName.trimmingCharacters(in: .whitespacesAndNewlines)
+                                                                 ~^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:170:36: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        let total = Double(context.effectiveSelectionURLs.count)
+                           ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:172:37: error: value of type 'ContextSnapshot' has no member 'effectiveSelectionURLs'
+        for (index, url) in context.effectiveSelectionURLs.enumerated() {
+                            ~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:181:57: error: cannot infer contextual base in reference to member 'whitespacesAndNewlines'
+            let tag = tagString.trimmingCharacters(in: .whitespacesAndNewlines)
+                                                       ~^~~~~~~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIActionExecutor.swift:185:70: error: reference to member 'tagNamesKey' cannot be resolved without a contextual type
+                var tags = try urlResource.resourceValues(forKeys: [.tagNamesKey]).tagNames ?? []
+                                                                     ^
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIResultWindow.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIResultWindow.swift:46:36: error: cannot find 'L' in scope
+                    Label(copied ? L("已复制", "Copied") : L("复制", "Copy"),
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/AI/AIResultWindow.swift:46:63: error: cannot find 'L' in scope
+                    Label(copied ? L("已复制", "Copied") : L("复制", "Copy"),
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/AISettingsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:4:26: error: cannot find type 'AIConfig' in scope
+    @Binding var config: AIConfig
+                         ^~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:9:33: error: cannot find type 'AIConfig' in scope
+    public init(config: Binding<AIConfig>) {
+                                ^~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:16:24: error: cannot find 'L' in scope
+                Toggle(L("启用 AI 功能", "Enable AI Features"), isOn: $config.isEnabled)
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:20:24: error: cannot find 'L' in scope
+                Picker(L("服务商", "Provider"), selection: $config.providerID) {
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:21:29: error: cannot find 'LLMProviderPreset' in scope
+                    ForEach(LLMProviderPreset.all) { preset in
+                            ^~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:27:37: error: cannot find 'LLMProviderPreset' in scope
+                    if let preset = LLMProviderPreset.preset(for: newValue) {
+                                    ^~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:36:31: error: cannot find 'L' in scope
+                    TextField(L("Base URL", "Base URL"), text: $config.baseURL)
+                              ^
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:37:31: error: cannot find 'L' in scope
+                    TextField(L("模型名称", "Model Name"), text: $config.model)
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:38:40: error: cannot find 'LLMProviderPreset' in scope
+                } else if let preset = LLMProviderPreset.preset(for: config.providerID) {
+                                       ^~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:40:35: error: cannot find 'L' in scope
+                        TextField(L("模型名称", "Model Name"), text: $config.model)
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:42:32: error: cannot find 'L' in scope
+                        Picker(L("模型", "Model"), selection: $config.model) {
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:50:29: error: cannot find 'L' in scope
+                SecureField(L("API Key", "API Key"), text: $apiKey)
+                            ^
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:52:30: error: cannot find 'AIKeychainStore' in scope
+                        try? AIKeychainStore.save(apiKey: newValue, for: config.providerID)
+                             ^~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:56:26: error: cannot find 'L' in scope
+                    Text(L("注意: Ollama 需要在本地运行并且无需 API Key。", "Note: Ollama requires local instance and doesn't need an API Key."))
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:61:22: error: cannot find 'L' in scope
+                Text(L("LLM 配置", "LLM Configuration"))
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:63:22: error: cannot find 'L' in scope
+                Text(L("API Key 将被安全地存储在 macOS 钥匙串中。", "API Key is securely stored in macOS Keychain."))
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:69:28: error: cannot find 'L' in scope
+                    Button(L("测试连接", "Test Connection")) {
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:83:34: error: cannot find 'L' in scope
+                            Text(L("连接成功", "Connection Successful"))
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:96:22: error: cannot find 'L' in scope
+                Text(L("注：OCR 文字提取和背景移除功能依赖 macOS 本地 Vision 框架，无需配置 API Key 即可使用。", "Note: OCR and Background Removal rely on macOS local Vision framework and work without API Key."))
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:108:27: error: cannot find 'AIKeychainStore' in scope
+        if let key = try? AIKeychainStore.load(for: config.providerID) {
+                          ^~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:120:29: error: cannot find 'LLMServiceFactory' in scope
+        guard let service = LLMServiceFactory.makeService(for: config) else {
+                            ^~~~~~~~~~~~~~~~~
+/Users/haoqiqin/VibeCoding/Super RClick/App/Features/Settings/AISettingsView.swift:122:35: error: cannot find 'LLMError' in scope
+            testResult = .failure(LLMError.invalidURL)
+                                  ^~~~~~~~
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ SuperRClick (in target 'SuperRClick' from project 'SuperRClick')
+
+EmitSwiftModule normal arm64 (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ ActionLibraryView.swift,\ ActionVisibilityView.swift,\ AppCoordinator.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/ActionLibraryView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/ActionVisibilityView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Bootstrap/AppCoordinator.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/ActionLibraryView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/ActionVisibilityView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Bootstrap/AppCoordinator.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ RecentActivityView.swift,\ SettingsView.swift,\ SetupCenterView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/RecentActivityView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/SettingsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Setup/SetupCenterView.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/RecentActivityView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/SettingsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Setup/SetupCenterView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ PinnedActionsView.swift,\ PlatformActionExecutor.swift,\ ProgressReporting.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/PinnedActionsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Bootstrap/PlatformActionExecutor.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/ProgressReporting.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/PinnedActionsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Bootstrap/PlatformActionExecutor.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/ProgressReporting.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ GitHubUpdater.swift,\ LanguageManager.swift,\ MenuBarRootView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Update/GitHubUpdater.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/LanguageManager.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/MenuBar/MenuBarRootView.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Update/GitHubUpdater.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/LanguageManager.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/MenuBar/MenuBarRootView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ WorkspaceSettingsView.swift,\ GeneratedAssetSymbols.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/WorkspaceSettingsView.swift /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/WorkspaceSettingsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/Library/Developer/Xcode/DerivedData/SuperRClick-brblhlrqrdumksbfepyigjpjbxah/Build/Intermediates.noindex/SuperRClick.build/Debug/SuperRClick.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ SuperRClickApp.swift,\ SuperRClickRootView.swift,\ TaskProgressWindow.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/SuperRClickApp.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/SuperRClickRootView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Progress/TaskProgressWindow.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/SuperRClickApp.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/SuperRClickRootView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Progress/TaskProgressWindow.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ BatchRenameDraft.swift,\ BatchRenamePanelView.swift,\ CreateActionView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/BatchRename/BatchRenameDraft.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/BatchRename/BatchRenamePanelView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/CreateActionView.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/BatchRename/BatchRenameDraft.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/BatchRename/BatchRenamePanelView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Actions/CreateActionView.swift (in target 'SuperRClick' from project 'SuperRClick')
+    cd /Users/haoqiqin/VibeCoding/Super\ RClick
+    
+
+SwiftCompile normal arm64 Compiling\ ToolsView.swift,\ WorkspaceProfileView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Tools/ToolsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/WorkspaceProfileView.swift (in target 'SuperRClick' from project 'SuperRClick')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ AIActionExecutor.swift,\ AIResultWindow.swift,\ AISettingsView.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIActionExecutor.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIResultWindow.swift /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/AISettingsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+	SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIActionExecutor.swift (in target 'SuperRClick' from project 'SuperRClick')
+	SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/AI/AIResultWindow.swift (in target 'SuperRClick' from project 'SuperRClick')
+	SwiftCompile normal arm64 /Users/haoqiqin/VibeCoding/Super\ RClick/App/Features/Settings/AISettingsView.swift (in target 'SuperRClick' from project 'SuperRClick')
+	Building project SuperRClick with scheme SuperRClick
+(5 failures)

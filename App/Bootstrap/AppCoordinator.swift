@@ -608,9 +608,11 @@ final class AppCoordinator {
         Task {
             let onProgress: ProgressCallback = { @Sendable [weak self] current, total, detail in
                 Task { @MainActor [weak self] in
-                    self?.taskProgress?.current = current
-                    self?.taskProgress?.total = total
-                    self?.taskProgress?.detail = detail
+                    guard var p = self?.taskProgress else { return }
+                    p.current = current
+                    p.total = total
+                    p.detail = detail
+                    self?.taskProgress = p
                 }
             }
 
@@ -633,10 +635,15 @@ final class AppCoordinator {
                 resultMessage = L("操作未知结果", "Unknown result")
             }
 
-            taskProgress?.isComplete = true
-            taskProgress?.isSuccess = isSuccess
-            taskProgress?.resultMessage = resultMessage
-            taskProgress?.current = taskProgress?.total ?? 0
+            // Batch all final mutations into a single read-modify-write
+            // to avoid Swift runtime exclusivity crash
+            if var p = taskProgress {
+                p.isComplete = true
+                p.isSuccess = isSuccess
+                p.resultMessage = resultMessage
+                p.current = p.total
+                taskProgress = p
+            }
 
             // Auto-close after 3 seconds on success
             if isSuccess {

@@ -74,9 +74,13 @@ final class BatchRenameWindowController {
     }
 
     func close() {
-        window?.close()
+        // Guard against re-entry: close() → windowWillClose → dismissBatchRename → closeBatchRenamePanel → close()
+        guard let win = window else { return }
+        // Remove delegate FIRST to prevent windowWillClose from calling dismissBatchRename again
+        win.delegate = nil
         window = nil
         hostingView = nil
+        win.close()
     }
 }
 

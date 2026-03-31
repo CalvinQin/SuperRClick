@@ -126,6 +126,7 @@ private struct ToolCard: View {
             .scaleEffect(isHovered ? 1.02 : 1.0)
             .animation(.easeInOut(duration: 0.15), value: isHovered)
         }
+        .contentShape(Rectangle())
         .buttonStyle(.plain)
         .onHover { hovering in
             isHovered = hovering

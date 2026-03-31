@@ -103,15 +103,25 @@ struct MenuBarRootView: View {
     }
     
     private func openMainWindow() {
-        if AppModeManager.shared.showInDock {
-            NSApp.setActivationPolicy(.regular)
-            NSApp.activate(ignoringOtherApps: true)
-        } else {
-            NSApp.activate(ignoringOtherApps: true)
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+
+        // Try to find and show an existing main window (not MenuBarExtra panels)
+        let mainWindow = NSApp.windows.first { window in
+            // Exclude MenuBarExtra status item windows and panels
+            !(window is NSPanel)
+            && window.className != "NSStatusBarWindow"
+            && !window.className.contains("MenuBarExtra")
+            && window.level == .normal
         }
-        
-        if let window = NSApp.windows.first(where: { $0.title.contains("Super RClick") || $0.isKeyWindow }) {
-            window.makeKeyAndOrderFront(nil)
+
+        if let mainWindow {
+            mainWindow.makeKeyAndOrderFront(nil)
+        } else {
+            // No existing window found — reopen the app to trigger WindowGroup
+            if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "") {
+                NSWorkspace.shared.openApplication(at: appURL, configuration: NSWorkspace.OpenConfiguration())
+            }
         }
     }
 }

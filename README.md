@@ -114,16 +114,33 @@ open SuperRClick.xcodeproj
 
 ## Screenshots
 
-> *Coming soon — Star the repo to stay updated!*
+### Finder Right-Click Menu
+> All your power tools, one right-click away.
 
----
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/finder-context-menu.png" width="720" alt="Finder Context Menu with Super RClick"/>
+</p>
 
-## Roadmap
+### MenuBar Quick Actions
+> Quick access to batch rename, compress, convert, jump, and terminal — without opening Finder.
 
-- [ ] Homebrew Cask support (`brew install --cask super-rclick`)
-- [ ] Keyboard shortcuts for menu actions
-- [ ] Plugin system for user-created extensions
-- [ ] Quick Look integration
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/menubar-quick-actions.png" width="300" alt="MenuBar Quick Actions"/>
+</p>
+
+### Batch Rename
+> Rename multiple files with prefix, suffix, or replace mode. Real-time preview with conflict detection.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/batch-rename.png" width="600" alt="Batch Rename Panel"/>
+</p>
+
+### Main App
+> Manage all actions, create custom commands, and configure your workspace.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/main-app.png" width="720" alt="Super RClick Main Window"/>
+</p>
 
 ---
 

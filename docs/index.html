@@ -157,8 +157,34 @@
     }
     footer a { color: var(--accent); text-decoration: none; }
 
+    /* Showcase */
+    .showcase {
+      max-width: 1100px; margin: 0 auto;
+      padding: 80px 24px; text-align: center;
+    }
+    .showcase h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+    .showcase .sub { color: var(--text-secondary); margin-bottom: 48px; font-size: 16px; }
+    .showcase-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .showcase-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px; text-align: center;
+      transition: all 0.3s ease;
+    }
+    .showcase-item:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .showcase-item img {
+      width: 100%; border-radius: 10px; margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .showcase-item h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .showcase-item p { font-size: 13px; color: var(--text-secondary); }
+    .showcase-item.small img { max-width: 240px; }
+
     @media (max-width: 600px) {
       .stat-grid { grid-template-columns: 1fr; }
+      .showcase-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 32px; }
       .hero-actions { flex-direction: column; align-items: center; }
     }
@@ -229,6 +255,34 @@
     <div class="feature-icon">🚀</div>
     <h3>Quick Jump & Terminal</h3>
     <p>Jump to any directory by entering a path. Open Terminal in the current folder. Quick navigation without leaving Finder.</p>
+  </div>
+</section>
+
+<section class="showcase" id="showcase">
+  <h2>See It in Action</h2>
+  <p class="sub">Seamless integration with macOS Finder — feels like it's always been there.</p>
+
+  <div class="showcase-grid">
+    <div class="showcase-item">
+      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/finder-context-menu.png" alt="Finder Context Menu" loading="lazy"/>
+      <h4>Finder Right-Click Menu</h4>
+      <p>All tools accessible from one right-click</p>
+    </div>
+    <div class="showcase-item">
+      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/main-app.png" alt="Main App Window" loading="lazy"/>
+      <h4>Main App</h4>
+      <p>Manage actions, templates & settings</p>
+    </div>
+    <div class="showcase-item">
+      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/batch-rename.png" alt="Batch Rename" loading="lazy"/>
+      <h4>Batch Rename</h4>
+      <p>Real-time preview with conflict detection</p>
+    </div>
+    <div class="showcase-item small">
+      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/menubar-quick-actions.png" alt="MenuBar" loading="lazy"/>
+      <h4>MenuBar Quick Access</h4>
+      <p>Always one click away</p>
+    </div>
   </div>
 </section>
 

@@ -265,6 +265,7 @@ final class AppCoordinator {
     func runImageConversionWithFormatPicker() {
         let formats = ["png", "jpeg", "webp", "tiff", "heic"]
 
+        NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()
         alert.messageText = L("选择目标格式", "Choose Target Format")
         alert.informativeText = L("请选择图片转换的目标格式。转换后的文件将保存到原目录。", "Select the target format for image conversion. Converted files will be saved to the original directory.")
@@ -302,6 +303,7 @@ final class AppCoordinator {
     // MARK: - Toolbox Actions (with file pickers)
 
     func runImageConversionFromToolbox() {
+        NSApp.activate(ignoringOtherApps: true)
         let panel = NSOpenPanel()
         panel.title = L("选择要转换的图片", "Select images to convert")
         panel.prompt = L("选择", "Select")
@@ -323,6 +325,7 @@ final class AppCoordinator {
     }
 
     func runCompressFromToolbox() {
+        NSApp.activate(ignoringOtherApps: true)
         let panel = NSOpenPanel()
         panel.title = L("选择要压缩的文件", "Select files to compress")
         panel.prompt = L("选择", "Select")
@@ -352,6 +355,7 @@ final class AppCoordinator {
     }
 
     func runOpenTerminalFromToolbox() {
+        NSApp.activate(ignoringOtherApps: true)
         let panel = NSOpenPanel()
         panel.title = L("选择要在终端打开的文件夹", "Select folder to open in Terminal")
         panel.prompt = L("选择", "Select")
@@ -420,6 +424,7 @@ final class AppCoordinator {
     }
 
     private func promptFilesForBatchRename() {
+        NSApp.activate(ignoringOtherApps: true)
         let panel = NSOpenPanel()
         panel.title = L("选择要批量重命名的文件", "Select files to batch rename")
         panel.prompt = L("选择", "Select")
@@ -596,6 +601,7 @@ final class AppCoordinator {
     }
 
     func promptForMonitoredFolder() {
+        NSApp.activate(ignoringOtherApps: true)
         let panel = NSOpenPanel()
         panel.prompt = "Add Folder"
         panel.canChooseDirectories = true

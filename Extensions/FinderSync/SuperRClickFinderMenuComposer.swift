@@ -47,12 +47,6 @@ public final class SuperRClickFinderMenuComposer {
         let orderedSections = groupedDefinitions.keys.sorted()
 
         for (index, section) in orderedSections.enumerated() {
-            if index > 0 {
-                menu.addItem(.separator())
-            }
-
-            addSectionHeader(for: section, to: menu)
-
             let definitions = (groupedDefinitions[section] ?? []).sorted(by: definitionSort)
             
             let newFileDefs = definitions.filter { $0.id.rawValue.hasPrefix("new-") }
@@ -70,9 +64,6 @@ public final class SuperRClickFinderMenuComposer {
                 menu.addItem(newFileItem)
                 
                 append(definitions: newFileDefs, to: newFileSubMenu, target: target)
-                if !normalDefs.isEmpty {
-                    menu.addItem(.separator())
-                }
             }
 
             append(definitions: normalDefs, to: menu, target: target)
@@ -93,8 +84,6 @@ public final class SuperRClickFinderMenuComposer {
             return
         }
 
-        menu.addItem(.separator())
-        addSectionHeader(for: .system, title: SharedLocale.isChinese ? "工具" : "Utilities", to: menu)
         append(utilities: actionableUtilities, to: menu, target: target, context: context)
     }
 

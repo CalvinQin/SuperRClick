@@ -25,9 +25,7 @@ struct MenuBarRootView: View {
                 Spacer()
             }
             .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-
-            Divider()
+            .padding(.vertical, 8)
 
             // Main Actions
             VStack(alignment: .leading, spacing: 2) {
@@ -65,38 +63,17 @@ struct MenuBarRootView: View {
                 .padding(.vertical, 3)
                 .padding(.horizontal, 14)
             }
-            .padding(.vertical, 6)
-
-            Divider()
+            .padding(.vertical, 4)
 
             // Footer
-            VStack(spacing: 4) {
-                if let status = coordinator.statusBanner {
-                    Label(status.title, systemImage: status.iconName)
-                        .font(.caption2.weight(.medium))
-                        .foregroundStyle(status.color)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(status.color.opacity(0.15), in: Capsule())
-                }
-
-                HStack {
-                    Button {
-                        coordinator.refresh()
-                    } label: {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .font(.caption)
-                    }
-                    .buttonStyle(.plain)
-                    .help(L("刷新状态", "Refresh"))
-
-                    Spacer()
-
+            HStack {
                     Button(L("偏好设置...", "Preferences...")) {
                         openMainWindow()
                     }
                     .buttonStyle(.plain)
                     .font(.caption.weight(.medium))
+
+                    Spacer()
                     
                     Button(L("退出", "Quit")) {
                         NSApplication.shared.terminate(nil)
@@ -104,11 +81,9 @@ struct MenuBarRootView: View {
                     .buttonStyle(.plain)
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.red)
-                    .padding(.leading, 6)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 6)
-            }
         }
         .frame(width: 280)
         .background(Color(nsColor: .windowBackgroundColor))

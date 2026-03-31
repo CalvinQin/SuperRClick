@@ -48,17 +48,15 @@ final class TaskProgressWindowController {
         })
 
         let hostingView = NSHostingView(rootView: AnyView(content))
-        let windowRect = NSRect(x: 0, y: 0, width: 420, height: 180)
+        let windowRect = NSRect(x: 0, y: 0, width: 340, height: 130)
         hostingView.frame = windowRect
 
         let win = NSWindow(
             contentRect: windowRect,
-            styleMask: [.titled, .fullSizeContentView],
+            styleMask: [.borderless],
             backing: .buffered,
             defer: false
         )
-        win.titlebarAppearsTransparent = true
-        win.titleVisibility = .hidden
         win.isMovableByWindowBackground = true
         win.level = .floating
         win.center()
@@ -108,12 +106,13 @@ private struct TaskProgressView: View {
                     progressView(info: info)
                 }
             }
-            .frame(width: 420, height: 180)
+            .frame(width: 340, height: 130)
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(.ultraThickMaterial)
+                    .shadow(color: .black.opacity(0.15), radius: 12, y: 4)
             )
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 
@@ -152,7 +151,8 @@ private struct TaskProgressView: View {
                 Spacer()
             }
         }
-        .padding(24)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
     }
 
     private func completedView(info: TaskProgressInfo) -> some View {
@@ -192,6 +192,7 @@ private struct TaskProgressView: View {
                 .controlSize(.small)
             }
         }
-        .padding(24)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
     }
 }

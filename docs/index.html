@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super RClick — The Best Free Finder Right-Click Menu Enhancer for macOS</title>
+  <meta name="description" content="Super RClick is a free, open-source macOS Finder extension that supercharges your right-click menu. Batch rename, compress, convert images, create files, and more. Download now.">
+  <meta name="keywords" content="macOS right click menu, finder extension, context menu enhancer, batch rename mac, image converter mac, mac file manager, finder right click, mac productivity tool, 右键菜单增强, mac右键工具">
+  <meta name="author" content="CalvinQin">
+  <meta property="og:title" content="Super RClick — Supercharge your macOS Finder right-click menu">
+  <meta property="og:description" content="Free, open-source Finder extension. Batch rename, compress, convert images, create new files, open terminal. All from one elegant right-click.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calvinqin.github.io/SuperRClick/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --text-secondary: #8888a0;
+      --accent: #5b7fff;
+      --accent-glow: rgba(91, 127, 255, 0.3);
+      --green: #34d399;
+      --orange: #f97316;
+      --purple: #a78bfa;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Glow background */
+    .glow-bg {
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, var(--accent-glow), transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.8);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-brand span { font-weight: 700; font-size: 18px; }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      position: relative; z-index: 1;
+      text-align: center; padding: 100px 24px 80px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 100px;
+      background: rgba(91, 127, 255, 0.1);
+      border: 1px solid rgba(91, 127, 255, 0.2);
+      font-size: 13px; font-weight: 500; color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px); font-weight: 800;
+      line-height: 1.1; margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px; color: var(--text-secondary);
+      max-width: 600px; margin: 0 auto 36px;
+    }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 12px;
+      font-weight: 600; font-size: 15px; text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+    .btn-secondary {
+      background: var(--card); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--surface); }
+
+    /* Features */
+    .features {
+      max-width: 1100px; margin: 0 auto;
+      padding: 80px 24px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .feature-icon { font-size: 32px; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* Highlights */
+    .highlights {
+      max-width: 900px; margin: 0 auto;
+      padding: 60px 24px; text-align: center;
+    }
+    .highlights h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+    .highlights .sub { color: var(--text-secondary); margin-bottom: 48px; font-size: 16px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .stat {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 20px;
+    }
+    .stat-num { font-size: 40px; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* CTA */
+    .cta {
+      text-align: center; padding: 80px 24px;
+      max-width: 700px; margin: 0 auto;
+    }
+    .cta h2 { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+    .cta p { color: var(--text-secondary); margin-bottom: 32px; font-size: 16px; }
+
+    /* Footer */
+    footer {
+      text-align: center; padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary); font-size: 13px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .stat-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+      .hero-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="glow-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png" alt="Super RClick">
+      <span>Super RClick</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="https://github.com/CalvinQin/SuperRClick" target="_blank">GitHub</a>
+      <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary" style="padding:8px 18px; font-size:13px;">Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">✨ Free & Open Source — MIT License</div>
+  <h1>Supercharge your Finder right-click menu</h1>
+  <p>
+    The most powerful Finder context menu extension for macOS.
+    Batch rename, compress, convert images, create files, jump to directories — all from one elegant right-click.
+  </p>
+  <div class="hero-actions">
+    <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary">
+      ⬇ Download DMG
+    </a>
+    <a href="https://github.com/CalvinQin/SuperRClick" class="btn btn-secondary">
+      ⭐ Star on GitHub
+    </a>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="feature-card">
+    <div class="feature-icon">📋</div>
+    <h3>Copy Path</h3>
+    <p>Copy full path, POSIX path, or shell-escaped path with a single right-click. No more Terminal commands just to get a file path.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">✏️</div>
+    <h3>Batch Rename</h3>
+    <p>Rename multiple files at once with prefix, suffix, or find-and-replace. Smart numbering with real-time preview and conflict detection.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">📦</div>
+    <h3>Compress Files</h3>
+    <p>Archive selected files and folders to ZIP instantly. Progress bar, completion notifications — no third-party apps needed.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🖼️</div>
+    <h3>Image Conversion</h3>
+    <p>Convert between PNG, JPEG, TIFF, and HEIC formats. One-click format selection right from the Finder context menu.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">📄</div>
+    <h3>New File Templates</h3>
+    <p>Create 20+ file types instantly from Finder: Markdown, Python, JSON, HTML, Swift, YAML, and more. No more Terminal touch commands.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🚀</div>
+    <h3>Quick Jump & Terminal</h3>
+    <p>Jump to any directory by entering a path. Open Terminal in the current folder. Quick navigation without leaving Finder.</p>
+  </div>
+</section>
+
+<section class="highlights">
+  <h2>Built for Power Users</h2>
+  <p class="sub">Lightweight, fast, and native. No Electron, no bloat.</p>
+  <div class="stat-grid">
+    <div class="stat">
+      <div class="stat-num">&lt;4MB</div>
+      <div class="stat-label">App Size</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Native</div>
+      <div class="stat-label">Swift + SwiftUI</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Free Forever</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to upgrade your Finder?</h2>
+  <p>Download Super RClick now and transform your macOS workflow. It's free, open-source, and takes under 30 seconds to install.</p>
+  <div class="hero-actions">
+    <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary">
+      ⬇ Download v0.1.0
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>Made with ❤️ by <a href="https://github.com/CalvinQin">@CalvinQin</a> · <a href="https://github.com/CalvinQin/SuperRClick">View on GitHub</a></p>
+  <p style="margin-top:8px;">macOS right-click menu enhancer · Finder extension · Batch rename · Image converter · Mac productivity tool</p>
+</footer>
+
+</body>
+</html>

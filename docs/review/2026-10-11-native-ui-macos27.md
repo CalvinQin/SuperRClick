@@ -106,6 +106,7 @@ PASS 表示对应检查实际执行且断言通过，包含“预期失败被正
 
 - [最终：中文深色](../../output/review/final-actions-zh-dark.png)
 - [最终：英文浅色](../../output/review/final-actions-light.png)
+- [最终：中文动作编辑器](../../output/review/final-action-editor-zh-dark.png)
 - [原创图标版本的 AI 关闭并保存](../../output/review/final-settings-zh-dark.png)
 - [原创主图标](icons-app-master.png)
 - [多尺寸与状态联系表](icons-states.png)
@@ -114,9 +115,15 @@ PASS 表示对应检查实际执行且断言通过，包含“预期失败被正
 
 `before-actions.png`、`after-actions*.png`、`editor-*` 等保留为第一阶段过程证据，不作为本轮最终视觉交付。构建日志、xcresult、功能 fixture 与界面截图位于现有 gitignore 排除的 `output/review/`；可复跑代码和图标设计资产纳入源码。
 
-## Finder 真机验证需要的最小额外授权
+## 已授权的本地安装与 Finder 真机验证状态
 
-此部分仅描述，尚未执行。经用户同意后，将本地 Release 副本按 Shared framework → Finder appex（保留扩展 entitlements）→ App（保留 App entitlements）签名，安装到 `~/Applications/SuperRClick.app`；如该位置已有应用立即停下，不覆盖。启动后仅在系统未登记时注册内嵌扩展，并由用户在“系统设置 → 通用 → 登录项与扩展”启用 Finder 扩展。
+用户随后批准本地签名、安装和必要注册。已将 `6a6daff` 的 Release 副本按 Shared framework → Finder appex → App 顺序 ad hoc 签名；严格递归验签、两份嵌入 entitlements 与源文件比较、9 项最低系统检查全部通过。安装前确认两处 Applications 均无现存同名 App，以禁止覆盖的原子移动安装至 `~/Applications/SuperRClick.app`，未启动读取真实配置的主 App。
+
+安装后系统未自动登记扩展，因此执行了必要注册。PlugInKit 随后返回 `+ com.haoqiqin.SuperRClick.FinderSync(0.2.1)`，路径为已安装的内嵌扩展；未切换启用开关、未重启 Finder、未改变系统权限。配置 JSON 注册前后及后续复查的 SHA-256 均为 `39ef51791657aef71ab1e1a788ab384b8943ac3ae9f06caadc0a62b699d96e46`，待执行命令文件仍不存在。
+
+已创建并打开 `output/functional-finder-fixtures/run-vc_pb569`，包含文本、嵌套目录和生成图片。原生电脑控制工具两次连接 Finder 均因 ScreenCaptureKit `-3811` / server `-10005` 失败，尚未执行或验证真实右键菜单动作，不能以注册状态代替实测通过。签名、注册与现场状态见 `output/review/finder-install-signing.log`、`finder-install-manifest.json`、`finder-registration.json`、`finder-live-test.json`。
+
+五张最终截图/图标已通过官方 Codex 桌面直传保存到 Library，每项均返回成功，身份元数据已写回本地文件。此前 prepared-upload 助手不可用，恢复后的直传结果记录在 `output/review/library-delivery-success.json`；本任务也已直接显示真实主界面和编辑器图像。
 
 测试仅使用本项目 `output/functional-finder-fixtures` 下新建临时子目录，因为扩展当前监听 home。普通 Finder 菜单不需要新增辅助功能或输入监控权限，也不需要重启 Finder。不会自动执行复制路径；如用户自己验证复制，会替换剪贴板。
 

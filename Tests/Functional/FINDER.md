@@ -12,9 +12,11 @@ This compiles the production Finder context and menu composer with a selector-on
 
 Checks cover selection, multiple selection, directories, both background surfaces, sidebar, toolbar, empty selection, visibility includes/excludes, custom enabled state/filters, cloud AI switches, local AI, every new-file template, dynamic image formats, menu targets, and original template icons. On macOS 27 the image visibility preference is also checked. The executable targets macOS 15, but running it on macOS 27 does not verify macOS 15 or Intel runtime behavior.
 
-## Real Finder integration: pending consent
+## Real Finder integration: local installation prepared; live actions pending
 
-The steps below are a future validation procedure; they have **not** been executed as part of the offline checks. The unsigned Release build and the entitlement-stripped Debug preview are not installed test applications. Use a fresh Release build, preserving both app and extension entitlements.
+On 2026-10-11, the user authorized local signing, installation and necessary registration. A signed copy of Release commit `6a6daff` was installed without overwriting at `~/Applications/SuperRClick.app`, with production entitlements preserved and verified. Registration returned an enabled (`+`) entry without an agent-initiated enablement toggle. The real configuration JSON hash was unchanged and no pending command existed. The main Release app was not launched. A disposable fixture folder was opened, but the native computer-control tool failed twice with ScreenCaptureKit `-3811`, so **real Finder menu actions remain NOT RUN**. Evidence is in `output/review/finder-install-*.json`, `finder-registration.json` and `finder-live-test.json`.
+
+The procedure below describes a fresh installation and subsequent manual validation. Do not rerun its install steps over the existing test app. The original unsigned build output and the entitlement-stripped Debug preview remain unsuitable for installation; use a staged Release copy, preserving both app and extension entitlements.
 
 Minimum consent covers staging and local signing, installing this app at `~/Applications/SuperRClick.app`, launching it with real configuration storage, registering the embedded Finder extension if needed, enabling it in System Settings, and creating/reading/modifying disposable fixtures under this repository's `output/functional-finder-fixtures`. Clipboard actions are excluded from this minimum scope: verify only that copy-path menu items are present or hidden as configured; do not execute them or read the clipboard. An existing installation must be handled separately; the commands below stop before overwriting it.
 

@@ -1,6 +1,7 @@
 import Shared
 import SwiftUI
 import AppKit
+import FinderSync
 
 struct ExtensionStatusBanner: View {
     @AppStorage("hasDismissedExtensionBanner") private var hasDismissed = false
@@ -17,7 +18,7 @@ struct ExtensionStatusBanner: View {
                         Text(L("需要启用 Finder 扩展", "Finder Extension Required"))
                             .font(.headline)
                         
-                        Text(L("如果您没有在 Finder 中看到 Super RClick 的右键菜单，请前往“系统设置 > 隐私与安全性 > 扩展 > 附加的扩展”并勾选启用它。", "If you don’t see Super RClick in Finder’s context menu, go to System Settings > Privacy & Security > Extensions > Added Extensions and enable it."))
+                        Text(L("如果 Finder 中没有 Super RClick 菜单，请前往“系统设置 → 通用 → 登录项与扩展”并启用它的 Finder 扩展。", "If you don’t see Super RClick in Finder’s context menu, enable its Finder extension in System Settings → General → Login Items & Extensions."))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
@@ -37,13 +38,8 @@ struct ExtensionStatusBanner: View {
                 }
                 
                 Button {
-                    // Open macOS Extensions Preferences (Ventura/Sonoma/Sequoia path)
-                    if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
-                        NSWorkspace.shared.open(url)
-                    } else if let url = URL(string: "x-apple.systempreferences:com.apple.preferences.extensions") {
-                        // Fallback for older macOS
-                        NSWorkspace.shared.open(url)
-                    }
+                    guard !AppCoordinator.isIsolatedPreview else { return }
+                    FIFinderSyncController.showExtensionManagementInterface()
                 } label: {
                     Label(L("前往系统设置开启", "Open System Settings"), systemImage: "gearshape.arrow.triangle.2.circlepath")
                         .font(.subheadline.weight(.semibold))
@@ -53,6 +49,7 @@ struct ExtensionStatusBanner: View {
                         .foregroundStyle(.orange)
                 }
                 .buttonStyle(.plain)
+                .disabled(AppCoordinator.isIsolatedPreview)
                 .padding(.top, 4)
             }
             .padding(16)

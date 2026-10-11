@@ -4,6 +4,7 @@ import SwiftUI
 
 struct MenuBarRootView: View {
     @Bindable var coordinator: AppCoordinator
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(spacing: 0) {
@@ -103,25 +104,7 @@ struct MenuBarRootView: View {
     }
     
     private func openMainWindow() {
-        NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
-
-        // Try to find and show an existing main window (not MenuBarExtra panels)
-        let mainWindow = NSApp.windows.first { window in
-            // Exclude MenuBarExtra status item windows and panels
-            !(window is NSPanel)
-            && window.className != "NSStatusBarWindow"
-            && !window.className.contains("MenuBarExtra")
-            && window.level == .normal
-        }
-
-        if let mainWindow {
-            mainWindow.makeKeyAndOrderFront(nil)
-        } else {
-            // No existing window found — reopen the app to trigger WindowGroup
-            if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "") {
-                NSWorkspace.shared.openApplication(at: appURL, configuration: NSWorkspace.OpenConfiguration())
-            }
-        }
+        coordinator.selectedSection = .settings
+        MainWindowPresentation.show(using: openWindow)
     }
 }

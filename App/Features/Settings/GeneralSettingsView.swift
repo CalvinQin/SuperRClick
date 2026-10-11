@@ -7,14 +7,15 @@ struct GeneralSettingsView: View {
     @StateObject private var appModeManager = AppModeManager.shared
     @StateObject private var githubUpdater = GitHubUpdater.shared
     @State private var languageManager = LanguageManager.shared
+    @State private var confirmClearHistory = false
 
     var body: some View {
         Form {
             aboutSection
             generalPreferencesSection
             
-            AISettingsView(config: $coordinator.persistenceState.aiConfig) {
-                coordinator.saveAIConfig()
+            AISettingsView(config: coordinator.persistenceState.aiConfig) { draft in
+                coordinator.saveAIConfig(draft)
             }
             
             actionVisibilitySection
@@ -23,6 +24,12 @@ struct GeneralSettingsView: View {
         .formStyle(.grouped)
         .scrollContentBackground(.hidden) // Allow parent background to shine through
         .navigationTitle(L("偏好设置", "Preferences"))
+        .alert(L("清除全部执行记录？", "Clear all activity?"), isPresented: $confirmClearHistory) {
+            Button(L("取消", "Cancel"), role: .cancel) { }
+            Button(L("清除历史", "Clear History"), role: .destructive) { coordinator.clearHistory() }
+        } message: {
+            Text(L("此操作无法撤销，不会删除你的文件或自定义动作。", "This cannot be undone. Your files and custom actions will be kept."))
+        }
     }
 
     // MARK: - About
@@ -43,6 +50,8 @@ struct GeneralSettingsView: View {
                     Text(L("版本", "Version") + " " + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.0"))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    Text(L("需要 macOS 15 或更新版本", "Requires macOS 15 or later"))
+                        .font(.caption).foregroundStyle(.secondary)
                     Text(L("强大的 Finder 原生右键效率平台", "A powerful native Finder context menu platform"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -77,6 +86,7 @@ struct GeneralSettingsView: View {
                         }
                     }
                     .labelsHidden()
+                    .accessibilityLabel(L("语言", "Language"))
                     .pickerStyle(.menu)
                     .frame(width: 150)
                 }
@@ -136,39 +146,14 @@ struct GeneralSettingsView: View {
 
     private var actionVisibilitySection: some View {
         Section {
-            Text(L("管理哪些内置动作会显示在 Finder 右键菜单中。", "Manage which built-in actions appear in the Finder context menu."))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.bottom, 4)
-
-            ForEach(coordinator.allDefinitions) { action in
-                HStack(spacing: 12) {
-                    Image(systemName: action.systemImageName ?? "bolt.fill")
-                        .frame(width: 24)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(action.title)
-                            .font(.body)
-                        if let sub = action.subtitle {
-                            Text(sub)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-
-                    Spacer()
-
-                    Toggle("", isOn: Binding(
-                        get: { !coordinator.isActionHidden(action) },
-                        set: { isVisible in
-                            coordinator.setActionHidden(action, isHidden: !isVisible)
-                        }
-                    ))
-                    .toggleStyle(.switch)
-                    .labelsHidden()
-                    .controlSize(.small)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L("定制 Finder 右键菜单", "Customize your Finder menu"))
+                    Text(L("在动作库中管理显示、固定与自定义动作。", "Manage visibility, pins, and custom actions in the library."))
+                        .font(.caption).foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 2)
+                Spacer()
+                Button(L("管理动作", "Manage Actions")) { coordinator.selectedSection = .actionLibrary }
             }
         } header: {
             Text(L("动作可见性", "Action Visibility"))
@@ -189,8 +174,9 @@ struct GeneralSettingsView: View {
                 }
                 Spacer()
                 Button(L("清除历史", "Clear History"), role: .destructive) {
-                    coordinator.clearHistory()
+                    confirmClearHistory = true
                 }
+                .disabled(coordinator.recentHistory.isEmpty)
             }
             .padding(.vertical, 4)
         } header: {

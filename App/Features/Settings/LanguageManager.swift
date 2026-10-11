@@ -30,6 +30,7 @@ final class LanguageManager {
     
     var currentLanguage: AppLanguage {
         didSet {
+            guard !AppCoordinator.isIsolatedPreview else { return }
             UserDefaults.standard.set(currentLanguage.rawValue, forKey: languageKey)
             if currentLanguage == .system {
                 UserDefaults.standard.removeObject(forKey: "AppleLanguages")

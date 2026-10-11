@@ -54,7 +54,7 @@ struct PinnedActionsView: View {
             title: action.title,
             subtitle: action.subtitle,
             systemImage: action.systemImageName ?? "bolt.fill",
-            onRun: { coordinator.run(action) },
+            onRun: { coordinator.runFromPanel(action) },
             onUnpin: { coordinator.togglePinned(action) }
         )
     }
@@ -76,11 +76,13 @@ struct PinnedActionsView: View {
                 Text(L("还没有固定的动作", "No pinned actions"))
                     .font(.title3.weight(.bold))
                     .foregroundStyle(.primary)
-                Text(L("在动作库中右键点击任意动作，选择「固定到面板」即可添加。", "Right-click any action in the library and choose \"Pin to Panel\" to add it here."))
+                Text(L("在动作库中点击固定按钮，将常用动作添加到这里。", "Use the pin button in Actions to keep your favorites here."))
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 360)
+                Button(L("浏览动作库", "Browse Actions")) { coordinator.selectedSection = .actionLibrary }
+                    .buttonStyle(.borderedProminent)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

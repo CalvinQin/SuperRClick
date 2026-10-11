@@ -260,13 +260,12 @@ public final class AIActionExecutor {
                 .replacingOccurrences(of: ".", with: "")
             
             if !tag.isEmpty && tag.lowercased() != "empty" && tag.lowercased() != "none" {
-                var urlResource = url
-                var tags = try urlResource.resourceValues(forKeys: [URLResourceKey.tagNamesKey]).tagNames ?? []
+                var tags = try url.resourceValues(forKeys: [URLResourceKey.tagNamesKey]).tagNames ?? []
                 if !tags.contains(tag) {
                     tags.append(tag)
-                    var rv = URLResourceValues()
-                    rv.tagNames = tags
-                    try urlResource.setResourceValues(rv)
+                    // URLResourceValues.tagNames is writable only on macOS 26+.
+                    // NSURL supports writing Finder tags on macOS 10.9 and later.
+                    try (url as NSURL).setResourceValue(tags, forKey: .tagNamesKey)
                     generatedTags.append("\(url.lastPathComponent) -> \(tag)")
                 }
             }

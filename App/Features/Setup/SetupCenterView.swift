@@ -73,7 +73,7 @@ struct SetupCenterView: View {
                 Text(L("欢迎使用 Super RClick", "Welcome to Super RClick"))
                     .font(.largeTitle.weight(.semibold))
                 
-                Text(L("要使用该应用，请先在系统偏好设置中开启 Finder 扩展功能。", "To use this app, please enable the Finder extension in System Preferences."))
+                Text(L("在系统设置中启用 Finder 扩展，即可从右键菜单使用你的动作。", "Enable the Finder extension in System Settings to access your actions from the context menu."))
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -87,7 +87,9 @@ struct SetupCenterView: View {
                         .foregroundStyle(.blue)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(L("Finder 扩展已启用", "Finder Extension Enabled"))
+                        Text(coordinator.finderExtensionStatus == .ready
+                             ? L("Finder 扩展已启用", "Finder Extension Enabled")
+                             : L("Finder 扩展", "Finder Extension"))
                             .font(.headline)
                         Text(coordinator.finderExtensionDetail)
                             .font(.subheadline)
@@ -104,6 +106,8 @@ struct SetupCenterView: View {
                         Button(L("打开扩展设置", "Open Extension Settings")) {
                             coordinator.openFinderExtensionsSettings()
                         }
+                        .disabled(AppCoordinator.isIsolatedPreview)
+                        .accessibilityIdentifier("setup.openFinderExtensions")
                     }
                 }
                 .padding(8)
@@ -164,7 +168,20 @@ struct SetupCenterView: View {
         }
     }
     
+    @ViewBuilder
     private var desktopBridgePage: some View {
+        if AppCoordinator.isIsolatedPreview {
+            ContentUnavailableView(
+                L("隔离预览", "Isolated Preview"),
+                systemImage: "lock.shield",
+                description: Text(L("此预览不会检查或请求系统权限。", "This preview does not check or request system permissions."))
+            )
+        } else {
+            desktopBridgePermissionsPage
+        }
+    }
+
+    private var desktopBridgePermissionsPage: some View {
         let bridgeManager = DesktopBridgeManager.shared
         
         return VStack(alignment: .leading, spacing: 20) {

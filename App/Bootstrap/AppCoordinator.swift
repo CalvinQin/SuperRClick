@@ -1,4 +1,5 @@
 import AppKit
+import FinderSync
 import Foundation
 import Observation
 import Shared
@@ -8,6 +9,14 @@ import UniformTypeIdentifiers
 @MainActor
 @Observable
 final class AppCoordinator {
+    static var isIsolatedPreview: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.environment["SUPERRCLICK_TEST_STORAGE"]?.hasPrefix("/") == true
+        #else
+        false
+        #endif
+    }
+
     enum SetupCapabilityStatus {
         case ready
         case actionRequired
@@ -65,7 +74,6 @@ final class AppCoordinator {
         static let appGroupID = "group.com.haoqiqin.superrclick"
         static let batchRenameDemoFolderName = "Batch Rename Demo"
         static let setupCompletedDefaultsKey = "setup.completed"
-        static let finderExtensionBundleIdentifier = "com.haoqiqin.SuperRClick.FinderSync"
     }
 
     @ObservationIgnored private let actionEngine: ActionEngine
@@ -74,6 +82,7 @@ final class AppCoordinator {
     @ObservationIgnored private let platformExecutor: PlatformActionExecutor
     @ObservationIgnored private let aiExecutor: AIActionExecutor
     @ObservationIgnored private var externalCommandObserver: NSObjectProtocol?
+    @ObservationIgnored private var setupActivationTask: Task<Void, Never>?
     @ObservationIgnored private var activeExternalSecurityScopedURLs: [URL] = []
     @ObservationIgnored private var handledExternalRequestIDs: Set<UUID> = []
 
@@ -84,6 +93,8 @@ final class AppCoordinator {
     var recentHistory: [ActionInvocationRecord] = []
     var persistenceState = PersistenceState()
     var statusBanner: StatusBanner?
+    var selectedSection: SidebarSection? = .actionLibrary
+    var actionBeingEdited: CustomAction?
     var taskProgress: TaskProgressInfo?
     var isReady = false
     var hasCompletedSetup = UserDefaults.standard.bool(forKey: Constants.setupCompletedDefaultsKey)
@@ -119,10 +130,25 @@ final class AppCoordinator {
         self.platformExecutor = platformExecutor
         self.aiExecutor = aiExecutor
         self.sampleContext = AppCoordinator.makeDefaultContext()
+        if Self.isIsolatedPreview { hasCompletedSetup = true }
+
+        if !Self.isIsolatedPreview {
+            setupActivationTask = Task { [weak self] in
+                for await _ in NotificationCenter.default.notifications(named: NSApplication.didBecomeActiveNotification) {
+                    guard !Task.isCancelled, let self else { return }
+                    self.refreshSetupStatus()
+                    DesktopBridgeManager.shared.checkPermissions(prompt: false)
+                }
+            }
+        }
 
         Task {
             await bootstrap()
         }
+    }
+
+    deinit {
+        setupActivationTask?.cancel()
     }
 
     var totalAvailableActions: Int {
@@ -155,6 +181,7 @@ final class AppCoordinator {
     }
 
     func setupDesktopBridge() {
+        guard !Self.isIsolatedPreview else { return }
         DesktopBridgeManager.shared.onDesktopRightClick = { [weak self] point in
             guard let self = self else { return }
             self.showDesktopMenu(at: point)
@@ -192,8 +219,8 @@ final class AppCoordinator {
             await refreshModel()
             statusBanner = StatusBanner(
                 tone: .info,
-                title: "Refreshed action catalog",
-                detail: "The app reloaded visibility rules, monitored folders, pinned actions, and recent history."
+                title: L("动作库已刷新", "Action library refreshed"),
+                detail: nil
             )
         }
     }
@@ -204,36 +231,29 @@ final class AppCoordinator {
     }
 
     func refreshSetupStatus() {
+        guard !Self.isIsolatedPreview else { return }
         guard !isRefreshingSetupStatus else {
             return
         }
 
         isRefreshingSetupStatus = true
+        defer { isRefreshingSetupStatus = false }
 
-        Task {
-            let status = await Task.detached(priority: .userInitiated) {
-                Self.detectFinderExtensionStatus()
-            }.value
-
-            finderExtensionStatus = status.isEnabled ? .ready : .actionRequired
-            finderExtensionDetail = status.detail
-            lastSetupRefreshAt = Date()
-            isRefreshingSetupStatus = false
-        }
+        let isEnabled = FIFinderSyncController.isExtensionEnabled
+        finderExtensionStatus = isEnabled ? .ready : .actionRequired
+        finderExtensionDetail = isEnabled
+            ? L("Finder 扩展已启用。请在 Finder 中右键点击文件，确认菜单是否显示。", "Finder extension is enabled. Right-click a file in Finder to check the menu.")
+            : L("请在“系统设置 → 通用 → 登录项与扩展”中启用 Super RClick 的 Finder 扩展。", "Enable the Super RClick Finder extension in System Settings → General → Login Items & Extensions.")
+        lastSetupRefreshAt = Date()
     }
 
     func openFinderExtensionsSettings() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
-            NSWorkspace.shared.open(url)
-            return
-        }
-
-        if let legacyURL = URL(string: "x-apple.systempreferences:com.apple.preferences.extensions") {
-            NSWorkspace.shared.open(legacyURL)
-        }
+        guard !Self.isIsolatedPreview else { return }
+        FIFinderSyncController.showExtensionManagementInterface()
     }
 
     func openAccessibilitySettings() {
+        guard !Self.isIsolatedPreview else { return }
         guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") else {
             return
         }
@@ -241,6 +261,7 @@ final class AppCoordinator {
     }
 
     func openInputMonitoringSettings() {
+        guard !Self.isIsolatedPreview else { return }
         guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent") else {
             return
         }
@@ -285,6 +306,48 @@ final class AppCoordinator {
                 await refreshModel()
                 statusBanner = AppCoordinator.statusBanner(for: action, result: result)
             }
+        }
+    }
+
+    /// The app's panel has no live Finder selection. Always ask for an explicit target.
+    func runFromPanel(_ action: ActionDefinition) {
+        if action.availability.requiresTextSelection {
+            statusBanner = StatusBanner(
+                tone: .info,
+                title: L("此动作需要选中文本", "This action needs selected text"),
+                detail: L("此面板没有文本选择。请在原应用中选中文本并使用复制命令。", "This panel has no text selection. Select text and use Copy in the source app.")
+            )
+            return
+        }
+        switch action.id {
+        case BuiltInActionCatalog.batchRename.id:
+            openBatchRename()
+        case BuiltInActionCatalog.convertImage.id:
+            runImageConversionFromToolbox()
+        case BuiltInActionCatalog.compressItems.id:
+            runCompressFromToolbox()
+        case BuiltInActionCatalog.openTerminalHere.id:
+            runOpenTerminalFromToolbox()
+        default:
+            let isTemplate = action.section == .newFile
+            let panel = NSOpenPanel()
+            panel.title = action.title
+            panel.prompt = L("选择", "Choose")
+            panel.canChooseFiles = !isTemplate
+            panel.canChooseDirectories = true
+            panel.allowsMultipleSelection = !isTemplate
+            guard panel.runModal() == .OK, let firstURL = panel.urls.first else { return }
+            if isTemplate {
+                sampleContext = .finderContainer(firstURL, displayName: firstURL.lastPathComponent,
+                                                sourceApplicationBundleIdentifier: Bundle.main.bundleIdentifier)
+            } else {
+                let items = panel.urls.map { url in
+                    ActionItem(url: url, displayName: url.lastPathComponent,
+                               isDirectory: (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false)
+                }
+                sampleContext = .finderSelection(items, sourceApplicationBundleIdentifier: Bundle.main.bundleIdentifier)
+            }
+            run(action)
         }
     }
 
@@ -463,16 +526,17 @@ final class AppCoordinator {
     }
 
     func togglePinned(_ action: ActionDefinition) {
-        if let index = persistenceState.pinnedActions.firstIndex(where: { $0.actionID == action.id }) {
-            persistenceState.pinnedActions.remove(at: index)
+        var updated = persistenceState
+        if let index = updated.pinnedActions.firstIndex(where: { $0.actionID == action.id }) {
+            updated.pinnedActions.remove(at: index)
         } else {
-            let nextOrder = (persistenceState.pinnedActions.map(\.order).max() ?? -1) + 1
-            persistenceState.pinnedActions.append(
+            let nextOrder = (updated.pinnedActions.map(\.order).max() ?? -1) + 1
+            updated.pinnedActions.append(
                 PinnedAction(actionID: action.id, order: nextOrder, isFavorite: true)
             )
         }
 
-        persistState()
+        guard saveState(updated) else { return }
 
         Task {
             await refreshModel()
@@ -484,6 +548,10 @@ final class AppCoordinator {
     }
 
     func openBatchRename(for context: ActionContext? = nil) {
+        if isPresentingBatchRename || isApplyingBatchRename {
+            showBatchRenamePanel()
+            return
+        }
         releaseActiveExternalSecurityScopes()
 
         // If context has real file items, use them directly
@@ -546,6 +614,7 @@ final class AppCoordinator {
     }
 
     func ensureExternalCommandMonitoring() async {
+        guard !Self.isIsolatedPreview else { return }
         guard externalCommandObserver == nil else {
             NSLog("[SuperRClick] ensureExternalCommandMonitoring: observer already exists, skipping")
             return
@@ -568,6 +637,7 @@ final class AppCoordinator {
     }
 
     func dismissBatchRename() {
+        guard !isApplyingBatchRename else { return }
         isPresentingBatchRename = false
         isApplyingBatchRename = false
         batchRenameContext = nil
@@ -593,6 +663,7 @@ final class AppCoordinator {
         preserveFileExtension: Bool? = nil,
         separator: String? = nil
     ) {
+        guard !isApplyingBatchRename else { return }
         if let mode {
             batchRenameDraft.mode = mode
         }
@@ -619,13 +690,16 @@ final class AppCoordinator {
     }
 
     func updateBatchRenameDraft(_ draft: BatchRenameDraft) {
+        guard !isApplyingBatchRename else { return }
         batchRenameDraft = draft
         recalculateBatchRenamePlan()
     }
 
     func applyBatchRename() {
+        guard !isApplyingBatchRename else { return }
         guard let context = batchRenameContext,
               let plan = batchRenamePlan,
+              plan.canApply,
               let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.batchRename.id) else {
             return
         }
@@ -747,6 +821,7 @@ final class AppCoordinator {
     }
 
     func consumePendingExternalCommands() async {
+        guard !Self.isIsolatedPreview else { return }
         NSLog("[SuperRClick] consumePendingExternalCommands: ENTER")
         do {
             let storageDir = try appGroupContainer.resolveDirectory()
@@ -869,10 +944,11 @@ final class AppCoordinator {
     }
 
     func setActionHidden(_ action: ActionDefinition, isHidden: Bool) {
-        persistenceState.visibilityRules.removeAll(where: { $0.actionID == action.id })
+        var updated = persistenceState
+        updated.visibilityRules.removeAll(where: { $0.actionID == action.id })
 
         if isHidden {
-            persistenceState.visibilityRules.append(
+            updated.visibilityRules.append(
                 VisibilityRule(
                     actionID: action.id,
                     mode: .exclude,
@@ -881,7 +957,7 @@ final class AppCoordinator {
             )
         }
 
-        persistState()
+        guard saveState(updated) else { return }
 
         Task {
             await actionEngine.setVisibilityRules(persistenceState.visibilityRules)
@@ -891,13 +967,28 @@ final class AppCoordinator {
 
     // MARK: - Custom Actions
 
-    func addCustomAction(_ action: CustomAction) {
-        persistenceState.customActions.append(action)
-        persistState()
+    func presentActionEditor(_ action: CustomAction? = nil) {
+        guard actionBeingEdited == nil, isReady else { return }
+        actionBeingEdited = action ?? CustomAction()
+    }
 
+    func saveCustomAction(_ action: CustomAction) throws {
+        let action = try action.validated()
+        var updated = persistenceState
+        let existingIndex = updated.customActions.firstIndex(where: { $0.id == action.id })
+        if let existingIndex {
+            updated.customActions[existingIndex] = action
+        } else {
+            updated.customActions.append(action)
+        }
+        let controller = try appGroupContainer.makePersistenceController()
+        try controller.saveState(updated)
+        persistenceState = updated
         statusBanner = StatusBanner(
             tone: .success,
-            title: L("已创建自定义动作", "Custom action created"),
+            title: existingIndex == nil
+                ? L("已创建自定义动作", "Custom action created")
+                : L("已保存自定义动作", "Custom action saved"),
             detail: action.name
         )
 
@@ -907,12 +998,21 @@ final class AppCoordinator {
     }
 
     func deleteCustomAction(_ action: CustomAction) {
-        persistenceState.customActions.removeAll(where: { $0.id == action.id })
-        persistState()
+        var updated = persistenceState
+        updated.customActions.removeAll(where: { $0.id == action.id })
+        guard saveState(updated) else { return }
+        statusBanner = StatusBanner(tone: .success, title: L("已删除动作", "Action deleted"), detail: action.name)
 
         Task {
             await refreshModel()
         }
+    }
+
+    func setCustomActionEnabled(_ action: CustomAction, isEnabled: Bool) {
+        var updated = persistenceState
+        guard let index = updated.customActions.firstIndex(where: { $0.id == action.id }) else { return }
+        updated.customActions[index].isEnabled = isEnabled
+        _ = saveState(updated)
     }
 
     // MARK: - Monitored Folder Toggle
@@ -927,8 +1027,10 @@ final class AppCoordinator {
     // MARK: - History
 
     func clearHistory() {
-        persistenceState.actionHistory.removeAll()
-        persistState()
+        var updated = persistenceState
+        updated.actionHistory.removeAll()
+        guard saveState(updated) else { return }
+        statusBanner = StatusBanner(tone: .success, title: L("执行记录已清除", "Activity cleared"), detail: nil)
 
         Task {
             await refreshModel()
@@ -938,6 +1040,7 @@ final class AppCoordinator {
     private func bootstrap() async {
         do {
             let controller = try appGroupContainer.makePersistenceController()
+            let isFirstLaunch = !FileManager.default.fileExists(atPath: controller.stateFileURL.path)
             persistenceState = controller.loadOrCreateState()
             var didSeedDefaults = false
 
@@ -947,7 +1050,7 @@ final class AppCoordinator {
                 didSeedDefaults = true
             }
 
-            if persistenceState.pinnedActions.isEmpty {
+            if isFirstLaunch {
                 persistenceState.pinnedActions = defaultPinnedActions()
                 didSeedDefaults = true
             }
@@ -1019,8 +1122,8 @@ final class AppCoordinator {
 
     private func refreshModel() async {
         // Reload definitions so language changes take effect
-        await actionEngine.reloadDefinitions()
-        allDefinitions = await actionEngine.allDefinitions() + NewFileCatalog.all
+        await actionEngine.reloadDefinitions(BuiltInActionCatalog.all + NewFileCatalog.all)
+        allDefinitions = await actionEngine.allDefinitions()
         
         // Group all definitions regardless of current context visibility so Action Library shows everything
         let groupedDefinitions = Dictionary(grouping: allDefinitions, by: \.section)
@@ -1073,21 +1176,30 @@ final class AppCoordinator {
         }
     }
 
-    private func persistState() {
+    @discardableResult
+    private func saveState(_ updated: PersistenceState) -> Bool {
         do {
             let controller = try appGroupContainer.makePersistenceController()
-            try controller.saveState(persistenceState)
+            try controller.saveState(updated)
+            persistenceState = updated
+            return true
         } catch {
             statusBanner = StatusBanner(
-                tone: .warning,
-                title: "Could not save settings",
+                tone: .error,
+                title: L("设置未保存", "Settings were not saved"),
                 detail: error.localizedDescription
             )
+            return false
         }
     }
+
+    @discardableResult
+    private func persistState() -> Bool { saveState(persistenceState) }
     
-    func saveAIConfig() {
-        persistState()
+    func saveAIConfig(_ config: AIConfig) -> Bool {
+        var updated = persistenceState
+        updated.aiConfig = config
+        return saveState(updated)
     }
 
     private func defaultPinnedActions() -> [PinnedAction] {
@@ -1363,53 +1475,6 @@ final class AppCoordinator {
     func setSetupCompleted(_ completed: Bool) {
         hasCompletedSetup = completed
         UserDefaults.standard.set(completed, forKey: Constants.setupCompletedDefaultsKey)
-    }
-
-    private nonisolated static func detectFinderExtensionStatus() -> (isEnabled: Bool, detail: String) {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
-        process.arguments = [
-            "-m",
-            "-A",
-            "-D",
-            "-v",
-            "-p",
-            "com.apple.FinderSync",
-            "-i",
-            Constants.finderExtensionBundleIdentifier
-        ]
-
-        let outputPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = outputPipe
-
-        do {
-            try process.run()
-            process.waitUntilExit()
-
-            let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(decoding: data, as: UTF8.self)
-            let isEnabled = output
-                .split(separator: "\n")
-                .contains(where: { $0.contains("+") && $0.contains(Constants.finderExtensionBundleIdentifier) })
-
-            if isEnabled {
-                return (
-                    true,
-                    L("Finder 扩展已启用。Finder 窗口和已覆盖目录中的右键菜单应该可以正常出现。", "Finder extension is enabled. Context menus should appear in Finder windows.")
-                )
-            }
-
-            return (
-                false,
-                L("Finder 扩展还没有被系统标记为启用。请前往系统设置中的扩展页面开启它。", "Finder extension is not enabled. Please enable it in System Settings > Extensions.")
-            )
-        } catch {
-            return (
-                false,
-                L("暂时无法读取 Finder 扩展状态：\(error.localizedDescription)", "Cannot read Finder extension status: \(error.localizedDescription)")
-            )
-        }
     }
 
     private func canonicalized(_ url: URL) -> URL {

@@ -6,6 +6,12 @@ import Foundation
 /// then falls back to system preferred languages.
 public enum SharedLocale {
     public static var isChinese: Bool {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["SUPERRCLICK_TEST_STORAGE"] != nil,
+           let language = UserDefaults.standard.string(forKey: "app_selected_language") {
+            return language == "zh-Hans"
+        }
+        #endif
         if let groupDefaults = UserDefaults(suiteName: "group.com.haoqiqin.superrclick"),
            let saved = groupDefaults.string(forKey: "app_selected_language") {
             if saved == "zh-Hans" { return true }
@@ -23,7 +29,7 @@ public func L(_ zh: String, _ en: String) -> String {
 
 // MARK: - Action Section
 
-public enum ActionSection: String, Codable, Hashable, Sendable, Comparable {
+public enum ActionSection: String, Codable, Hashable, Sendable, Comparable, CaseIterable {
     case file
     case ai
     case newFile

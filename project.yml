@@ -3,14 +3,14 @@ options:
   bundleIdPrefix: com.haoqiqin
   createIntermediateGroups: true
   deploymentTarget:
-    macOS: "26.0"
+    macOS: "15.0"
 configs:
   Debug: debug
   Release: release
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
     CURRENT_PROJECT_VERSION: 3
     MARKETING_VERSION: 0.2.1
     DEVELOPMENT_ASSET_PATHS: ""

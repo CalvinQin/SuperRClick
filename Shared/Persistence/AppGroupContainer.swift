@@ -10,6 +10,14 @@ public struct AppGroupContainer: Sendable {
     }
 
     public func resolveDirectory(fileManager: FileManager = .default) throws -> URL {
+        #if DEBUG
+        // UI tests and local previews must never migrate or overwrite the user's configuration.
+        if let path = ProcessInfo.processInfo.environment["SUPERRCLICK_TEST_STORAGE"], path.hasPrefix("/") {
+            let directory = URL(fileURLWithPath: path, isDirectory: true)
+            try ensureDirectoryExists(directory, fileManager: fileManager)
+            return directory
+        }
+        #endif
         if let groupIdentifier,
            let containerURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: groupIdentifier) {
             try ensureDirectoryExists(containerURL, fileManager: fileManager)

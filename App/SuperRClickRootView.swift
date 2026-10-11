@@ -52,11 +52,14 @@ enum SidebarSection: String, CaseIterable, Identifiable {
 
 struct SuperRClickRootView: View {
     @Bindable var coordinator: AppCoordinator
-    @State private var selectedSection: SidebarSection?
-    @State private var isPresentingCreateAction = false
+    @State private var didCheckSetup = false
     @State private var isPresentingSetup = false
 
     var body: some View {
+        navigation.frame(minWidth: 800, minHeight: 560)
+    }
+
+    private var navigation: some View {
         NavigationSplitView {
             sidebar
                 .toolbar {
@@ -65,21 +68,27 @@ struct SuperRClickRootView: View {
                     }
                 }
         } detail: {
-            detailView
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(nsColor: .windowBackgroundColor))
+            VStack(spacing: 0) {
+                detailView.frame(maxWidth: .infinity, maxHeight: .infinity)
+                if let status = coordinator.statusBanner {
+                    ActionStatusBanner(status: status) {
+                        coordinator.statusBanner = nil
+                    }
+                }
+            }
+            .background(Color(nsColor: .windowBackgroundColor))
         }
         .navigationSplitViewStyle(.balanced)
-        .sheet(isPresented: $isPresentingCreateAction) {
-            CreateActionView(coordinator: coordinator)
+        .sheet(item: $coordinator.actionBeingEdited) { action in
+            CreateActionView(coordinator: coordinator, action: action)
         }
         .sheet(isPresented: $isPresentingSetup) {
             SetupCenterView(coordinator: coordinator)
         }
         .background(BatchRenamePanelHost(coordinator: coordinator))
         .task {
-            if selectedSection == nil {
-                selectedSection = .actionLibrary
+            if !didCheckSetup {
+                didCheckSetup = true
                 if !coordinator.hasCompletedSetup {
                     isPresentingSetup = true
                 }
@@ -96,7 +105,7 @@ struct SuperRClickRootView: View {
     // MARK: - Sidebar
 
     private var sidebar: some View {
-        List(selection: $selectedSection) {
+        List(selection: $coordinator.selectedSection) {
             Section(L("应用", "App")) {
                 ForEach([SidebarSection.actionLibrary, .pinned, .recent], id: \.self) { section in
                     sidebarRow(section)
@@ -142,6 +151,7 @@ struct SuperRClickRootView: View {
                 .symbolRenderingMode(.hierarchical)
         }
         .tag(section)
+        .accessibilityIdentifier("sidebar.\(section.rawValue)")
     }
 
     private var sidebarFooter: some View {
@@ -150,25 +160,27 @@ struct SuperRClickRootView: View {
                 .padding(.horizontal, 12)
             
             Button {
-                isPresentingCreateAction = true
+                coordinator.presentActionEditor()
             } label: {
                 Label(L("新建动作", "New Action"), systemImage: "plus.circle.fill")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.callout.weight(.medium))
             }
             .buttonStyle(.plain)
+            .disabled(!coordinator.isReady)
+            .accessibilityIdentifier("sidebar.newAction")
             .padding(.horizontal, 16)
             .padding(.bottom, 6)
 
             if coordinator.isReady {
                 HStack(spacing: 6) {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 7, height: 7)
-                        .shadow(color: .green.opacity(0.5), radius: 3)
-                    Text(L("就绪", "Ready"))
+                    Image(systemName: coordinator.finderExtensionStatus == .ready ? "checkmark.circle.fill" : "info.circle")
+                        .foregroundStyle(coordinator.finderExtensionStatus == .ready ? Color.green : .secondary)
+                    Text(coordinator.finderExtensionStatus == .ready
+                         ? L("Finder 扩展已启用", "Finder extension enabled")
+                         : L("在设置中检查 Finder 扩展", "Check Finder setup in Settings"))
                         .font(.caption2)
-                        .foregroundStyle(.tertiary)
+                        .foregroundStyle(.secondary)
                 }
                 .padding(.bottom, 10)
             }
@@ -180,7 +192,7 @@ struct SuperRClickRootView: View {
 
     @ViewBuilder
     private var detailView: some View {
-        switch selectedSection {
+        switch coordinator.selectedSection {
         case .actionLibrary:
             ActionLibraryView(coordinator: coordinator)
         case .pinned:

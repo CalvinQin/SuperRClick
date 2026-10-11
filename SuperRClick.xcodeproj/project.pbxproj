@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0418F2137B0BE2912140B2BD /* ProgressReporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057463F933BE4555A05124E4 /* ProgressReporting.swift */; };
 		049AC370CB7CDC55B5C9E080 /* ExtensionStatusBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC14CF8B8AFD5386CDA284C5 /* ExtensionStatusBanner.swift */; };
+		05B7AF4F8DD48261E67408D3 /* ActionComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891729637A39DC2F39EDBF4E /* ActionComponents.swift */; };
 		0694EEA4B45F9B64C88B38B7 /* BuiltInActionCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311309AB982E82422E709413 /* BuiltInActionCatalogTests.swift */; };
 		07024FF44A856DC4CD846DDE /* DesktopSelectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418143AA4C67BF7BA2CFCF2B /* DesktopSelectionProvider.swift */; };
 		0A411E84A45FC71B6203C431 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB66C064CCC2893EE51B5996 /* ToolsView.swift */; };
@@ -63,6 +64,7 @@
 		B45E667621825D908CE82353 /* ActionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B89F144E77DABB08F6716DA /* ActionContext.swift */; };
 		B8F6D3F0A784CCEA5F85D501 /* PersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA7C69B6BC579CD02F1EAE4 /* PersistenceControllerTests.swift */; };
 		BC3D355004EF729737A4CD25 /* SuperRClickCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* SuperRClickCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1494F5C0B286CB618A37F86 /* CustomActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDB05AD5CF71985D3A4F8D7 /* CustomActionTests.swift */; };
 		C479E1F7ACFB120D764A9A08 /* ActionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2E8E2DA554BDABA1218234 /* ActionID.swift */; };
 		C5E7EA2A7D5AC1EA9177F007 /* ExternalCommandCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */; };
 		C7520B2C9B5A735DDBB5F45C /* SuperRClickFinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1894909FC3B2811CAA4F786E /* SuperRClickFinderSync.swift */; };
@@ -191,6 +193,7 @@
 		7EC6092F121A36C29E11DE03 /* SuperRClickFinderMenuComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickFinderMenuComposer.swift; sourceTree = "<group>"; };
 		80AB4A10401A179897B42174 /* NewFileCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileCatalog.swift; sourceTree = "<group>"; };
 		846D3EACD6E9BD755359CE2F /* PersistenceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceState.swift; sourceTree = "<group>"; };
+		891729637A39DC2F39EDBF4E /* ActionComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionComponents.swift; sourceTree = "<group>"; };
 		8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		8DB1ED5E7091B6FA179A0CF1 /* SuperRClick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperRClick.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformActionExecutor.swift; sourceTree = "<group>"; };
@@ -205,6 +208,7 @@
 		A96298551A87D913182C8DD1 /* SuperRClickUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedActionsView.swift; sourceTree = "<group>"; };
 		AB2E4CF609EA4AACF0839864 /* ExternalCommandModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCommandModels.swift; sourceTree = "<group>"; };
+		ABDB05AD5CF71985D3A4F8D7 /* CustomActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomActionTests.swift; sourceTree = "<group>"; };
 		B23AB1C5EA993244FB961C19 /* DesktopBridgeMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopBridgeMenuBuilder.swift; sourceTree = "<group>"; };
 		B99C27578D83BA4952837B75 /* ActionDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDefinition.swift; sourceTree = "<group>"; };
 		BEB1A957747FF655D37FA68A /* CustomAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAction.swift; sourceTree = "<group>"; };
@@ -391,6 +395,7 @@
 		62F578C3AA4031FAE2D92A60 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				891729637A39DC2F39EDBF4E /* ActionComponents.swift */,
 				2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */,
 				C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */,
 				A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */,
@@ -432,6 +437,7 @@
 				92C0A0E067D55231E9D219A1 /* ActionEngineTests.swift */,
 				A8932CF96F9E47075902887D /* BatchRenamePlannerTests.swift */,
 				311309AB982E82422E709413 /* BuiltInActionCatalogTests.swift */,
+				ABDB05AD5CF71985D3A4F8D7 /* CustomActionTests.swift */,
 				C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */,
 				FDA7C69B6BC579CD02F1EAE4 /* PersistenceControllerTests.swift */,
 			);
@@ -696,7 +702,6 @@
 				};
 			};
 			buildConfigurationList = 51D50B14B2769ABE69B499AB /* Build configuration list for PBXProject "SuperRClick" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -706,13 +711,14 @@
 			mainGroup = 8FCFCB2C8D913E7EC0F8E37E;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			productRefGroup = DFE33B5DF1D805925229D87A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4D0C751C16F82679900EFD33 /* SuperRClick */,
 				D1CBA9A9ADE91613E8D3C059 /* SuperRClickCore */,
-				444C1E4A38ED9F0EAE0FA353 /* SuperRClickCoreTests */,
+				4D0C751C16F82679900EFD33 /* SuperRClick */,
 				ED92FE3AA7BB73668213333F /* SuperRClickFinderSync */,
+				444C1E4A38ED9F0EAE0FA353 /* SuperRClickCoreTests */,
 				7344323C71D9F50296D2624E /* SuperRClickUITests */,
 			);
 		};
@@ -756,6 +762,7 @@
 				7AB6F10613BA57AB52688FEC /* ActionEngineTests.swift in Sources */,
 				83E8AB6554380DFB5BC2B29D /* BatchRenamePlannerTests.swift in Sources */,
 				0694EEA4B45F9B64C88B38B7 /* BuiltInActionCatalogTests.swift in Sources */,
+				C1494F5C0B286CB618A37F86 /* CustomActionTests.swift in Sources */,
 				C5E7EA2A7D5AC1EA9177F007 /* ExternalCommandCenterTests.swift in Sources */,
 				B8F6D3F0A784CCEA5F85D501 /* PersistenceControllerTests.swift in Sources */,
 				F9A594C167DF4DB39EF0021B /* SharedCoreIntegrationTests.swift in Sources */,
@@ -807,6 +814,7 @@
 				D487F855181702673E71C06A /* AIActionExecutor.swift in Sources */,
 				530AD807AA7792324078BF98 /* AIResultWindow.swift in Sources */,
 				E7D1F20F6CA2CD5EA960EA0B /* AISettingsView.swift in Sources */,
+				05B7AF4F8DD48261E67408D3 /* ActionComponents.swift in Sources */,
 				265B06D1C4FBAD32B120751D /* ActionLibraryView.swift in Sources */,
 				51DED55E4DDE3154D3C8FCF4 /* ActionVisibilityView.swift in Sources */,
 				9E555F5012A37AFE3C0300FC /* AppCoordinator.swift in Sources */,
@@ -924,7 +932,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.2.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1108,7 +1116,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.2.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

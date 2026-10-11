@@ -21,8 +21,8 @@ struct SettingsView: View {
                     Label(L("工作区", "Workspaces"), systemImage: "folder")
                 }
                 
-            AISettingsView(config: $coordinator.persistenceState.aiConfig) {
-                coordinator.saveAIConfig()
+            AISettingsView(config: coordinator.persistenceState.aiConfig) { draft in
+                coordinator.saveAIConfig(draft)
             }
                 .tabItem {
                     Label("AI", systemImage: "sparkles")

@@ -26,12 +26,15 @@ final class BatchRenameWindowController {
 
     private var window: NSWindow?
     private var hostingView: NSHostingView<AnyView>?
+    private weak var coordinator: AppCoordinator?
 
     private init() {}
 
     func show(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
         // If window already exists, just bring it forward
         if let window, window.isVisible {
+            setOperationRunning(coordinator.isApplyingBatchRename)
             window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
             return
@@ -66,6 +69,7 @@ final class BatchRenameWindowController {
 
         self.window = win
         self.hostingView = hostingView
+        setOperationRunning(coordinator.isApplyingBatchRename)
 
         NSLog("[SuperRClick] BatchRenameWindowController.show: about to makeKeyAndOrderFront")
         NSApp.activate(ignoringOtherApps: true)
@@ -73,13 +77,19 @@ final class BatchRenameWindowController {
         NSLog("[SuperRClick] BatchRenameWindowController.show: window is now visible")
     }
 
+    func setOperationRunning(_ isRunning: Bool) {
+        window?.standardWindowButton(.closeButton)?.isEnabled = !isRunning
+    }
+
     func close() {
+        guard coordinator?.isApplyingBatchRename != true else { return }
         // Guard against re-entry: close() → windowWillClose → dismissBatchRename → closeBatchRenamePanel → close()
         guard let win = window else { return }
         // Remove delegate FIRST to prevent windowWillClose from calling dismissBatchRename again
         win.delegate = nil
         window = nil
         hostingView = nil
+        coordinator = nil
         win.close()
     }
 }
@@ -91,7 +101,12 @@ final class BatchRenamePanelDelegate: NSObject, NSWindowDelegate {
     static let shared = BatchRenamePanelDelegate()
     weak var coordinator: AppCoordinator?
 
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        coordinator?.isApplyingBatchRename != true
+    }
+
     func windowWillClose(_ notification: Notification) {
+        guard coordinator?.isApplyingBatchRename != true else { return }
         coordinator?.dismissBatchRename()
     }
 }
@@ -111,6 +126,7 @@ struct BatchRenamePanelView: View {
             VStack(alignment: .leading, spacing: 18) {
                 headerCard(plan: plan)
                 controlsCard
+                    .disabled(coordinator.isApplyingBatchRename)
                 previewCard(plan: plan)
                 conflictCard(plan: plan)
                 actionBar(plan: plan)
@@ -130,8 +146,14 @@ struct BatchRenamePanelView: View {
             )
         )
         .onAppear(perform: syncDraftFromCoordinator)
+        .onChange(of: coordinator.isApplyingBatchRename, initial: true) { _, isRunning in
+            if isRunning {
+                isTokenFocused = false
+            }
+            BatchRenameWindowController.shared.setOperationRunning(isRunning)
+        }
         .onChange(of: draft) { _, newValue in
-            guard didInitialSync else { return }
+            guard didInitialSync, !coordinator.isApplyingBatchRename else { return }
             coordinator.updateBatchRenameDraft(newValue)
         }
     }
@@ -273,14 +295,24 @@ struct BatchRenamePanelView: View {
             Button(L("取消", "Cancel")) {
                 coordinator.dismissBatchRename()
             }
+            .disabled(coordinator.isApplyingBatchRename)
+            .keyboardShortcut(.cancelAction)
+            .accessibilityIdentifier("batchRename.cancel")
 
             Spacer()
 
-            Button(L("应用更改", "Apply Changes")) {
+            if coordinator.isApplyingBatchRename {
+                ProgressView()
+                    .controlSize(.small)
+                    .accessibilityLabel(L("正在重命名文件", "Renaming files"))
+            }
+
+            Button(coordinator.isApplyingBatchRename ? L("正在应用…", "Applying…") : L("应用更改", "Apply Changes")) {
                 coordinator.applyBatchRename()
             }
             .buttonStyle(.borderedProminent)
-            .disabled(!plan.canApply)
+            .disabled(!plan.canApply || coordinator.isApplyingBatchRename)
+            .accessibilityIdentifier("batchRename.apply")
         }
         .padding(.horizontal, 4)
     }

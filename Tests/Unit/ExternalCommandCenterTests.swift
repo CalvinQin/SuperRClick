@@ -59,7 +59,7 @@ final class ExternalCommandCenterTests: XCTestCase {
             securityScopeStarter: { _ in true }
         )
 
-        let resolved = try center.resolveBatchRenameRequest(request)
+        let resolved = try center.resolveRequest(request)
         XCTAssertEqual(resolved.context.items.count, 1)
         XCTAssertEqual(resolved.context.items.first?.url.path, "/tmp/demo.txt")
         XCTAssertEqual(resolved.context.metadata["external.command.kind"], ExternalCommandKind.presentBatchRename.rawValue)

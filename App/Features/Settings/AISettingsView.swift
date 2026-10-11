@@ -2,15 +2,19 @@ import SwiftUI
 import Shared
 
 public struct AISettingsView: View {
-    @Binding var config: AIConfig
-    var onSave: (() -> Void)?
+    @State private var config: AIConfig
+    private let onSave: (AIConfig) -> Bool
     @State private var apiKey: String = ""
+    @State private var loadedAPIKey: String = ""
     @State private var isTestingConnection = false
     @State private var testResult: Result<Bool, Error>?
     @State private var isSaved = false
+    @State private var hasUnsavedChanges = false
+    @State private var saveError: String?
+    @State private var keychainSaveError: String?
     
-    public init(config: Binding<AIConfig>, onSave: (() -> Void)? = nil) {
-        self._config = config
+    public init(config: AIConfig, onSave: @escaping (AIConfig) -> Bool) {
+        self._config = State(initialValue: config)
         self.onSave = onSave
     }
     
@@ -18,6 +22,7 @@ public struct AISettingsView: View {
         Group {
             Section {
                 Toggle(L("启用 AI 功能", "Enable AI Features"), isOn: $config.isEnabled)
+                    .accessibilityIdentifier("ai.enabled")
             } header: {
                 Text(L("AI 设置", "AI Settings"))
             }
@@ -26,7 +31,7 @@ public struct AISettingsView: View {
                 Picker(L("服务商", "Provider"), selection: $config.providerID) {
                     ForEach(LLMProviderPreset.all) { preset in
                         HStack {
-                            if let domain = preset.logoDomain, let url = URL(string: "https://logo.clearbit.com/\(domain)?size=32") {
+                            if !isIsolatedUISession, let domain = preset.logoDomain, let url = URL(string: "https://logo.clearbit.com/\(domain)?size=32") {
                                 AsyncImage(url: url) { phase in
                                     if let image = phase.image {
                                         image.resizable().aspectRatio(contentMode: .fit)
@@ -79,8 +84,12 @@ public struct AISettingsView: View {
                 
                 SecureField(L("API Key", "API Key"), text: $apiKey)
                     .onChange(of: apiKey) { _, newValue in
-                        try? AIKeychainStore.save(apiKey: newValue, for: config.providerID)
+                        guard newValue != loadedAPIKey else {
+                            keychainSaveError = nil
+                            return
+                        }
                         markUnsaved()
+                        persistAPIKeyIfNeeded()
                     }
                 
                 if config.providerID == "ollama" {
@@ -107,14 +116,15 @@ public struct AISettingsView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(isSaved ? .green : .accentColor)
-                    .disabled(!config.isEnabled)
+                    .accessibilityIdentifier("ai.save")
                     
                     Spacer()
                     
                     Button(L("测试连接", "Test Connection")) {
                         Task { await testConnection() }
                     }
-                    .disabled(isTestingConnection || !config.isEnabled)
+                    .disabled(isTestingConnection || !config.isEnabled || isIsolatedUISession)
+                    .accessibilityIdentifier("ai.testConnection")
                     
                     if isTestingConnection {
                         ProgressView()
@@ -132,9 +142,26 @@ public struct AISettingsView: View {
                                 .foregroundColor(.red)
                             Text(error.localizedDescription)
                                 .foregroundColor(.red)
-                                .lineLimit(2)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .textSelection(.enabled)
                         }
                     }
+                }
+
+                if let error = keychainSaveError ?? saveError {
+                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .textSelection(.enabled)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityIdentifier("ai.saveError")
+                } else if hasUnsavedChanges {
+                    Text(L("有未保存的设置。", "You have unsaved settings."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("ai.unsavedChanges")
                 }
             }
             
@@ -153,37 +180,82 @@ public struct AISettingsView: View {
     
     private func markUnsaved() {
         isSaved = false
+        hasUnsavedChanges = true
+        saveError = nil
     }
     
-    private func saveSettings() {
-        onSave?()
+    @discardableResult
+    private func saveSettings() -> Bool {
+        guard persistAPIKeyIfNeeded(), onSave(config) else {
+            isSaved = false
+            hasUnsavedChanges = true
+            saveError = L("设置未能保存。请重试；当前更改仍保留在此页面。", "Settings could not be saved. Please try again; your changes are still on this page.")
+            return false
+        }
+
+        saveError = nil
+        hasUnsavedChanges = false
         withAnimation(.easeInOut(duration: 0.3)) {
             isSaved = true
         }
-        // Reset after 3 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation { isSaved = false }
-        }
+        return true
     }
     
     private func loadAPIKey() {
-        if let key = try? AIKeychainStore.load(for: config.providerID) {
-            apiKey = key
+        let key: String
+        if isIsolatedUISession {
+            key = ""
         } else {
-            apiKey = ""
+            key = (try? AIKeychainStore.load(for: config.providerID)) ?? ""
         }
+        // Update the comparison value first so loading a provider never writes its key back.
+        loadedAPIKey = key
+        apiKey = key
+        keychainSaveError = nil
         testResult = nil
+    }
+
+    @discardableResult
+    private func persistAPIKeyIfNeeded() -> Bool {
+        guard apiKey != loadedAPIKey else {
+            keychainSaveError = nil
+            return true
+        }
+
+        guard !isIsolatedUISession else {
+            loadedAPIKey = apiKey
+            return true
+        }
+
+        do {
+            try AIKeychainStore.save(apiKey: apiKey, for: config.providerID)
+            loadedAPIKey = apiKey
+            keychainSaveError = nil
+            return true
+        } catch {
+            keychainSaveError = L("API Key 未能保存到钥匙串：", "The API key could not be saved to Keychain: ") + error.localizedDescription
+            return false
+        }
+    }
+
+    private var isIsolatedUISession: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.environment["SUPERRCLICK_TEST_STORAGE"] != nil
+        #else
+        false
+        #endif
     }
     
     private func testConnection() async {
-        // Auto-save before testing
-        saveSettings()
-        
+        guard !isTestingConnection, config.isEnabled, !isIsolatedUISession else { return }
         isTestingConnection = true
+        defer { isTestingConnection = false }
         testResult = nil
+
+        // A connection check should not claim success when its settings could not be saved.
+        guard saveSettings() else { return }
         
         guard let service = LLMServiceFactory.makeService(for: config) else {
-            isTestingConnection = false
             testResult = .failure(LLMError.invalidURL)
             return
         }
@@ -194,7 +266,5 @@ public struct AISettingsView: View {
         } catch {
             testResult = .failure(error)
         }
-        
-        isTestingConnection = false
     }
 }

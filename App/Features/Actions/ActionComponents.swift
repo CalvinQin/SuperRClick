@@ -6,8 +6,8 @@ struct ActionSymbol: View {
     var tint: Color = .accentColor
 
     var body: some View {
-        Image(systemName: name)
-            .font(.system(size: 17, weight: .medium))
+        Image(rclick: name)
+            .resizable().frame(width: 20, height: 20)
             .foregroundStyle(tint)
             .frame(width: 36, height: 36)
             .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 9))
@@ -21,7 +21,7 @@ struct ActionStatusBanner: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: status.iconName)
+            Image(rclick: status.iconName)
                 .foregroundStyle(status.color)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 3) {
@@ -36,7 +36,7 @@ struct ActionStatusBanner: View {
             }
             Spacer(minLength: 12)
             Button(action: dismiss) {
-                Image(systemName: "xmark")
+                Image(rclick: "xmark")
                     .frame(width: 28, height: 28)
                     .contentShape(Rectangle())
             }

@@ -70,7 +70,7 @@ struct GeneralSettingsView: View {
             // App Language (Dynamic Switcher)
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Label(L("语言设定 / Language", "Language"), systemImage: "globe")
+                    RClickLabel(L("语言设定 / Language", "Language"), icon: "globe")
                     Spacer()
                     
                     Picker("", selection: Binding(
@@ -100,7 +100,7 @@ struct GeneralSettingsView: View {
             // App Appearance / Mode
             VStack(alignment: .leading, spacing: 12) {
                 Toggle(isOn: $appModeManager.showInDock) {
-                    Label(L("在 Dock 栏显示应用图标", "Show app icon in Dock"), systemImage: "dock.rectangle")
+                    RClickLabel(L("在 Dock 栏显示应用图标", "Show app icon in Dock"), icon: "dock.rectangle")
                 }
                 .toggleStyle(.switch)
                 
@@ -113,7 +113,7 @@ struct GeneralSettingsView: View {
             // Auto Updater
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Label(L("应用更新", "App Updates"), systemImage: "arrow.down.app")
+                    RClickLabel(L("应用更新", "App Updates"), icon: "arrow.down.app")
                     Spacer()
                     Button(L("检查更新", "Check for Updates")) {
                         githubUpdater.checkForUpdates(manual: true)
@@ -129,7 +129,7 @@ struct GeneralSettingsView: View {
             
             // Open Setup Center
             HStack {
-                Label(L("启动与向导", "Setup & Wizard"), systemImage: "wand.and.stars")
+                RClickLabel(L("启动与向导", "Setup & Wizard"), icon: "wand.and.stars")
                 Spacer()
                 Button(L("打开向导中心", "Open Setup Wizard")) {
                     coordinator.presentSetupCenter()

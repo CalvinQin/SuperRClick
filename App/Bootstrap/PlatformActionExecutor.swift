@@ -5,6 +5,14 @@ import Shared
 typealias ProgressCallback = @Sendable (Int, Int, String) -> Void
 
 actor PlatformActionExecutor {
+    private let revealCreatedFile: @Sendable (URL) async -> Void
+
+    init(revealCreatedFile: @escaping @Sendable (URL) async -> Void = { url in
+        await MainActor.run { NSWorkspace.shared.activateFileViewerSelecting([url]) }
+    }) {
+        self.revealCreatedFile = revealCreatedFile
+    }
+
     func execute(actionID: ActionID, context: ActionContext, onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
         switch actionID.rawValue {
         case BuiltInActionCatalog.copyFullPath.id.rawValue:
@@ -47,27 +55,47 @@ actor PlatformActionExecutor {
             return .blocked(reason: "Refusing to rename protected location: \(protectedPreview.sourceName).")
         }
 
+        guard plan.previews.allSatisfy({ preview in
+            !preview.proposedName.contains("/") && !preview.proposedName.contains("\0") &&
+            preview.sourceURL.deletingLastPathComponent().standardizedFileURL ==
+                preview.proposedURL.deletingLastPathComponent().standardizedFileURL
+        }) else {
+            return .blocked(reason: L("新名称不能包含路径分隔符。", "New names cannot contain path separators."))
+        }
+
         let fileManager = FileManager.default
-        var renamedCount = 0
+        var renamed: [BatchRenamePreviewItem] = []
         let renamable = plan.previews.filter { $0.sourceURL.path != $0.proposedURL.path }
         let total = renamable.count
 
         for preview in renamable {
             do {
-                onProgress?(renamedCount, total, preview.sourceName)
+                onProgress?(renamed.count, total, preview.sourceName)
                 try fileManager.moveItem(at: preview.sourceURL, to: preview.proposedURL)
-                renamedCount += 1
+                renamed.append(preview)
             } catch {
+                var unrestored: [String] = []
+                for previous in renamed.reversed() {
+                    do {
+                        try fileManager.moveItem(at: previous.proposedURL, to: previous.sourceURL)
+                    } catch {
+                        unrestored.append(previous.proposedURL.path)
+                    }
+                }
+                let recovery = unrestored.isEmpty
+                    ? L("先前已重命名的项目已恢复。", "Previously renamed items were restored.")
+                    : L("部分项目无法恢复，仍位于：\(unrestored.joined(separator: "、"))。",
+                        "Some items could not be restored and remain at: \(unrestored.joined(separator: ", ")).")
                 return .failed(
-                    reason: L("重命名 \(renamedCount) 个后停止：\(error.localizedDescription)",
-                              "Stopped after renaming \(renamedCount) item(s): \(error.localizedDescription)"),
+                    reason: L("无法重命名“\(preview.sourceName)”：\(error.localizedDescription) \(recovery)",
+                              "Could not rename “\(preview.sourceName)”: \(error.localizedDescription) \(recovery)"),
                     recoverable: true
                 )
             }
         }
-        onProgress?(renamedCount, total, "")
+        onProgress?(renamed.count, total, "")
 
-        return .completed(message: L("已重命名 \(renamedCount) 个项目。", "Renamed \(renamedCount) item(s)."))
+        return .completed(message: L("已重命名 \(renamed.count) 个项目。", "Renamed \(renamed.count) item(s)."))
     }
 
     private func createNewFile(extension ext: String, context: ActionContext) async -> ActionExecutionResult {
@@ -77,28 +105,17 @@ actor PlatformActionExecutor {
         
         let directory = normalizedDirectory(for: url)
         
-        // Ensure standard naming: extension is passed like "txt"
-        let baseName = "Untitled"
-        var targetURL = directory.appendingPathComponent("\(baseName).\(ext)")
-        
-        var counter = 1
-        while FileManager.default.fileExists(atPath: targetURL.path) {
-            targetURL = directory.appendingPathComponent("\(baseName) \(counter).\(ext)")
-            counter += 1
-        }
-        
-        var fileData: Data? = nil
-        if let base64String = NewFileData.base64Templates[ext],
-           let decodedData = Data(base64Encoded: base64String) {
-            fileData = decodedData
-        }
-        
-        let success = FileManager.default.createFile(atPath: targetURL.path, contents: fileData, attributes: nil)
-        if success {
-            NSWorkspace.shared.activateFileViewerSelecting([targetURL])
+        let fileData = NewFileData.contents(forExtension: ext)
+        do {
+            let targetURL = try ExclusiveFileOutput.write(
+                fileData,
+                preferredURL: directory.appendingPathComponent("Untitled.\(ext)"),
+                suffixSeparator: " "
+            )
+            await revealCreatedFile(targetURL)
             return .completed(message: "Created new \(ext.uppercased()) file.")
-        } else {
-            return .failed(reason: "Unable to create file at \(targetURL.path)", recoverable: true)
+        } catch {
+            return .failed(reason: error.localizedDescription, recoverable: true)
         }
     }
 
@@ -153,40 +170,40 @@ actor PlatformActionExecutor {
     }
 
     private func compressItems(_ urls: [URL], onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
-        guard !urls.isEmpty else {
-            return .blocked(reason: L("请至少选择一个文件或文件夹进行压缩。", "Select at least one file or folder to compress."))
+        let plan: ZipArchivePlan
+        do {
+            plan = try ZipArchivePlan(selectedURLs: urls)
+        } catch let error as ZipArchivePlan.ValidationError {
+            if case .missingInput = error {
+                return .failed(reason: error.localizedDescription, recoverable: true)
+            }
+            return .blocked(reason: error.localizedDescription)
+        } catch {
+            return .failed(reason: error.localizedDescription, recoverable: true)
         }
-
-        let parents = Set(urls.map { normalizedDirectory(for: $0).path })
-        guard parents.count == 1, let parentPath = parents.first else {
-            return .blocked(reason: L("压缩功能要求所有文件在同一文件夹下。", "Compression currently requires items from the same folder."))
-        }
-
-        let parentDirectory = URL(fileURLWithPath: parentPath, isDirectory: true)
-        let archiveName = "SuperRClick-\(timestamp()).zip"
-        let archiveURL = parentDirectory.appendingPathComponent(archiveName)
 
         onProgress?(0, urls.count, L("正在准备压缩...", "Preparing compression..."))
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/zip")
-        process.currentDirectoryURL = parentDirectory
-        process.arguments = ["-r", archiveURL.lastPathComponent] + urls.map(\.lastPathComponent)
+        process.currentDirectoryURL = plan.workingDirectoryURL
+        process.arguments = plan.arguments
 
         do {
             try process.run()
             process.waitUntilExit()
         } catch {
+            try? FileManager.default.removeItem(at: plan.archiveURL)
             return .failed(reason: error.localizedDescription, recoverable: true)
         }
 
-        onProgress?(urls.count, urls.count, archiveURL.lastPathComponent)
-
         guard process.terminationStatus == 0 else {
+            try? FileManager.default.removeItem(at: plan.archiveURL)
             return .failed(reason: L("zip 退出码 \(process.terminationStatus)。", "zip exited with code \(process.terminationStatus)."), recoverable: true)
         }
 
-        return .completed(message: L("已创建压缩包 \(archiveURL.lastPathComponent)。", "Created archive \(archiveURL.lastPathComponent)."))
+        onProgress?(urls.count, urls.count, plan.archiveURL.lastPathComponent)
+        return .completed(message: L("已创建压缩包 \(plan.archiveURL.lastPathComponent)。", "Created archive \(plan.archiveURL.lastPathComponent)."))
     }
 
     private func convertImages(_ urls: [URL], targetFormat: String, onProgress: ProgressCallback? = nil) async -> ActionExecutionResult {
@@ -219,25 +236,36 @@ actor PlatformActionExecutor {
 
         let total = urls.count
         var convertedCount = 0
+        var failedNames: [String] = []
         for (index, inputURL) in urls.enumerated() {
             onProgress?(index, total, inputURL.lastPathComponent)
 
             let destinationURL = inputURL.deletingPathExtension().appendingPathExtension(fileExtension)
-            let uniqueOutput = uniqueDestinationURL(preferredURL: destinationURL)
-
-            let result = await runProcess(
-                launchPath: "/usr/bin/sips",
-                arguments: ["-s", "format", sipsFormat, inputURL.path, "--out", uniqueOutput.path]
-            )
-
-            if result.terminationStatus == 0 {
-                convertedCount += 1
+            do {
+                let output = try ExclusiveFileOutput(preferredURL: destinationURL)
+                defer { output.cleanup() }
+                let result = await runProcess(
+                    launchPath: "/usr/bin/sips",
+                    arguments: ["-s", "format", sipsFormat, inputURL.path, "--out", output.temporaryURL.path]
+                )
+                if result.terminationStatus == 0 {
+                    _ = try output.publish()
+                    convertedCount += 1
+                } else {
+                    failedNames.append(inputURL.lastPathComponent)
+                }
+            } catch {
+                failedNames.append(inputURL.lastPathComponent)
             }
         }
         onProgress?(total, total, "")
 
-        guard convertedCount > 0 else {
-            return .failed(reason: L("所选图片均无法转换。", "None of the selected images could be converted."), recoverable: true)
+        guard failedNames.isEmpty else {
+            let names = failedNames.joined(separator: ", ")
+            return .failed(reason: L(
+                "已转换 \(convertedCount)/\(total) 张图片。未能转换：\(names)。原始文件未更改。",
+                "Converted \(convertedCount) of \(total) image(s). Could not convert: \(names). Original files were not changed."
+            ), recoverable: true)
         }
 
         return .completed(message: L(
@@ -275,32 +303,6 @@ actor PlatformActionExecutor {
         let path = url.path(percentEncoded: false)
         let isDirectoryLike = url.hasDirectoryPath || path.hasSuffix("/")
         return isDirectoryLike ? url : url.deletingLastPathComponent()
-    }
-
-    private func uniqueDestinationURL(preferredURL: URL) -> URL {
-        let fileManager = FileManager.default
-        guard fileManager.fileExists(atPath: preferredURL.path) else {
-            return preferredURL
-        }
-
-        let stem = preferredURL.deletingPathExtension().lastPathComponent
-        let directory = preferredURL.deletingLastPathComponent()
-        let ext = preferredURL.pathExtension
-
-        for index in 1...99 {
-            let candidate = directory.appendingPathComponent("\(stem)-\(index)").appendingPathExtension(ext)
-            if !fileManager.fileExists(atPath: candidate.path) {
-                return candidate
-            }
-        }
-
-        return directory.appendingPathComponent("\(stem)-\(UUID().uuidString.prefix(6))").appendingPathExtension(ext)
-    }
-
-    private func timestamp() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd-HHmmss"
-        return formatter.string(from: Date())
     }
 
     private func isProtectedLocation(_ url: URL) -> Bool {

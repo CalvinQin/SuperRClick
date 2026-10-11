@@ -21,7 +21,7 @@ struct WorkspaceSettingsView: View {
 
     private var globalStatusSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label(L("全局覆盖模式", "Global Coverage Mode"), systemImage: "globe.europe.africa.fill")
+            RClickLabel(L("全局覆盖模式", "Global Coverage Mode"), icon: "globe.europe.africa.fill")
                 .font(.title3.weight(.bold))
 
             Text(L("Super RClick 已自动覆盖整个用户目录，所有 Finder 窗口中均可使用右键菜单，无需手动配置。", "Super RClick automatically covers your entire user directory. Context menus are available in all Finder windows."))
@@ -47,7 +47,7 @@ struct WorkspaceSettingsView: View {
             }
 
             HStack(spacing: 12) {
-                Image(systemName: "info.circle.fill")
+                Image(rclick: "info.circle.fill")
                     .font(.title3)
                     .foregroundStyle(.blue)
                 Text(L("监控根目录：\(RealUserDirectories.homeDirectory().path)", "Root directory: \(RealUserDirectories.homeDirectory().path)"))
@@ -67,9 +67,9 @@ struct WorkspaceSettingsView: View {
     private func statusChip(name: String, icon: String, note: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Image(systemName: icon)
+                Image(rclick: icon)
                     .font(.title2)
-                    .symbolRenderingMode(.hierarchical)
+
                     .foregroundStyle(.secondary)
                 Spacer()
                 Circle()
@@ -96,7 +96,7 @@ struct WorkspaceSettingsView: View {
 
     private var workspaceProfilesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label(L("工作区配置", "Workspace Profiles"), systemImage: "square.stack.3d.up.fill")
+            RClickLabel(L("工作区配置", "Workspace Profiles"), icon: "square.stack.3d.up.fill")
                 .font(.title3.weight(.bold))
 
             if coordinator.persistenceState.workspaceProfiles.isEmpty {
@@ -114,7 +114,7 @@ struct WorkspaceSettingsView: View {
 
     private func profileRow(_ profile: WorkspaceProfile) -> some View {
         HStack(spacing: 16) {
-            Image(systemName: "folder.badge.gearshape")
+            Image(rclick: "folder.badge.gearshape")
                 .font(.title)
                 .foregroundStyle(.secondary)
                 .frame(width: 40, height: 40)

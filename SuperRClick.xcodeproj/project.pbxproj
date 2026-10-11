@@ -16,6 +16,7 @@
 		0CAB7504BABBF994D0720C11 /* PlatformActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */; };
 		12F490F2BE6562C3C485B418 /* ExternalCommandCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6A2B03FA8916390BD9CF28 /* ExternalCommandCenter.swift */; };
 		1A3242D746968ACF5A1223D4 /* AIActionCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B53E90B7D743EE3FF18CFCC /* AIActionCatalog.swift */; };
+		1AD6D8792B78813EFAD28227 /* CustomActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901D2742D49F13A24BED3133 /* CustomActionExecutor.swift */; };
 		214A8B972800D95487F994BD /* BatchRenamePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */; };
 		21DE52A58EA0BA5DD1224773 /* CreateActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */; };
 		265B06D1C4FBAD32B120751D /* ActionLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEFE0911474E890A1B97BA3 /* ActionLibraryView.swift */; };
@@ -25,6 +26,7 @@
 		2E7EC107F8D355326F48CA01 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9820D7D3D960DD440442B04 /* Assets.xcassets */; };
 		3CFFFF0868E1C125DB729AA5 /* SuperRClickCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* SuperRClickCore.framework */; };
 		3E36D1CD280E6EADAD05A042 /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE242B4766671B354E11F2C /* LLMService.swift */; };
+		43231A45FA1C9A4DBDFC2FD4 /* RClickIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E46912A3997A2970D6AAD1 /* RClickIcon.swift */; };
 		4505A027822060BCA1F68669 /* WorkspaceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EDAFDB8BA8587C1F963B8 /* WorkspaceSettingsView.swift */; };
 		4AFED532135CE59012E4CFD5 /* ActionDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99C27578D83BA4952837B75 /* ActionDefinition.swift */; };
 		4BADE5FB7B279BDA6B3FD6A0 /* PinnedActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B9D6C5543593853C1DF38C /* PinnedActionsView.swift */; };
@@ -38,6 +40,7 @@
 		59B44C93B00787B53E1EA7CE /* SuperRClickCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9626412859BCE61B05D5A63 /* SuperRClickCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5F3A1026964B6A1936046297 /* SuperRClickRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F024A3F70B91E395A80EFC3C /* SuperRClickRootView.swift */; };
 		5FEA1BDAEE19DB104296E733 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1024DBC99E1E0BA3B39C8078 /* LanguageManager.swift */; };
+		6DDDD5ABE083CD758BCB26C6 /* ExclusiveFileOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E3509952B165919EC44DE /* ExclusiveFileOutput.swift */; };
 		712AB31DD2DE9FC609537888 /* SuperRClickUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1933F1EC316EB7F356F6AF4 /* SuperRClickUITests.swift */; };
 		72336C7A92C94D4203217BE3 /* SuperRClickFinderSync.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47E8E51C153F5D0B0E0EECAC /* SuperRClickFinderSync.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7A5D41970CD8E360590504B1 /* RecentActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3467F391E053B0685E9C20A4 /* RecentActivityView.swift */; };
@@ -77,6 +80,7 @@
 		E7D1F20F6CA2CD5EA960EA0B /* AISettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13B35DA05D1DE93AFE224DC /* AISettingsView.swift */; };
 		EAB94C71CC07E32899ADF988 /* SuperRClickApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CF4FB0F3953E8723EB15B5 /* SuperRClickApp.swift */; };
 		EB7CF90C4A636D85283F1AC3 /* ActionAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF06A9FEB1C9D93FFF83BC5 /* ActionAvailability.swift */; };
+		ED90E11CE71FB236E2BE3AD1 /* ZipArchivePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADB6B5ECD8A3B0FA8D25A69 /* ZipArchivePlan.swift */; };
 		F47E5356D6BDEA562857EE23 /* AppGroupContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA21285AFDA8C24E9B1454F0 /* AppGroupContainer.swift */; };
 		F7E2B392B44A97F5FB70A4EC /* NewFileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BC2ABF378406D8E622BBCF /* NewFileData.swift */; };
 		F84B247C452ED05C99B79FF1 /* LLMProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8CD31E74C70C007144EC82 /* LLMProvider.swift */; };
@@ -185,6 +189,7 @@
 		516CEAD234FE95446B36CA15 /* BatchRenamePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenamePanelView.swift; sourceTree = "<group>"; };
 		560BD7226B92CF5813248FC9 /* AIActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIActionExecutor.swift; sourceTree = "<group>"; };
 		57EF5505AD243DDE7E73C306 /* SuperRClickCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuperRClickCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5ADB6B5ECD8A3B0FA8D25A69 /* ZipArchivePlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZipArchivePlan.swift; sourceTree = "<group>"; };
 		6800F0D902763874975C3CCE /* VisibilityRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityRule.swift; sourceTree = "<group>"; };
 		6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameModels.swift; sourceTree = "<group>"; };
 		6CC7FF42DAC0092045A4A0BD /* SuperRClickServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickServices.swift; sourceTree = "<group>"; };
@@ -193,10 +198,12 @@
 		7EC6092F121A36C29E11DE03 /* SuperRClickFinderMenuComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRClickFinderMenuComposer.swift; sourceTree = "<group>"; };
 		80AB4A10401A179897B42174 /* NewFileCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileCatalog.swift; sourceTree = "<group>"; };
 		846D3EACD6E9BD755359CE2F /* PersistenceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceState.swift; sourceTree = "<group>"; };
+		88E46912A3997A2970D6AAD1 /* RClickIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RClickIcon.swift; sourceTree = "<group>"; };
 		891729637A39DC2F39EDBF4E /* ActionComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionComponents.swift; sourceTree = "<group>"; };
 		8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		8DB1ED5E7091B6FA179A0CF1 /* SuperRClick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperRClick.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformActionExecutor.swift; sourceTree = "<group>"; };
+		901D2742D49F13A24BED3133 /* CustomActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomActionExecutor.swift; sourceTree = "<group>"; };
 		91B9E133DA19B63AD3F09959 /* AIResultWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIResultWindow.swift; sourceTree = "<group>"; };
 		92C0A0E067D55231E9D219A1 /* ActionEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionEngineTests.swift; sourceTree = "<group>"; };
 		93BC2ABF378406D8E622BBCF /* NewFileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileData.swift; sourceTree = "<group>"; };
@@ -217,6 +224,7 @@
 		C7C0957D3C447B5756F8F6BC /* CreateActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateActionView.swift; sourceTree = "<group>"; };
 		C95717C34406B38463AFAC06 /* ExternalCommandCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCommandCenterTests.swift; sourceTree = "<group>"; };
 		C9626412859BCE61B05D5A63 /* SuperRClickCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SuperRClickCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA5E3509952B165919EC44DE /* ExclusiveFileOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExclusiveFileOutput.swift; sourceTree = "<group>"; };
 		CEF06A9FEB1C9D93FFF83BC5 /* ActionAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionAvailability.swift; sourceTree = "<group>"; };
 		D29BE228AE9C81F162D18999 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		D3837B53E59298FE975D7410 /* WorkspaceProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceProfileView.swift; sourceTree = "<group>"; };
@@ -281,6 +289,7 @@
 				360367E609252C4E456AE693 /* Actions */,
 				39BE53670324D1776DBB4F37 /* AI */,
 				0D0EDD402D1A7073D65062AC /* BatchRename */,
+				2B8010D206B7F8DA6FF9B3DC /* Design */,
 				F52314A54E0537996C649C6E /* ExternalCommands */,
 				F02B039F9E1A14BD0FE91056 /* Models */,
 				F04F1A1FDBD87673D5FE7634 /* Persistence */,
@@ -316,6 +325,14 @@
 			path = Integration;
 			sourceTree = "<group>";
 		};
+		2B8010D206B7F8DA6FF9B3DC /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				88E46912A3997A2970D6AAD1 /* RClickIcon.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
 		2C2CD325B90292E20213440D /* Progress */ = {
 			isa = PBXGroup;
 			children = (
@@ -343,6 +360,7 @@
 				425D4629566F1A2C19027651 /* BuiltInActionCatalog.swift */,
 				80AB4A10401A179897B42174 /* NewFileCatalog.swift */,
 				93BC2ABF378406D8E622BBCF /* NewFileData.swift */,
+				5ADB6B5ECD8A3B0FA8D25A69 /* ZipArchivePlan.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -387,6 +405,7 @@
 		5AF2FB91794DE72A672EBFC6 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				CA5E3509952B165919EC44DE /* ExclusiveFileOutput.swift */,
 				355F719B3E1EFE80118F4C63 /* RealUserDirectories.swift */,
 			);
 			path = Support;
@@ -459,6 +478,7 @@
 			isa = PBXGroup;
 			children = (
 				8AAFE2D404DDA86F94568222 /* AppCoordinator.swift */,
+				901D2742D49F13A24BED3133 /* CustomActionExecutor.swift */,
 				8E32C8B77D35C2751B2885EA /* PlatformActionExecutor.swift */,
 			);
 			path = Bootstrap;
@@ -793,6 +813,7 @@
 				8983DBC7DBB1EABBB2434F77 /* BatchRenamePlanner.swift in Sources */,
 				E01E68C07986DCD2217727F8 /* BuiltInActionCatalog.swift in Sources */,
 				9F95E698F13851E8AB6BEA88 /* CustomAction.swift in Sources */,
+				6DDDD5ABE083CD758BCB26C6 /* ExclusiveFileOutput.swift in Sources */,
 				12F490F2BE6562C3C485B418 /* ExternalCommandCenter.swift in Sources */,
 				7F53D6AFD76910D8597F3087 /* ExternalCommandModels.swift in Sources */,
 				F84B247C452ED05C99B79FF1 /* LLMProvider.swift in Sources */,
@@ -802,8 +823,10 @@
 				F7E2B392B44A97F5FB70A4EC /* NewFileData.swift in Sources */,
 				286560CCB5592D2DDC6CF285 /* PersistenceController.swift in Sources */,
 				4C3ECC5E4B7C6C393B36411E /* PersistenceState.swift in Sources */,
+				43231A45FA1C9A4DBDFC2FD4 /* RClickIcon.swift in Sources */,
 				2C3A20432DADBFE7606E919B /* RealUserDirectories.swift in Sources */,
 				B1BF5CCF3A88B44A980BA253 /* VisibilityRule.swift in Sources */,
+				ED90E11CE71FB236E2BE3AD1 /* ZipArchivePlan.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,6 +845,7 @@
 				FD5292708C4BDFD625997170 /* BatchRenameDraft.swift in Sources */,
 				214A8B972800D95487F994BD /* BatchRenamePanelView.swift in Sources */,
 				21DE52A58EA0BA5DD1224773 /* CreateActionView.swift in Sources */,
+				1AD6D8792B78813EFAD28227 /* CustomActionExecutor.swift in Sources */,
 				B0C2F939DC11AA0E3BE8D86C /* DesktopBridgeManager.swift in Sources */,
 				CFA9EA014E41A13A69DCECAD /* DesktopBridgeMenuBuilder.swift in Sources */,
 				07024FF44A856DC4CD846DDE /* DesktopSelectionProvider.swift in Sources */,

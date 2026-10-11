@@ -25,9 +25,17 @@ public enum LLMError: Error, LocalizedError {
 // MARK: - OpenAI Compatible Service
 public final class OpenAICompatibleService: LLMServiceProtocol {
     public let config: AIConfig
+    private let keyLoader: @Sendable (String) throws -> String?
+    private let transport: @Sendable (URLRequest) async throws -> (Data, URLResponse)
     
-    public init(config: AIConfig) {
+    public init(
+        config: AIConfig,
+        keyLoader: @escaping @Sendable (String) throws -> String? = { try AIKeychainStore.load(for: $0) },
+        transport: @escaping @Sendable (URLRequest) async throws -> (Data, URLResponse) = { try await URLSession.shared.data(for: $0) }
+    ) {
         self.config = config
+        self.keyLoader = keyLoader
+        self.transport = transport
     }
     
     public func testConnection() async throws -> Bool {
@@ -40,7 +48,9 @@ public final class OpenAICompatibleService: LLMServiceProtocol {
             throw LLMError.invalidURL
         }
         
-        guard let customApiKey = try? AIKeychainStore.load(for: config.providerID), !customApiKey.isEmpty else {
+        let customApiKey = (try? keyLoader(config.providerID)) ?? ""
+        // Local Ollama accepts unauthenticated requests; other providers still require a key.
+        guard config.providerID == "ollama" || !customApiKey.isEmpty else {
             throw LLMError.missingAPIKey
         }
         
@@ -58,11 +68,13 @@ public final class OpenAICompatibleService: LLMServiceProtocol {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.addValue("Bearer \(customApiKey)", forHTTPHeaderField: "Authorization")
+        if !customApiKey.isEmpty {
+            request.addValue("Bearer \(customApiKey)", forHTTPHeaderField: "Authorization")
+        }
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await transport(request)
         
         guard let r = response as? HTTPURLResponse else { throw LLMError.invalidResponse }
         if r.statusCode != 200 {

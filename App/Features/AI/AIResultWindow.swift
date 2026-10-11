@@ -17,7 +17,7 @@ public struct AIResultView: View {
                     .font(.headline)
                 Spacer()
                 Button(action: onClose) {
-                    Image(systemName: "xmark.circle.fill")
+                    Image(rclick: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                         .imageScale(.large)
                 }
@@ -44,8 +44,8 @@ public struct AIResultView: View {
             HStack {
                 Spacer()
                 Button(action: copyToClipboard) {
-                    Label(copied ? L("已复制", "Copied") : L("复制", "Copy"),
-                          systemImage: copied ? "checkmark" : "doc.on.doc")
+                    RClickLabel(copied ? L("已复制", "Copied") : L("复制", "Copy"),
+                          icon: copied ? "checkmark" : "doc.on.doc")
                 }
                 .keyboardShortcut("c", modifiers: [.command])
                 .padding()

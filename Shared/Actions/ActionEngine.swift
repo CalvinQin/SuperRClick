@@ -84,6 +84,15 @@ public actor ActionEngine {
     }
 
     private func isVisible(_ definition: ActionDefinition, in context: ActionContext) -> Bool {
+        Self.isVisible(definition, in: context, visibilityRules: visibilityRules)
+    }
+
+    /// Shared by synchronous menu builders and this actor's execution checks.
+    public nonisolated static func isVisible(
+        _ definition: ActionDefinition,
+        in context: ActionContext,
+        visibilityRules: [VisibilityRule]
+    ) -> Bool {
         guard definition.matches(context) else {
             return false
         }

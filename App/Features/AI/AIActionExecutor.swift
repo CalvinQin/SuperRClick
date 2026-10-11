@@ -12,9 +12,43 @@ extension ContextSnapshot {
 
 @MainActor
 public final class AIActionExecutor {
+    public enum ExecutionError: Error, LocalizedError {
+        case noSelection
+        case invalidSuggestedName
+
+        public var errorDescription: String? {
+            switch self {
+            case .noSelection:
+                L("请先选择至少一个文件。", "Select at least one file first.")
+            case .invalidSuggestedName:
+                L("AI 返回了无效文件名。文件名不能包含路径或控制字符，原文件已保留。",
+                  "AI returned an invalid filename. Names cannot contain paths or control characters; the original file was kept.")
+            }
+        }
+    }
+
     private var resultWindows: [UUID: AIResultWindowController] = [:]
+    private let makeLLMService: @Sendable (AIConfig) -> (any LLMServiceProtocol)?
+    private let extractText: @Sendable (URL, Bool) async throws -> String
+    private let removeBackground: @Sendable (URL) async throws -> Data
+    private let presentResult: (@MainActor (String, String) -> Void)?
+    private let revealFiles: @MainActor ([URL]) -> Void
     
-    public init() {}
+    /// Injectable boundaries allow file behavior to be verified without network, Keychain or windows.
+    /// The application uses the existing services and presentation behavior by default.
+    public init(
+        makeLLMService: @escaping @Sendable (AIConfig) -> (any LLMServiceProtocol)? = { LLMServiceFactory.makeService(for: $0) },
+        extractText: @escaping @Sendable (URL, Bool) async throws -> String = { try await LocalVisionService.extractText(from: $0, accurate: $1) },
+        removeBackground: @escaping @Sendable (URL) async throws -> Data = { try await LocalVisionService.removeBackground(from: $0) },
+        presentResult: (@MainActor (String, String) -> Void)? = nil,
+        revealFiles: @escaping @MainActor ([URL]) -> Void = { NSWorkspace.shared.activateFileViewerSelecting($0) }
+    ) {
+        self.makeLLMService = makeLLMService
+        self.extractText = extractText
+        self.removeBackground = removeBackground
+        self.presentResult = presentResult
+        self.revealFiles = revealFiles
+    }
     
     public func execute(
         actionID: ActionID,
@@ -22,7 +56,9 @@ public final class AIActionExecutor {
         aiConfig: AIConfig,
         progressReporter: ProgressReporting
     ) async throws {
-        
+        guard !context.effectiveSelectionURLs.isEmpty else { throw ExecutionError.noSelection }
+        try Task.checkCancellation()
+
         switch actionID {
         case AIActionCatalog.smartRename:
             try await executeSmartRename(context: context, config: aiConfig, reporter: progressReporter)
@@ -48,12 +84,23 @@ public final class AIActionExecutor {
     private func executeLocalOCR(context: ContextSnapshot, reporter: ProgressReporting) async throws {
         reporter.updateProgress(fractionCompleted: 0.1, message: L("准备提取文字...", "Preparing text extraction..."))
         
-        guard let url = context.effectiveSelectionURLs.first else { return }
-        let text = try await LocalVisionService.extractText(from: url, accurate: true)
+        let urls = context.effectiveSelectionURLs
+        var results: [String] = []
+        for (index, url) in urls.enumerated() {
+            try Task.checkCancellation()
+            reporter.updateProgress(
+                fractionCompleted: Double(index) / Double(urls.count),
+                message: L("正在提取: \(url.lastPathComponent)", "Extracting: \(url.lastPathComponent)")
+            )
+            let text = try await extractText(url, true)
+            let content = text.isEmpty ? L("未识别到文字。", "No text recognized.") : text
+            results.append(urls.count == 1 ? content : "\(url.lastPathComponent)\n\(content)")
+        }
+        try Task.checkCancellation()
         
         reporter.updateProgress(fractionCompleted: 1.0, message: L("提取完成", "Extraction complete"))
         
-        showResult(title: L("OCR 提取结果", "OCR Extracted Text"), content: text)
+        showResult(title: L("OCR 提取结果", "OCR Extracted Text"), content: results.joined(separator: "\n\n"))
     }
     
     private func executeRemoveBackground(context: ContextSnapshot, reporter: ProgressReporting) async throws {
@@ -64,26 +111,47 @@ public final class AIActionExecutor {
         }
         
         let total = Double(context.effectiveSelectionURLs.count)
+        var outputURLs: [URL] = []
         for (index, url) in context.effectiveSelectionURLs.enumerated() {
+            try Task.checkCancellation()
             reporter.updateProgress(
                 fractionCompleted: Double(index) / total,
                 message: L("正在处理: \(url.lastPathComponent)", "Processing: \(url.lastPathComponent)")
             )
             
-            let pngData = try await LocalVisionService.removeBackground(from: url)
+            let pngData = try await removeBackground(url)
+            try Task.checkCancellation()
             
-            let newURL = url.deletingPathExtension().appendingPathExtension("transparent.png")
-            try pngData.write(to: newURL)
+            let preferredURL = url.deletingPathExtension().appendingPathExtension("transparent.png")
+            outputURLs.append(try writeNewOutput(pngData, preferredURL: preferredURL))
         }
         
         reporter.updateProgress(fractionCompleted: 1.0, message: L("处理完成", "Processing complete"))
-        NSWorkspace.shared.activateFileViewerSelecting([context.effectiveSelectionURLs.first!])
+        revealFiles(outputURLs)
+    }
+
+    /// Exclusive creation also protects existing symlinks and a destination created concurrently.
+    private func writeNewOutput(_ data: Data, preferredURL: URL) throws -> URL {
+        let directory = preferredURL.deletingLastPathComponent()
+        let stem = preferredURL.deletingPathExtension().lastPathComponent
+        let ext = preferredURL.pathExtension
+        var suffix = 1
+        while true {
+            let destination = suffix == 1 ? preferredURL
+                : directory.appendingPathComponent("\(stem)-\(suffix)").appendingPathExtension(ext)
+            do {
+                try data.write(to: destination, options: .withoutOverwriting)
+                return destination
+            } catch let error as CocoaError where error.code == .fileWriteFileExists {
+                suffix += 1
+            }
+        }
     }
     
     // MARK: - LLM API Actions
     
     private func requireLLM(config: AIConfig) throws -> LLMServiceProtocol {
-        guard let service = LLMServiceFactory.makeService(for: config) else {
+        guard let service = makeLLMService(config) else {
             throw LLMError.apiError("AI configuration is missing or invalid.")
         }
         return service
@@ -169,7 +237,7 @@ public final class AIActionExecutor {
             
             // Try OCR for visible text in the image
             do {
-                let ocrText = try await LocalVisionService.extractText(from: url, accurate: false)
+                let ocrText = try await extractText(url, false)
                 let trimmed = ocrText.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !trimmed.isEmpty {
                     parts.append("Text in image: \(String(trimmed.prefix(500)))")
@@ -190,6 +258,7 @@ public final class AIActionExecutor {
         let total = Double(context.effectiveSelectionURLs.count)
         
         for (index, url) in context.effectiveSelectionURLs.enumerated() {
+            try Task.checkCancellation()
             reporter.updateProgress(
                 fractionCompleted: Double(index) / total,
                 message: L("AI 分析中: \(url.lastPathComponent)", "AI Analyzing: \(url.lastPathComponent)")
@@ -213,10 +282,12 @@ public final class AIActionExecutor {
                 .replacingOccurrences(of: "```", with: "")
                 .replacingOccurrences(of: "`", with: "")
             
-            // Reject garbage names
+            // A model response is a filename, never a path. Validate before adding the extension.
             let lower = suggestedName.lowercased()
-            if suggestedName.isEmpty || lower == "empty" || lower == "untitled" || lower == "file" {
-                continue
+            let forbiddenCharacters = CharacterSet.controlCharacters.union(CharacterSet(charactersIn: "/\\:"))
+            if suggestedName.isEmpty || [".", "..", "empty", "untitled", "file"].contains(lower)
+                || suggestedName.rangeOfCharacter(from: forbiddenCharacters) != nil {
+                throw ExecutionError.invalidSuggestedName
             }
             
             let currentExt = url.pathExtension
@@ -225,10 +296,13 @@ public final class AIActionExecutor {
                 newName += ".\(currentExt)"
             }
             
-            let newURL = url.deletingLastPathComponent().appendingPathComponent(newName)
-            if !FileManager.default.fileExists(atPath: newURL.path) {
-                try FileManager.default.moveItem(at: url, to: newURL)
-            }
+            let directory = url.deletingLastPathComponent().standardizedFileURL
+            let newURL = directory.appendingPathComponent(newName).standardizedFileURL
+            guard newURL.deletingLastPathComponent() == directory else { throw ExecutionError.invalidSuggestedName }
+            if newURL == url.standardizedFileURL { continue }
+            try Task.checkCancellation()
+            // moveItem fails on a conflicting destination; do not silently report it as renamed.
+            try FileManager.default.moveItem(at: url, to: newURL)
         }
         
         reporter.updateProgress(fractionCompleted: 1.0, message: L("重命名完成", "Rename complete"))
@@ -254,7 +328,7 @@ public final class AIActionExecutor {
             
             let tagString = try await service.sendMessage(prompt: prompt, systemPrompt: "You are a macOS file tag generator. Output ONLY a single short relevant tag string without any other text.")
             
-            var tag = tagString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let tag = tagString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                 .replacingOccurrences(of: "\"", with: "")
                 .replacingOccurrences(of: "```", with: "")
                 .replacingOccurrences(of: ".", with: "")
@@ -280,6 +354,10 @@ public final class AIActionExecutor {
     }
     
     private func showResult(title: String, content: String) {
+        if let presentResult {
+            presentResult(title, content)
+            return
+        }
         let uuid = UUID()
         let controller = AIResultWindowController(title: title, content: content)
         resultWindows[uuid] = controller

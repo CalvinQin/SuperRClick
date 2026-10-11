@@ -24,7 +24,7 @@ public enum LocalVisionService {
             let handler = VNImageRequestHandler(url: url, options: [:])
             try handler.perform([request])
             
-            guard let observations = request.results as? [VNRecognizedTextObservation] else {
+            guard let observations = request.results else {
                 return ""
             }
             
@@ -81,14 +81,16 @@ public enum LocalVisionService {
             let filter = CIFilter.blendWithMask()
             filter.inputImage = originalCIImage
             filter.maskImage = maskImage
-            filter.backgroundImage = CIImage(color: .clear)
+            // A solid-color CIImage has infinite extent. Bound the clear layer to the source
+            // so blending cannot produce an infinite image that createCGImage cannot render.
+            filter.backgroundImage = CIImage(color: .clear).cropped(to: originalCIImage.extent)
             
             guard let outputImage = filter.outputImage else {
                 throw VisionError.processingFailed
             }
             
             let context = CIContext()
-            guard let cgOutput = context.createCGImage(outputImage, from: outputImage.extent) else {
+            guard let cgOutput = context.createCGImage(outputImage, from: originalCIImage.extent) else {
                 throw VisionError.processingFailed
             }
             

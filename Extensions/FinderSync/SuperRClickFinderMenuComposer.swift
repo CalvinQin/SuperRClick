@@ -2,7 +2,19 @@ import AppKit
 import Shared
 
 public final class SuperRClickFinderMenuComposer {
-    public init() {}
+    private let stateProvider: () throws -> PersistenceState
+
+    public convenience init() {
+        self.init(stateProvider: {
+            let container = AppGroupContainer(groupIdentifier: "group.com.haoqiqin.superrclick")
+            return try container.makePersistenceController().loadOrCreateState()
+        })
+    }
+
+    /// Allows previews and offline checks to provide state without opening App Group storage.
+    public init(stateProvider: @escaping () throws -> PersistenceState) {
+        self.stateProvider = stateProvider
+    }
 
     public func makeMenu(for context: SuperRClickFinderContext, target: AnyObject) -> NSMenu {
         let menu = NSMenu(title: "Super RClick")
@@ -20,15 +32,15 @@ public final class SuperRClickFinderMenuComposer {
 
     private func appendSharedActions(for context: SuperRClickFinderContext, to menu: NSMenu, target: AnyObject) {
         var allDefinitions = BuiltInActionCatalog.all
+        var visibilityRules: [VisibilityRule] = []
 
         // 1. Add NewFileCatalog
         allDefinitions.append(contentsOf: Shared.NewFileCatalog.all)
         
         // 2. Add Custom Actions from PersistenceState
         do {
-            let container = AppGroupContainer(groupIdentifier: "group.com.haoqiqin.superrclick")
-            let controller = try container.makePersistenceController()
-            let state = controller.loadOrCreateState()
+            let state = try stateProvider()
+            visibilityRules = state.visibilityRules
             
             let customDefinitions = state.customActions
                 .filter { $0.isEnabled }
@@ -42,17 +54,19 @@ public final class SuperRClickFinderMenuComposer {
                 }
             }
         } catch {
-            NSLog("[SuperRClick] Failed to load custom actions or AI config: \(error)")
+            NSLog("[SuperRClick] Failed to load menu configuration: \(error)")
         }
 
+        let actionContext = context.actionContext
         let availableDefinitions = allDefinitions.filter { definition in
-            definition.matches(context.actionContext) && shouldShow(definition: definition, in: context)
+            ActionEngine.isVisible(definition, in: actionContext, visibilityRules: visibilityRules)
+                && shouldShow(definition: definition, in: context)
         }
 
         let groupedDefinitions = Dictionary(grouping: availableDefinitions, by: \.section)
         let orderedSections = groupedDefinitions.keys.sorted()
 
-        for (index, section) in orderedSections.enumerated() {
+        for section in orderedSections {
             let definitions = (groupedDefinitions[section] ?? []).sorted(by: definitionSort)
             
             if section == .newFile {
@@ -62,7 +76,7 @@ public final class SuperRClickFinderMenuComposer {
                     action: nil,
                     keyEquivalent: ""
                 )
-                newFileItem.image = coloredMenuImage(symbolName: "doc.badge.plus", color: .systemGreen)
+                Self.setImage(Self.image(named: "doc.badge.plus"), on: newFileItem)
                 newFileItem.submenu = newFileSubMenu
                 menu.addItem(newFileItem)
                 
@@ -70,11 +84,11 @@ public final class SuperRClickFinderMenuComposer {
             } else if section == .ai {
                 let aiSubMenu = NSMenu(title: "AI")
                 let aiItem = NSMenuItem(
-                    title: SharedLocale.isChinese ? "🤖 AI 工具" : "🤖 AI Actions",
+                    title: SharedLocale.isChinese ? "AI 工具" : "AI Actions",
                     action: nil,
                     keyEquivalent: ""
                 )
-                aiItem.image = coloredMenuImage(symbolName: "sparkles", color: .systemPurple)
+                Self.setImage(Self.image(named: "sparkles"), on: aiItem)
                 aiItem.submenu = aiSubMenu
                 menu.addItem(aiItem)
                 
@@ -135,6 +149,7 @@ public final class SuperRClickFinderMenuComposer {
                     )
                     fmtItem.target = target
                     fmtItem.representedObject = actionID
+                    Self.setImage(Self.image(named: "photo"), on: fmtItem)
                     subMenu.addItem(fmtItem)
                 }
                 let parentItem = NSMenuItem(
@@ -142,7 +157,7 @@ public final class SuperRClickFinderMenuComposer {
                     action: nil,
                     keyEquivalent: ""
                 )
-                parentItem.image = menuImage(for: definition)
+                Self.setImage(menuImage(for: definition), on: parentItem)
                 parentItem.submenu = subMenu
                 menu.addItem(parentItem)
                 continue
@@ -156,7 +171,7 @@ public final class SuperRClickFinderMenuComposer {
             item.target = target
             item.isEnabled = true
             item.representedObject = definition.id.rawValue
-            item.image = menuImage(for: definition)
+            Self.setImage(menuImage(for: definition), on: item)
             menu.addItem(item)
         }
     }
@@ -176,6 +191,7 @@ public final class SuperRClickFinderMenuComposer {
             item.target = target
             item.isEnabled = context.map { utility.isEnabled(for: $0) } ?? true
             item.representedObject = utility.rawValue
+            Self.setImage(Self.image(named: utility.iconName), on: item)
             menu.addItem(item)
         }
     }
@@ -232,51 +248,27 @@ public final class SuperRClickFinderMenuComposer {
 
     // MARK: - Icon Helpers
 
-    /// Returns a colored SF Symbol image for menu items.
-    /// Uses palette rendering with a specific accent color so icons are
-    /// visually distinct in both light and dark mode context menus.
+    /// FinderSync's synchronous Objective-C callbacks are not actor-isolated.
+    /// NSImage is transferable; draw it on MainActor without transferring NSMenu.
+    static func image(named name: String, size: CGFloat = 16) -> NSImage {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated { RClickIcon.image(named: name, size: size) }
+        }
+        return DispatchQueue.main.sync { RClickIcon.image(named: name, size: size) }
+    }
+
+    static func setImage(_ image: NSImage?, on item: NSMenuItem) {
+        item.image = image
+        if #available(macOS 27.0, *), image != nil {
+            // These original glyphs identify actions; preserve them under macOS
+            // 27's automatic menu-image policy. Earlier systems retain defaults.
+            item.preferredImageVisibility = .visible
+        }
+    }
+
     private func menuImage(for definition: ActionDefinition) -> NSImage? {
-        guard let symbolName = definition.systemImageName else {
-            return nil
-        }
-
-        let color = iconColor(for: definition.section, actionId: definition.id.rawValue)
-        return coloredMenuImage(symbolName: symbolName, color: color)
-    }
-
-    private func coloredMenuImage(symbolName: String, color: NSColor) -> NSImage? {
-        guard let baseImage = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil) else {
-            return nil
-        }
-
-        let config = NSImage.SymbolConfiguration(paletteColors: [color])
-        let coloredImage = baseImage.withSymbolConfiguration(config)
-        coloredImage?.isTemplate = false
-        return coloredImage
-    }
-
-    /// Maps section/action to a distinct color for visual categorization.
-    private func iconColor(for section: ActionSection, actionId: String) -> NSColor {
-        switch section {
-        case .file:
-            // Give specific file actions distinct colors
-            switch actionId {
-            case "compress-items": return .systemOrange
-            case "convert-image": return .systemPurple
-            case "batch-rename": return .systemTeal
-            default: return .systemBlue
-            }
-        case .newFile:
-            return .systemGreen
-        case .ai:
-            return .systemPurple
-        case .text:
-            return .systemIndigo
-        case .automation:
-            return .systemOrange
-        case .system:
-            return .systemGray
-        }
+        guard let symbolName = definition.systemImageName else { return nil }
+        return Self.image(named: symbolName, size: 16)
     }
 
     private enum FinderUtilityAction: String {
@@ -292,6 +284,14 @@ public final class SuperRClickFinderMenuComposer {
                 return SharedLocale.isChinese ? "打开 Super RClick" : "Open Super RClick"
             case .refreshFinderTargets:
                 return SharedLocale.isChinese ? "刷新监控目录" : "Refresh Targets"
+            }
+        }
+
+        var iconName: String {
+            switch self {
+            case .revealInFinder: return "folder"
+            case .openSuperRClickPreferences: return "gearshape"
+            case .refreshFinderTargets: return "arrow.clockwise"
             }
         }
 

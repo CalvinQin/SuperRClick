@@ -10,7 +10,7 @@ struct ExtensionStatusBanner: View {
         if !hasDismissed {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .top, spacing: 12) {
-                    Image(systemName: "exclamationmark.applepodcasts")
+                    Image(rclick: "exclamationmark.applepodcasts")
                         .font(.system(size: 24))
                         .foregroundStyle(.orange)
                     
@@ -31,7 +31,7 @@ struct ExtensionStatusBanner: View {
                             hasDismissed = true
                         }
                     } label: {
-                        Image(systemName: "xmark")
+                        Image(rclick: "xmark")
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
@@ -41,7 +41,7 @@ struct ExtensionStatusBanner: View {
                     guard !AppCoordinator.isIsolatedPreview else { return }
                     FIFinderSyncController.showExtensionManagementInterface()
                 } label: {
-                    Label(L("前往系统设置开启", "Open System Settings"), systemImage: "gearshape.arrow.triangle.2.circlepath")
+                    RClickLabel(L("前往系统设置开启", "Open System Settings"), icon: "gearshape.arrow.triangle.2.circlepath")
                         .font(.subheadline.weight(.semibold))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)

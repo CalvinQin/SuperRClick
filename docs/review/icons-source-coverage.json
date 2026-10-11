@@ -1,0 +1,346 @@
+{
+  "uniqueStaticKeys": 96,
+  "sourceReferences": 147,
+  "unknownSourceKeys": {},
+  "keys": {
+    "accessibility": [
+      "App/Features/Setup/SetupCenterView.swift:200"
+    ],
+    "app.badge.fill": [
+      "Shared/Models/CustomAction.swift:21"
+    ],
+    "applescript": [
+      "Shared/Actions/NewFileCatalog.swift:13",
+      "Shared/Actions/NewFileCatalog.swift:14",
+      "Shared/Models/CustomAction.swift:20"
+    ],
+    "archivebox": [
+      "App/MenuBar/MenuBarRootView.swift:42",
+      "Shared/Actions/BuiltInActionCatalog.swift:73"
+    ],
+    "archivebox.fill": [
+      "App/Features/Tools/ToolsView.swift:48"
+    ],
+    "arrow.clockwise": [
+      "App/Features/Actions/ActionLibraryView.swift:62",
+      "Extensions/FinderSync/SuperRClickFinderMenuComposer.swift:285"
+    ],
+    "arrow.down.app": [
+      "App/Features/Settings/GeneralSettingsView.swift:116"
+    ],
+    "arrow.down.circle": [
+      "App/Features/Settings/WorkspaceProfileView.swift:139"
+    ],
+    "arrow.down.circle.fill": [
+      "App/Features/Settings/WorkspaceSettingsView.swift:44"
+    ],
+    "arrow.right": [
+      "App/Features/Tools/ToolsView.swift:109"
+    ],
+    "arrow.right.circle": [
+      "App/MenuBar/MenuBarRootView.swift:56"
+    ],
+    "bolt": [
+      "App/Features/Actions/CreateActionView.swift:148",
+      "App/Features/Settings/ActionVisibilityView.swift:20"
+    ],
+    "bolt.fill": [
+      "App/Features/Actions/PinnedActionsView.swift:56",
+      "App/Features/Setup/SetupCenterView.swift:135"
+    ],
+    "brain.head.profile": [
+      "Shared/AI/LLMProvider.swift:47"
+    ],
+    "c.square": [
+      "Shared/Actions/NewFileCatalog.swift:17"
+    ],
+    "character.cursor.ibeam": [
+      "Shared/Actions/AIActionCatalog.swift:14"
+    ],
+    "checkmark": [
+      "App/Features/AI/AIResultWindow.swift:48"
+    ],
+    "checkmark.circle.fill": [
+      "App/Bootstrap/AppCoordinator.swift:64",
+      "App/Features/BatchRename/BatchRenamePanelView.swift:460",
+      "App/Features/Progress/TaskProgressWindow.swift:166",
+      "App/Features/Settings/AISettingsView.swift:103",
+      "App/Features/Settings/AISettingsView.swift:126",
+      "App/Features/Setup/SetupCenterView.swift:102",
+      "App/Features/Setup/SetupCenterView.swift:215",
+      "App/Features/Setup/SetupCenterView.swift:245",
+      "App/SuperRClickRootView.swift:186"
+    ],
+    "checkmark.seal.fill": [
+      "App/Features/Actions/RecentActivityView.swift:170",
+      "App/Features/BatchRename/BatchRenamePanelView.swift:273"
+    ],
+    "chevron.left.forwardslash.chevron.right": [
+      "Shared/Actions/NewFileCatalog.swift:12",
+      "Shared/Actions/NewFileCatalog.swift:20"
+    ],
+    "clock.arrow.circlepath": [
+      "App/Features/Actions/RecentActivityView.swift:75",
+      "App/SuperRClickRootView.swift:32"
+    ],
+    "cloud.fill": [
+      "Shared/AI/LLMProvider.swift:140"
+    ],
+    "cpu": [
+      "Shared/AI/LLMProvider.swift:83"
+    ],
+    "cube.transparent": [
+      "Shared/AI/LLMProvider.swift:120"
+    ],
+    "cup.and.saucer": [
+      "Shared/Actions/NewFileCatalog.swift:16"
+    ],
+    "curlybraces.square": [
+      "Shared/Actions/NewFileCatalog.swift:21"
+    ],
+    "cursorarrow.and.square.on.square.dashed": [
+      "App/Features/Settings/SettingsView.swift:52"
+    ],
+    "desktopcomputer": [
+      "App/Features/Settings/WorkspaceProfileView.swift:127",
+      "App/Features/Settings/WorkspaceSettingsView.swift:34"
+    ],
+    "doc": [
+      "Shared/Actions/NewFileCatalog.swift:6"
+    ],
+    "doc.fill": [
+      "App/Features/Progress/TaskProgressWindow.swift:146",
+      "Shared/Actions/NewFileCatalog.swift:8"
+    ],
+    "doc.on.clipboard": [
+      "Shared/Actions/BuiltInActionCatalog.swift:25"
+    ],
+    "doc.on.doc": [
+      "App/Features/AI/AIResultWindow.swift:48",
+      "Shared/Actions/BuiltInActionCatalog.swift:9"
+    ],
+    "doc.on.doc.fill": [
+      "Shared/Actions/BuiltInActionCatalog.swift:122"
+    ],
+    "doc.plaintext": [
+      "Shared/Actions/NewFileCatalog.swift:5"
+    ],
+    "doc.richtext": [
+      "Shared/Actions/NewFileCatalog.swift:7"
+    ],
+    "doc.text": [
+      "App/Features/Actions/CreateActionView.swift:149",
+      "App/Features/Settings/WorkspaceProfileView.swift:133"
+    ],
+    "doc.text.fill": [
+      "App/Features/Settings/WorkspaceSettingsView.swift:39"
+    ],
+    "dock.rectangle": [
+      "App/Features/Settings/GeneralSettingsView.swift:103"
+    ],
+    "ellipsis": [
+      "App/Features/Actions/ActionLibraryView.swift:195"
+    ],
+    "exclamationmark.applepodcasts": [
+      "App/Features/Settings/ExtensionStatusBanner.swift:13"
+    ],
+    "exclamationmark.shield.fill": [
+      "App/Features/Actions/RecentActivityView.swift:171"
+    ],
+    "exclamationmark.triangle.fill": [
+      "App/Bootstrap/AppCoordinator.swift:66",
+      "App/Features/Actions/CreateActionView.swift:95",
+      "App/Features/BatchRename/BatchRenamePanelView.swift:464",
+      "App/Features/BatchRename/BatchRenamePanelView.swift:475",
+      "App/Features/Progress/TaskProgressWindow.swift:166",
+      "App/Features/Settings/AISettingsView.swift:144"
+    ],
+    "folder": [
+      "App/Features/Actions/CreateActionView.swift:150",
+      "App/Features/Settings/SettingsView.swift:21",
+      "Extensions/FinderSync/SuperRClickFinderMenuComposer.swift:283"
+    ],
+    "folder.badge.gearshape": [
+      "App/Features/Settings/WorkspaceProfileView.swift:245",
+      "App/Features/Settings/WorkspaceSettingsView.swift:117",
+      "App/Features/Setup/SetupCenterView.swift:85"
+    ],
+    "folder.fill": [
+      "App/Features/Settings/WorkspaceProfileView.swift:245",
+      "App/SuperRClickRootView.swift:34"
+    ],
+    "gear": [
+      "App/Features/Actions/CreateActionView.swift:151"
+    ],
+    "gearshape": [
+      "Extensions/FinderSync/SuperRClickFinderMenuComposer.swift:284"
+    ],
+    "gearshape.2": [
+      "Shared/AI/LLMProvider.swift:186"
+    ],
+    "gearshape.arrow.triangle.2.circlepath": [
+      "App/Features/Settings/ExtensionStatusBanner.swift:44"
+    ],
+    "gearshape.fill": [
+      "App/SuperRClickRootView.swift:35"
+    ],
+    "globe": [
+      "App/Features/Settings/GeneralSettingsView.swift:73"
+    ],
+    "globe.europe.africa.fill": [
+      "App/Features/Settings/WorkspaceSettingsView.swift:24"
+    ],
+    "hammer": [
+      "App/Features/Actions/CreateActionView.swift:150"
+    ],
+    "info.circle": [
+      "App/Features/Settings/SettingsView.swift:33",
+      "App/SuperRClickRootView.swift:186"
+    ],
+    "info.circle.fill": [
+      "App/Bootstrap/AppCoordinator.swift:62",
+      "App/Features/Settings/WorkspaceSettingsView.swift:50"
+    ],
+    "keyboard": [
+      "App/Features/Setup/SetupCenterView.swift:230"
+    ],
+    "lightbulb.fill": [
+      "App/Features/Tools/ToolsView.swift:66"
+    ],
+    "link": [
+      "App/Features/Actions/CreateActionView.swift:151"
+    ],
+    "lock.shield": [
+      "App/Features/Setup/SetupCenterView.swift:175"
+    ],
+    "magnifyingglass": [
+      "App/Features/Actions/ActionLibraryView.swift:226"
+    ],
+    "minus.circle.fill": [
+      "App/Features/BatchRename/BatchRenamePanelView.swift:462"
+    ],
+    "moon.stars.fill": [
+      "Shared/AI/LLMProvider.swift:156"
+    ],
+    "paintbrush": [
+      "Shared/Actions/NewFileCatalog.swift:19"
+    ],
+    "pencil.and.list.clipboard": [
+      "App/Features/Actions/PinnedActionsView.swift:26",
+      "App/Features/Tools/ToolsView.swift:28",
+      "App/MenuBar/MenuBarRootView.swift:35",
+      "Shared/Actions/BuiltInActionCatalog.swift:89"
+    ],
+    "person.crop.circle.badge.minus": [
+      "Shared/Actions/AIActionCatalog.swift:55"
+    ],
+    "photo": [
+      "App/Features/Actions/CreateActionView.swift:149",
+      "Shared/Actions/BuiltInActionCatalog.swift:105"
+    ],
+    "photo.on.rectangle.angled": [
+      "App/Features/Tools/ToolsView.swift:38",
+      "App/MenuBar/MenuBarRootView.swift:49"
+    ],
+    "pin": [
+      "App/Features/Actions/ActionLibraryView.swift:155"
+    ],
+    "pin.fill": [
+      "App/Features/Actions/ActionLibraryView.swift:155",
+      "App/Features/Actions/PinnedActionsView.swift:68",
+      "App/SuperRClickRootView.swift:31"
+    ],
+    "pin.slash.fill": [
+      "App/Features/Actions/PinnedActionsView.swift:142"
+    ],
+    "play.fill": [
+      "App/Features/Actions/PinnedActionsView.swift:134"
+    ],
+    "play.rectangle": [
+      "Shared/Actions/NewFileCatalog.swift:10"
+    ],
+    "plus": [
+      "App/Features/Actions/ActionLibraryView.swift:68"
+    ],
+    "plus.circle.fill": [
+      "App/SuperRClickRootView.swift:174"
+    ],
+    "questionmark.folder.fill": [
+      "App/Features/Actions/RecentActivityView.swift:173"
+    ],
+    "safari": [
+      "Shared/Actions/NewFileCatalog.swift:18"
+    ],
+    "server.rack": [
+      "Shared/AI/LLMProvider.swift:175"
+    ],
+    "sidebar": [
+      "App/SuperRClickRootView.swift:84"
+    ],
+    "slider.horizontal.3": [
+      "App/Features/Settings/SettingsView.swift:12"
+    ],
+    "sparkles": [
+      "App/Features/Settings/SettingsView.swift:28",
+      "Shared/AI/LLMProvider.swift:66"
+    ],
+    "square.and.arrow.down": [
+      "App/Features/Settings/AISettingsView.swift:103"
+    ],
+    "square.grid.2x2.fill": [
+      "App/SuperRClickRootView.swift:30"
+    ],
+    "square.stack.3d.up.fill": [
+      "App/Features/Settings/WorkspaceSettingsView.swift:99"
+    ],
+    "star.fill": [
+      "Shared/AI/LLMProvider.swift:101"
+    ],
+    "swift": [
+      "Shared/Actions/NewFileCatalog.swift:11"
+    ],
+    "tablecells": [
+      "Shared/Actions/NewFileCatalog.swift:22",
+      "Shared/Actions/NewFileCatalog.swift:9"
+    ],
+    "tag.fill": [
+      "Shared/Actions/AIActionCatalog.swift:28"
+    ],
+    "terminal": [
+      "App/Features/Actions/ActionLibraryView.swift:226",
+      "App/Features/Actions/CreateActionView.swift:148",
+      "App/MenuBar/MenuBarRootView.swift:63",
+      "Shared/Actions/BuiltInActionCatalog.swift:41",
+      "Shared/Actions/NewFileCatalog.swift:15",
+      "Shared/Models/CustomAction.swift:19"
+    ],
+    "terminal.fill": [
+      "App/Features/Tools/ToolsView.swift:58",
+      "Shared/Actions/BuiltInActionCatalog.swift:57"
+    ],
+    "text.viewfinder": [
+      "Shared/Actions/AIActionCatalog.swift:41"
+    ],
+    "trash": [
+      "App/Features/Actions/RecentActivityView.swift:35"
+    ],
+    "wand.and.stars": [
+      "App/Features/Settings/GeneralSettingsView.swift:132"
+    ],
+    "wrench.and.screwdriver.fill": [
+      "App/SuperRClickRootView.swift:33"
+    ],
+    "xmark": [
+      "App/Features/Actions/ActionComponents.swift:39",
+      "App/Features/Settings/ExtensionStatusBanner.swift:34"
+    ],
+    "xmark.circle.fill": [
+      "App/Features/AI/AIResultWindow.swift:20",
+      "App/Features/Settings/AISettingsView.swift:131"
+    ],
+    "xmark.octagon.fill": [
+      "App/Bootstrap/AppCoordinator.swift:68",
+      "App/Features/Actions/RecentActivityView.swift:172"
+    ]
+  }
+}

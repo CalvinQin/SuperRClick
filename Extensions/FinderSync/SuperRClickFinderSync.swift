@@ -35,12 +35,7 @@ public final class SuperRClickFinderSync: FIFinderSync {
     }
 
     public override var toolbarItemImage: NSImage {
-        let image = NSImage(
-            systemSymbolName: "gearshape.fill",
-            accessibilityDescription: "Super RClick"
-        ) ?? NSImage()
-        image.isTemplate = true
-        return image
+        SuperRClickFinderMenuComposer.image(named: "brand", size: 20)
     }
 
     public override func menu(for menuKind: FIMenuKind) -> NSMenu? {
@@ -133,6 +128,7 @@ public final class SuperRClickFinderSync: FIFinderSync {
         )
         openPreferences.target = self
         openPreferences.representedObject = "utility:open-preferences"
+        SuperRClickFinderMenuComposer.setImage(SuperRClickFinderMenuComposer.image(named: "gearshape"), on: openPreferences)
         menu.addItem(openPreferences)
 
         let refreshTargets = NSMenuItem(
@@ -142,6 +138,7 @@ public final class SuperRClickFinderSync: FIFinderSync {
         )
         refreshTargets.target = self
         refreshTargets.representedObject = "utility:refresh-targets"
+        SuperRClickFinderMenuComposer.setImage(SuperRClickFinderMenuComposer.image(named: "arrow.clockwise"), on: refreshTargets)
         menu.addItem(refreshTargets)
 
         return menu
@@ -232,43 +229,25 @@ public final class SuperRClickFinderSync: FIFinderSync {
         let ext = rawValue.replacingOccurrences(of: "new-", with: "")
         debugLog("[newFile] creating .\(ext) in \(targetDir.path)")
 
-        let fileManager = FileManager.default
-        var fileName = "Untitled.\(ext)"
-        var fileURL = targetDir.appendingPathComponent(fileName)
-        var counter = 1
+        let preferredURL = targetDir.appendingPathComponent("Untitled.\(ext)")
+        let fileData = NewFileData.contents(forExtension: ext)
+        debugLog("[newFile] initial document data (\(fileData.count) bytes)")
 
-        while fileManager.fileExists(atPath: fileURL.path) {
-            fileName = "Untitled \(counter).\(ext)"
-            fileURL = targetDir.appendingPathComponent(fileName)
-            counter += 1
-        }
-
-        var fileData = Data()
-        if let base64String = NewFileData.base64Templates[ext],
-           let decodedData = Data(base64Encoded: base64String) {
-            fileData = decodedData
-            debugLog("[newFile] using template data (\(fileData.count) bytes)")
-        } else {
-            debugLog("[newFile] no template, creating empty file")
-        }
-
-        // Try direct creation first (FinderSync has implicit access to monitored dirs)
-        let success = fileManager.createFile(atPath: fileURL.path, contents: fileData, attributes: nil)
-        if success {
-            NSWorkspace.shared.activateFileViewerSelecting([fileURL])
-            debugLog("[newFile] SUCCESS: \(fileURL.path)")
-            NSLog("Super RClick created new file at %@", fileURL.path)
-        } else {
-            debugLog("[newFile] FAILED direct creation at \(fileURL.path), trying with security scope...")
-            // Fallback: try with security-scoped access
+        // Publish exclusively: existing files and dangling symlinks keep their data,
+        // even if they appeared after the menu was opened.
+        do {
+            let createdURL = try ExclusiveFileOutput.write(fileData, preferredURL: preferredURL, suffixSeparator: " ")
+            NSWorkspace.shared.activateFileViewerSelecting([createdURL])
+            debugLog("[newFile] SUCCESS: \(createdURL.path)")
+        } catch {
+            debugLog("[newFile] direct creation failed, trying security scope: \(error.localizedDescription)")
             withSecurityScopedAccess(to: [targetDir]) {
-                let retrySuccess = fileManager.createFile(atPath: fileURL.path, contents: fileData, attributes: nil)
-                if retrySuccess {
-                    NSWorkspace.shared.activateFileViewerSelecting([fileURL])
-                    self.debugLog("[newFile] SUCCESS via security scope: \(fileURL.path)")
-                } else {
-                    self.debugLog("[newFile] FAILED even with security scope at \(fileURL.path)")
-                    NSLog("Super RClick failed to create new file at %@", fileURL.path)
+                do {
+                    let createdURL = try ExclusiveFileOutput.write(fileData, preferredURL: preferredURL, suffixSeparator: " ")
+                    NSWorkspace.shared.activateFileViewerSelecting([createdURL])
+                    self.debugLog("[newFile] SUCCESS via security scope: \(createdURL.path)")
+                } catch {
+                    self.debugLog("[newFile] FAILED via security scope: \(error.localizedDescription)")
                 }
             }
         }
@@ -283,9 +262,22 @@ public final class SuperRClickFinderSync: FIFinderSync {
             let controller = try container.makePersistenceController()
             let state = controller.loadOrCreateState()
             
-            guard let action = state.customActions.first(where: { $0.id == uuid }) else { return }
-            
-            executeCustomAction(action, context: context)
+            // A menu may remain open while the app disables or edits an action.
+            guard let action = state.customActions.first(where: { $0.id == uuid }), action.isEnabled else {
+                debugLog("[customAction] action no longer exists or is disabled")
+                return
+            }
+            let validatedAction = try action.validated()
+            guard ActionEngine.isVisible(
+                validatedAction.toActionDefinition(),
+                in: context.actionContext,
+                visibilityRules: state.visibilityRules
+            ) else {
+                debugLog("[customAction] action is no longer available for this context")
+                return
+            }
+
+            executeCustomAction(validatedAction, context: context)
         } catch {
             NSLog("[SuperRClick] Failed to load custom action: \(error)")
         }
@@ -400,31 +392,32 @@ public final class SuperRClickFinderSync: FIFinderSync {
     private func compressItems(_ urls: [URL]) {
         guard !urls.isEmpty else { return }
 
-        let parents = Set(urls.map { normalizedDirectory(for: $0).path })
-        guard parents.count == 1, let parentPath = parents.first else {
+        let plan: ZipArchivePlan
+        do {
+            plan = try ZipArchivePlan(selectedURLs: urls)
+        } catch {
             postResultNotification(
                 title: L("压缩失败", "Compression Failed"),
-                body: L("压缩功能要求所有文件在同一文件夹下。", "Compression requires items from the same folder."),
+                body: error.localizedDescription,
                 success: false
             )
             return
         }
 
-        let parentDirectory = URL(fileURLWithPath: parentPath, isDirectory: true)
-        let archiveName = "SuperRClick-\(timestamp()).zip"
         let exitCode = runProcess(
             launchPath: "/usr/bin/zip",
-            arguments: ["-r", archiveName] + urls.map(\.lastPathComponent),
-            currentDirectoryURL: parentDirectory
+            arguments: plan.arguments,
+            currentDirectoryURL: plan.workingDirectoryURL
         )
 
         if exitCode == 0 {
             postResultNotification(
                 title: L("压缩完成", "Compression Complete"),
-                body: L("已创建压缩包 \(archiveName)。", "Created archive \(archiveName)."),
+                body: L("已创建压缩包 \(plan.archiveURL.lastPathComponent)。", "Created archive \(plan.archiveURL.lastPathComponent)."),
                 success: true
             )
         } else {
+            try? FileManager.default.removeItem(at: plan.archiveURL)
             postResultNotification(
                 title: L("压缩失败", "Compression Failed"),
                 body: L("zip 退出码 \(exitCode)。", "zip exited with code \(exitCode)."),
@@ -464,20 +457,29 @@ public final class SuperRClickFinderSync: FIFinderSync {
         }
 
         var convertedCount = 0
+        var failedNames: [String] = []
         for inputURL in urls {
-            let destinationURL = uniqueDestinationURL(
-                preferredURL: inputURL.deletingPathExtension().appendingPathExtension(fileExtension)
-            )
-            let exitCode = runProcess(
-                launchPath: "/usr/bin/sips",
-                arguments: ["-s", "format", sipsFormat, inputURL.path, "--out", destinationURL.path]
-            )
-            if exitCode == 0 {
+            do {
+                let preferredURL = inputURL.deletingPathExtension().appendingPathExtension(fileExtension)
+                let output = try ExclusiveFileOutput(preferredURL: preferredURL)
+                defer { output.cleanup() }
+                let exitCode = runProcess(
+                    launchPath: "/usr/bin/sips",
+                    arguments: ["-s", "format", sipsFormat, inputURL.path, "--out", output.temporaryURL.path]
+                )
+                guard exitCode == 0 else {
+                    failedNames.append(inputURL.lastPathComponent)
+                    continue
+                }
+                _ = try output.publish()
                 convertedCount += 1
+            } catch {
+                failedNames.append(inputURL.lastPathComponent)
+                NSLog("Super RClick could not publish converted image: %@", error.localizedDescription)
             }
         }
 
-        if convertedCount > 0 {
+        if failedNames.isEmpty {
             postResultNotification(
                 title: L("转换完成", "Conversion Complete"),
                 body: L("已将 \(convertedCount) 张图片转换为 \(targetFormat.uppercased())。", "Converted \(convertedCount) image(s) to \(targetFormat.uppercased())."),
@@ -486,7 +488,10 @@ public final class SuperRClickFinderSync: FIFinderSync {
         } else {
             postResultNotification(
                 title: L("转换失败", "Conversion Failed"),
-                body: L("所选图片均无法转换。", "None of the selected images could be converted."),
+                body: L(
+                    "已转换 \(convertedCount)/\(urls.count) 张图片。未能转换：\(failedNames.joined(separator: ", "))。",
+                    "Converted \(convertedCount) of \(urls.count) image(s). Could not convert: \(failedNames.joined(separator: ", "))."
+                ),
                 success: false
             )
         }
@@ -662,32 +667,6 @@ public final class SuperRClickFinderSync: FIFinderSync {
         let path = url.path(percentEncoded: false)
         let isDirectoryLike = url.hasDirectoryPath || path.hasSuffix("/")
         return isDirectoryLike ? url : url.deletingLastPathComponent()
-    }
-
-    private func uniqueDestinationURL(preferredURL: URL) -> URL {
-        let fileManager = FileManager.default
-        guard fileManager.fileExists(atPath: preferredURL.path) else {
-            return preferredURL
-        }
-
-        let stem = preferredURL.deletingPathExtension().lastPathComponent
-        let directory = preferredURL.deletingLastPathComponent()
-        let ext = preferredURL.pathExtension
-
-        for index in 1...99 {
-            let candidate = directory.appendingPathComponent("\(stem)-\(index)").appendingPathExtension(ext)
-            if !fileManager.fileExists(atPath: candidate.path) {
-                return candidate
-            }
-        }
-
-        return directory.appendingPathComponent("\(stem)-\(UUID().uuidString.prefix(6))").appendingPathExtension(ext)
-    }
-
-    private func timestamp() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd-HHmmss"
-        return formatter.string(from: Date())
     }
 
     private func shellEscapedPath(_ path: String) -> String {

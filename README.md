@@ -40,38 +40,38 @@ macOS Finder's right-click menu is limited. **Super RClick** transforms it into 
 ### 🗂️ File Operations
 - **Copy Path** — Copy full path, POSIX path, or shell-escaped path with one click
 - **Open Terminal Here** — Open Terminal directly in any Finder folder
-- **Compress Items** — Quickly archive selected files & folders to ZIP with progress bar
+- **Compress Items** — Archive selected files and folders to ZIP, with progress feedback in the main app
 - **Quick Jump to Directory** — Enter any path and jump directly in Finder
 
 ### 🤖 AI Smart Actions
-- **AI File Processing** — Analyze file contents and auto-generate intelligent filenames or tags based on context
-- **LLM Provider Integration** — Natively integrate Cloud AI streams including OpenAI, Zhipu, Moonshot, custom endpoints, and Local Ollama servers
-- **Local On-Device AI** — Complete offline privacy utilizing built-in macOS Vision/CoreML frameworks
+- **AI File Processing** — Generate image filenames and file tags from text, image metadata, and recognized text
+- **LLM Provider Settings** — Configure OpenAI-compatible providers with presets for OpenAI, Zhipu, Moonshot, custom endpoints, and local Ollama servers
+- **Local On-Device AI** — Run OCR and background removal offline with the built-in macOS Vision framework
 - **Local Image OCR** — Extract text directly from images securely without uploading to the cloud
 - **Local Background Removal** — Effortlessly extract objects from images with transparent backgrounds completely offline
 
 ### ✏️ Batch Rename
-- Three rename modes: **prefix**, **suffix**, and **find & replace**
-- Smart numbering with customizable start, step, and zero-padding
+- Two rename modes: **prefix** and **suffix**
+- Sequential numbering with customizable start and zero-padding
 - Real-time preview with conflict detection
 - Works from Finder right-click or MenuBar with file picker
 
 ### 🖼️ Image Conversion
 - Convert between **PNG / JPEG / TIFF / HEIC** formats
 - One-click format selection via Finder submenu
-- Progress indicator with completion notification
+- Progress and completion feedback in the main app
 - Output saved alongside original files
 
 ### 📄 New File Templates
-- Create files instantly: `.txt`, `.md`, `.py`, `.json`, `.html`, `.css`, `.js`, `.ts`, `.csv`, `.xml`, `.yaml`, `.sh`, `.swift`, `.java`, `.docx`, `.xlsx`, `.pptx` and more
-- Supports **20+ file types** including Office documents, code files, and config files
+- Create files instantly: `.txt`, `.md`, `.rtf`, `.docx`, `.xlsx`, `.pptx`, `.swift`, `.py`, `.js`, `.ts`, `.sh`, `.java`, `.cpp`, `.html`, `.css`, `.xml`, `.json`, and `.csv`
+- Supports **18 file types** including Office documents, code files, and config files
 - Organized submenu — no more creating files from Terminal
 
 ### ⚙️ Customization
 - **Custom Actions** — Create your own right-click menu commands
 - **Toggle Visibility** — Show/hide menu items as needed
-- **Workspace Management** — Monitor and manage multiple directories
-- **MenuBar Quick Access** — All tools accessible from the menu bar
+- **Finder Coverage** — Monitor the current user's home directory
+- **MenuBar Quick Access** — Access batch rename, compression, image conversion, Terminal, and directory navigation
 - **Multilingual UI** — English and Chinese support
 
 ---

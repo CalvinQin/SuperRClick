@@ -59,13 +59,13 @@ struct ActionLibraryView: View {
         .toolbar {
             ToolbarItem {
                 Button { coordinator.refresh() } label: {
-                    Label(L("刷新", "Refresh"), systemImage: "arrow.clockwise")
+                    RClickLabel(L("刷新", "Refresh"), icon: "arrow.clockwise")
                 }
                 .help(L("刷新动作库", "Refresh actions"))
             }
             ToolbarItem {
                 Button { coordinator.presentActionEditor() } label: {
-                    Label(L("新建动作", "New Action"), systemImage: "plus")
+                    RClickLabel(L("新建动作", "New Action"), icon: "plus")
                 }
                 .disabled(!coordinator.isReady)
                 .keyboardShortcut("n")
@@ -152,7 +152,7 @@ struct ActionLibraryView: View {
             rowTitle(action.title, subtitle: action.subtitle)
             Spacer(minLength: 8)
             Button { coordinator.togglePinned(action) } label: {
-                Image(systemName: coordinator.isPinned(action) ? "pin.fill" : "pin")
+                Image(rclick: coordinator.isPinned(action) ? "pin.fill" : "pin")
                     .foregroundStyle(coordinator.isPinned(action) ? Color.accentColor : .secondary)
                     .frame(width: 28, height: 28)
             }
@@ -192,7 +192,7 @@ struct ActionLibraryView: View {
                 Divider()
                 Button(L("删除动作…", "Delete Action…"), role: .destructive) { actionToDelete = action }
             } label: {
-                Image(systemName: "ellipsis").frame(width: 28, height: 28)
+                Image(rclick: "ellipsis").frame(width: 28, height: 28)
             }
             .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
             .accessibilityLabel(L("动作选项：", "Action options: ") + action.name)
@@ -221,9 +221,9 @@ struct ActionLibraryView: View {
 
     private var emptyState: some View {
         ContentUnavailableView {
-            Label(scope == .custom && query.isEmpty && category == nil
+            RClickLabel(scope == .custom && query.isEmpty && category == nil
                   ? L("创建你的第一个动作", "Create your first action") : L("没有匹配的动作", "No matching actions"),
-                  systemImage: scope == .custom && query.isEmpty ? "terminal" : "magnifyingglass")
+                  icon: scope == .custom && query.isEmpty ? "terminal" : "magnifyingglass")
         } description: {
             Text(scope == .custom && query.isEmpty && category == nil
                  ? L("将 Shell 脚本、AppleScript 或常用应用加入 Finder 右键菜单。", "Add a shell script, AppleScript, or an app to your Finder menu.")

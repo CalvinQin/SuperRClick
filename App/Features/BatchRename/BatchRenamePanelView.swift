@@ -270,7 +270,7 @@ struct BatchRenamePanelView: View {
 
             if plan.conflicts.isEmpty {
                 HStack(spacing: 10) {
-                    Image(systemName: "checkmark.seal.fill")
+                    Image(rclick: "checkmark.seal.fill")
                         .foregroundStyle(.green)
                     Text(L("未检测到冲突", "No conflicts detected"))
                         .foregroundStyle(.secondary)
@@ -402,7 +402,7 @@ private struct BatchRenamePreviewRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: iconName)
+            Image(rclick: iconName)
                 .foregroundStyle(statusColor)
                 .frame(width: 20)
 
@@ -472,7 +472,7 @@ private struct BatchRenameConflictRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
-                Image(systemName: "exclamationmark.triangle.fill")
+                Image(rclick: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
                 Text(conflict.kind.rawValue.capitalized)
                     .font(.subheadline.weight(.semibold))

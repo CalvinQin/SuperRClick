@@ -29,7 +29,8 @@ struct SuperRClickApp: App {
                 }
                 .environment(\.locale, languageManager.locale ?? Locale.current)
         } label: {
-            Image(nsImage: NSApplication.shared.applicationIconImage.menuBarIcon)
+            Image(nsImage: RClickIcon.image(named: "brand", size: 18))
+                .accessibilityLabel("Super RClick")
         }
     }
     
@@ -113,19 +114,5 @@ private final class MainWindowRegistrationNSView: NSView {
     @objc private func windowWillClose(_ notification: Notification) {
         guard let window = notification.object as? NSWindow else { return }
         MainWindowPresentation.unregister(window)
-    }
-}
-
-extension NSImage {
-    var menuBarIcon: NSImage {
-        let targetSize = NSSize(width: 18, height: 18)
-        let newImage = NSImage(size: targetSize)
-        newImage.lockFocus()
-        self.draw(in: NSRect(origin: .zero, size: targetSize),
-                  from: NSRect(origin: .zero, size: self.size),
-                  operation: .copy,
-                  fraction: 1.0)
-        newImage.unlockFocus()
-        return newImage
     }
 }

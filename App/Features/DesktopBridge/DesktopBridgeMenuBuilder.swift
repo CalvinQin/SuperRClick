@@ -21,7 +21,13 @@ final class DesktopBridgeMenuBuilder {
         allDefinitions.append(contentsOf: customDefinitions)
 
         let availableDefinitions = allDefinitions.filter { definition in
-            definition.matches(context) && !coordinator.isActionHidden(definition)
+            let isAllowedByAISetting = coordinator.persistenceState.aiConfig.isEnabled
+                || definition.section != .ai
+                || definition.id == AIActionCatalog.ocrExtract
+                || definition.id == AIActionCatalog.removeBackground
+            return isAllowedByAISetting
+                && definition.matches(context)
+                && !coordinator.isActionHidden(definition)
         }
 
         let groupedDefinitions = Dictionary(grouping: availableDefinitions, by: \.section)
@@ -40,9 +46,7 @@ final class DesktopBridgeMenuBuilder {
             if !newFileDefs.isEmpty {
                 let newFileSubMenu = NSMenu(title: "新建 (New)")
                 let newFileItem = NSMenuItem(title: "新建文件...", action: nil, keyEquivalent: "")
-                if let image = NSImage(systemSymbolName: "doc.badge.plus", accessibilityDescription: nil) {
-                    newFileItem.image = image
-                }
+                newFileItem.image = RClickIcon.image(named: "doc.badge.plus", size: 16)
                 newFileItem.submenu = newFileSubMenu
                 menu.addItem(newFileItem)
                 
@@ -63,9 +67,7 @@ final class DesktopBridgeMenuBuilder {
         menu.addItem(.separator())
         let settingsItem = NSMenuItem(title: "Super RClick 设置...", action: #selector(openSettings), keyEquivalent: "")
         settingsItem.target = self
-        if let icon = NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil) {
-            settingsItem.image = icon
-        }
+        settingsItem.image = RClickIcon.image(named: "gearshape", size: 16)
         menu.addItem(settingsItem)
         
         return menu
@@ -77,24 +79,16 @@ final class DesktopBridgeMenuBuilder {
         // Store the definition ID string in representedObject
         item.representedObject = ActionPayload(actionID: definition.id, context: context)
         
-        if let symbolName = definition.systemImageName, let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil) {
-            item.image = image
+        if let symbolName = definition.systemImageName {
+            item.image = RClickIcon.image(named: symbolName, size: 16)
         }
         
         return item
     }
     
-    @objc private func handleAction(_ sender: NSMenuItem) {
+    @objc func handleAction(_ sender: NSMenuItem) {
         guard let payload = sender.representedObject as? ActionPayload else { return }
-        if let definition = (BuiltInActionCatalog.all + NewFileCatalog.all).first(where: { $0.id == payload.actionID }) {
-            coordinator.sampleContext = payload.context
-             // update sample Context before running? Or just pass it. Wait, run() uses sampleContext in AppCoordinator.
-            coordinator.sampleContext = payload.context
-            coordinator.run(definition)
-        } else if let custom = coordinator.persistenceState.customActions.first(where: { $0.id.uuidString == payload.actionID.rawValue }) {
-            coordinator.sampleContext = payload.context
-            coordinator.run(custom.toActionDefinition())
-        }
+        coordinator.run(actionID: payload.actionID, context: payload.context)
     }
     
     @objc private func openSettings(_ sender: NSMenuItem) {

@@ -40,4 +40,22 @@ final class BatchRenamePlannerTests: XCTestCase {
         XCTAssertEqual(plan.conflicts.map(\.kind), [.duplicateProposedName, .duplicateProposedName])
         XCTAssertEqual(plan.previews.map(\.status), [.duplicateProposedName, .duplicateProposedName])
     }
+
+    func testPathSeparatorsInTokenOrNumberingCannotCreateNestedDestination() {
+        let planner = BatchRenamePlanner(fileExistsAtPath: { _ in false })
+        let source = BatchRenameItemInput(url: URL(fileURLWithPath: "/tmp/source/report.txt"))
+        let requests = [
+            BatchRenameRequest(mode: .prefix, token: "../outside", items: [source]),
+            BatchRenameRequest(mode: .suffix, token: "nested/name", items: [source]),
+            BatchRenameRequest(mode: .prefix, token: "prefix", numbering: .init(separator: "/"), items: [source]),
+            BatchRenameRequest(mode: .prefix, token: "bad\0name", items: [source])
+        ]
+
+        for request in requests {
+            let plan = planner.makePlan(for: request)
+            XCTAssertFalse(plan.canApply)
+            XCTAssertEqual(plan.previews.first?.status, .invalidName)
+            XCTAssertTrue(plan.conflicts.contains { $0.kind == .invalidName })
+        }
+    }
 }

@@ -45,13 +45,13 @@ struct CreateActionView: View {
                     TextField(L("描述", "Description"), text: $draft.subtitle, prompt: Text(L("可选", "Optional")))
                         .accessibilityIdentifier("action.description")
                     Picker(L("图标", "Icon"), selection: $draft.systemImageName) {
-                        ForEach(icons, id: \.0) { icon in Label(icon.1, systemImage: icon.0).tag(icon.0) }
+                        ForEach(icons, id: \.0) { icon in RClickLabel(icon.1, icon: icon.0).tag(icon.0) }
                     }
                 }
                 Section {
                     Picker(L("类型", "Type"), selection: $draft.actionType) {
                         ForEach(CustomActionType.allCases, id: \.self) { type in
-                            Label(type.displayName, systemImage: type.iconName).tag(type)
+                            RClickLabel(type.displayName, icon: type.iconName).tag(type)
                         }
                     }
                     .accessibilityIdentifier("action.type")
@@ -92,7 +92,7 @@ struct CreateActionView: View {
             Divider()
             VStack(alignment: .leading, spacing: 12) {
                 if let saveError {
-                    Label(saveError, systemImage: "exclamationmark.triangle.fill")
+                    RClickLabel(saveError, icon: "exclamationmark.triangle.fill")
                         .font(.callout).foregroundStyle(.red).textSelection(.enabled)
                         .accessibilityIdentifier("action.saveError")
                 }

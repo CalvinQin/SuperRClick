@@ -82,7 +82,7 @@ struct SetupCenterView: View {
             
             GroupBox {
                 HStack(spacing: 16) {
-                    Image(systemName: "folder.badge.gearshape")
+                    Image(rclick: "folder.badge.gearshape")
                         .font(.title2)
                         .foregroundStyle(.blue)
                     
@@ -99,7 +99,7 @@ struct SetupCenterView: View {
                     Spacer()
                     
                     if coordinator.finderExtensionStatus == .ready {
-                        Image(systemName: "checkmark.circle.fill")
+                        Image(rclick: "checkmark.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.green)
                     } else {
@@ -132,7 +132,7 @@ struct SetupCenterView: View {
             List {
                 ForEach(coordinator.allDefinitions) { action in
                     HStack {
-                        Image(systemName: action.systemImageName ?? "bolt.fill")
+                        Image(rclick: action.systemImageName ?? "bolt.fill")
                             .foregroundStyle(.blue)
                             .frame(width: 24)
                         
@@ -171,11 +171,11 @@ struct SetupCenterView: View {
     @ViewBuilder
     private var desktopBridgePage: some View {
         if AppCoordinator.isIsolatedPreview {
-            ContentUnavailableView(
-                L("隔离预览", "Isolated Preview"),
-                systemImage: "lock.shield",
-                description: Text(L("此预览不会检查或请求系统权限。", "This preview does not check or request system permissions."))
-            )
+            ContentUnavailableView {
+                RClickLabel(L("隔离预览", "Isolated Preview"), icon: "lock.shield")
+            } description: {
+                Text(L("此预览不会检查或请求系统权限。", "This preview does not check or request system permissions."))
+            }
         } else {
             desktopBridgePermissionsPage
         }
@@ -197,7 +197,7 @@ struct SetupCenterView: View {
             VStack(spacing: 16) {
                 GroupBox {
                     HStack(spacing: 16) {
-                        Image(systemName: "accessibility")
+                        Image(rclick: "accessibility")
                             .font(.title2)
                             .foregroundStyle(.blue)
                         
@@ -212,7 +212,7 @@ struct SetupCenterView: View {
                         Spacer()
                         
                         if bridgeManager.isAccessibilityEnabled {
-                            Image(systemName: "checkmark.circle.fill")
+                            Image(rclick: "checkmark.circle.fill")
                                 .font(.title2)
                                 .foregroundStyle(.green)
                         } else {
@@ -227,7 +227,7 @@ struct SetupCenterView: View {
                 
                 GroupBox {
                     HStack(spacing: 16) {
-                        Image(systemName: "keyboard")
+                        Image(rclick: "keyboard")
                             .font(.title2)
                             .foregroundStyle(.blue)
                         
@@ -242,7 +242,7 @@ struct SetupCenterView: View {
                         Spacer()
                         
                         if bridgeManager.isInputMonitoringEnabled {
-                            Image(systemName: "checkmark.circle.fill")
+                            Image(rclick: "checkmark.circle.fill")
                                 .font(.title2)
                                 .foregroundStyle(.green)
                         } else {

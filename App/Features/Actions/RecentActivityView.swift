@@ -32,7 +32,7 @@ struct RecentActivityView: View {
                     Button {
                         coordinator.clearHistory()
                     } label: {
-                        Label(L("清除", "Clear"), systemImage: "trash")
+                        RClickLabel(L("清除", "Clear"), icon: "trash")
                             .font(.caption.weight(.medium))
                     }
                     .buttonStyle(.bordered)
@@ -56,7 +56,14 @@ struct RecentActivityView: View {
     }
 
     private func actionTitle(for id: ActionID) -> String {
-        BuiltInActionCatalog.definition(for: id)?.title ?? id.rawValue
+        if let action = coordinator.persistenceState.customActions.first(where: { $0.toActionDefinition().id == id }) {
+            return action.name
+        }
+        if let action = (BuiltInActionCatalog.all + NewFileCatalog.all).first(where: { $0.id == id }) {
+            return action.title
+        }
+        return id.rawValue.hasPrefix("custom-")
+            ? L("已移除的自定义动作", "Removed custom action") : id.rawValue
     }
 
     private var emptyState: some View {
@@ -65,9 +72,8 @@ struct RecentActivityView: View {
                 Circle()
                     .fill(Color.secondary.opacity(0.06))
                     .frame(width: 88, height: 88)
-                Image(systemName: "clock.arrow.circlepath")
-                    .font(.system(size: 36))
-                    .symbolRenderingMode(.hierarchical)
+                Image(rclick: "clock.arrow.circlepath")
+                    .resizable().frame(width: 36, height: 36)
                     .foregroundStyle(.secondary)
             }
             
@@ -154,7 +160,7 @@ private struct RecordRowView: View {
     }
 
     private var outcomeIcon: some View {
-        Image(systemName: outcomeIconName)
+        Image(rclick: outcomeIconName)
             .font(.callout.weight(.medium))
             .foregroundStyle(outcomeColor)
     }

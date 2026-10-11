@@ -94,8 +94,7 @@ struct MenuBarRootView: View {
 
     private func menuButton(title: String, icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Label(title, systemImage: icon)
-                .symbolRenderingMode(.monochrome)
+            RClickLabel(title, icon: icon)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)

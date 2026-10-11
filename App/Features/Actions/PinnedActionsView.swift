@@ -23,7 +23,7 @@ struct PinnedActionsView: View {
                 Button {
                     coordinator.openBatchRename()
                 } label: {
-                    Label(L("批量管理与重命名", "Batch Manage & Rename"), systemImage: "pencil.and.list.clipboard")
+                    RClickLabel(L("批量管理与重命名", "Batch Manage & Rename"), icon: "pencil.and.list.clipboard")
                 }
             }
         }
@@ -65,9 +65,8 @@ struct PinnedActionsView: View {
                 Circle()
                     .fill(Color.orange.opacity(0.08))
                     .frame(width: 88, height: 88)
-                Image(systemName: "pin.fill")
-                    .font(.system(size: 36))
-                    .symbolRenderingMode(.hierarchical)
+                Image(rclick: "pin.fill")
+                    .resizable().frame(width: 36, height: 36)
                     .foregroundStyle(.orange)
                     .rotationEffect(.degrees(-15))
             }
@@ -112,7 +111,7 @@ private struct PinnedRowView: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: systemImage)
+            Image(rclick: systemImage)
                 .font(.title3.weight(.medium))
                 .foregroundStyle(.blue)
                 .frame(width: 38, height: 38)
@@ -132,7 +131,7 @@ private struct PinnedRowView: View {
             Spacer()
 
             Button(action: onRun) {
-                Label(L("执行", "Run"), systemImage: "play.fill")
+                RClickLabel(L("执行", "Run"), icon: "play.fill")
                     .font(.caption.weight(.medium))
             }
             .buttonStyle(.bordered)
@@ -140,7 +139,7 @@ private struct PinnedRowView: View {
             .tint(.blue)
 
             Button(action: onUnpin) {
-                Image(systemName: "pin.slash.fill")
+                Image(rclick: "pin.slash.fill")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

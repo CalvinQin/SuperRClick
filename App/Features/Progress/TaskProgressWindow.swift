@@ -143,7 +143,7 @@ private struct TaskProgressView: View {
                 .tint(.accentColor)
 
             HStack {
-                Image(systemName: "doc.fill")
+                Image(rclick: "doc.fill")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
 
@@ -163,7 +163,7 @@ private struct TaskProgressView: View {
     private func completedView(info: TaskProgressInfo) -> some View {
         VStack(spacing: 16) {
             HStack(spacing: 12) {
-                Image(systemName: info.isSuccess ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                Image(rclick: info.isSuccess ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                     .font(.title2)
                     .foregroundStyle(info.isSuccess ? .green : .orange)
 

@@ -182,7 +182,7 @@ struct WorkspaceProfileView: View {
 
         return VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 10) {
-                Image(systemName: root.systemImageName)
+                Image(rclick: root.systemImageName)
                     .font(.title3)
                     .foregroundStyle(.blue)
                     .frame(width: 28, height: 28)
@@ -242,7 +242,7 @@ struct WorkspaceProfileView: View {
         let isBuiltIn = builtInRoots.contains(where: { canonicalPath($0.url) == canonicalPath(profile.rootURL) })
 
         return HStack(alignment: .top, spacing: 12) {
-            Image(systemName: isBuiltIn ? "folder.fill" : "folder.badge.gearshape")
+            Image(rclick: isBuiltIn ? "folder.fill" : "folder.badge.gearshape")
                 .foregroundStyle(.secondary)
                 .frame(width: 20)
 

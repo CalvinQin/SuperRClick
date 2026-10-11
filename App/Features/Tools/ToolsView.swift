@@ -23,8 +23,8 @@ struct ToolsView: View {
                 ], spacing: 14) {
                     ToolCard(
                         title: L("批量重命名", "Batch Rename"),
-                        subtitle: L("支持前缀/后缀/替换三种模式，智能编号",
-                                    "Prefix, suffix, replace modes with smart numbering"),
+                        subtitle: L("添加前缀或后缀，可设置起始编号与补零",
+                                    "Add a prefix or suffix, with a starting number and zero-padding"),
                         icon: "pencil.and.list.clipboard",
                         color: .teal
                     ) {
@@ -33,8 +33,8 @@ struct ToolsView: View {
 
                     ToolCard(
                         title: L("图片转换", "Image Conversion"),
-                        subtitle: L("支持 PNG / JPEG / WEBP / TIFF / HEIC 格式互转",
-                                    "Convert between PNG / JPEG / WEBP / TIFF / HEIC"),
+                        subtitle: L("将图片导出为 PNG / JPEG / TIFF / HEIC",
+                                    "Export images as PNG / JPEG / TIFF / HEIC"),
                         icon: "photo.on.rectangle.angled",
                         color: .purple
                     ) {
@@ -63,7 +63,7 @@ struct ToolsView: View {
                 }
 
                 HStack(spacing: 8) {
-                    Image(systemName: "lightbulb.fill")
+                    Image(rclick: "lightbulb.fill")
                         .foregroundStyle(.yellow)
                         .font(.callout)
                     Text(L("提示：在 Finder 中选中文件后右键，也可以直接使用这些工具。",
@@ -100,13 +100,13 @@ private struct ToolCard: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Image(systemName: icon)
+                    Image(rclick: icon)
                         .font(.title3.weight(.medium))
                         .foregroundStyle(color)
                         .frame(width: 40, height: 40)
                         .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
                     Spacer()
-                    Image(systemName: "arrow.right")
+                    Image(rclick: "arrow.right")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(isHovered ? color : Color.gray.opacity(0.3))
                         .padding(6)

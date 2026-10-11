@@ -9,7 +9,7 @@ struct SettingsView: View {
         TabView {
             ActionVisibilityView(coordinator: coordinator)
                 .tabItem {
-                    Label("Actions", systemImage: "slider.horizontal.3")
+                    RClickLabel("Actions", icon: "slider.horizontal.3")
                 }
 
             WorkspaceProfileView(
@@ -18,19 +18,19 @@ struct SettingsView: View {
                 onRemoveMonitoredFolder: { coordinator.removeMonitoredFolder($0) }
             )
                 .tabItem {
-                    Label(L("工作区", "Workspaces"), systemImage: "folder")
+                    RClickLabel(L("工作区", "Workspaces"), icon: "folder")
                 }
                 
             AISettingsView(config: coordinator.persistenceState.aiConfig) { draft in
                 coordinator.saveAIConfig(draft)
             }
                 .tabItem {
-                    Label("AI", systemImage: "sparkles")
+                    RClickLabel("AI", icon: "sparkles")
                 }
                 
             AboutSettingsView()
                 .tabItem {
-                    Label(L("关于", "About"), systemImage: "info.circle")
+                    RClickLabel(L("关于", "About"), icon: "info.circle")
                 }
         }
         .padding(20)
@@ -49,7 +49,7 @@ struct AboutSettingsView: View {
                             .resizable()
                             .frame(width: 80, height: 80)
                     } else {
-                        Image(systemName: "cursorarrow.and.square.on.square.dashed")
+                        Image(rclick: "cursorarrow.and.square.on.square.dashed")
                             .resizable()
                             .frame(width: 80, height: 80)
                             .foregroundColor(.accentColor)

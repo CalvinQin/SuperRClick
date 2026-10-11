@@ -31,19 +31,9 @@ public struct AISettingsView: View {
                 Picker(L("服务商", "Provider"), selection: $config.providerID) {
                     ForEach(LLMProviderPreset.all) { preset in
                         HStack {
-                            if !isIsolatedUISession, let domain = preset.logoDomain, let url = URL(string: "https://logo.clearbit.com/\(domain)?size=32") {
-                                AsyncImage(url: url) { phase in
-                                    if let image = phase.image {
-                                        image.resizable().aspectRatio(contentMode: .fit)
-                                    } else {
-                                        Image(systemName: preset.iconName)
-                                    }
-                                }
-                                .frame(width: 16, height: 16)
-                                .cornerRadius(4)
-                            } else {
-                                Image(systemName: preset.iconName)
-                            }
+                            Image(rclick: preset.iconName)
+                                .resizable().frame(width: 16, height: 16)
+                                .accessibilityHidden(true)
                             Text(preset.name)
                         }
                         .tag(preset.id)
@@ -110,7 +100,7 @@ public struct AISettingsView: View {
                         saveSettings()
                     } label: {
                         HStack(spacing: 6) {
-                            Image(systemName: isSaved ? "checkmark.circle.fill" : "square.and.arrow.down")
+                            Image(rclick: isSaved ? "checkmark.circle.fill" : "square.and.arrow.down")
                             Text(isSaved ? L("已保存", "Saved") : L("保存设置", "Save Settings"))
                         }
                     }
@@ -133,12 +123,12 @@ public struct AISettingsView: View {
                     } else if let result = testResult {
                         switch result {
                         case .success:
-                            Image(systemName: "checkmark.circle.fill")
+                            Image(rclick: "checkmark.circle.fill")
                                 .foregroundColor(.green)
                             Text(L("连接成功", "Connection Successful"))
                                 .foregroundColor(.green)
                         case .failure(let error):
-                            Image(systemName: "xmark.circle.fill")
+                            Image(rclick: "xmark.circle.fill")
                                 .foregroundColor(.red)
                             Text(error.localizedDescription)
                                 .foregroundColor(.red)
@@ -151,7 +141,7 @@ public struct AISettingsView: View {
                 }
 
                 if let error = keychainSaveError ?? saveError {
-                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                    RClickLabel(error, icon: "exclamationmark.triangle.fill")
                         .font(.caption)
                         .foregroundStyle(.red)
                         .textSelection(.enabled)

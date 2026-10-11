@@ -43,7 +43,7 @@ public struct BatchRenamePlanner: Sendable {
                         kind: .invalidName,
                         sourceURL: preview.sourceURL,
                         proposedURL: preview.proposedURL,
-                        message: L("建议的新名称为空。", "The proposed name is empty after trimming whitespace.")
+                        message: L("新名称不能为空，也不能包含路径分隔符。", "The proposed name cannot be empty or contain path separators.")
                     )
                 )
             } else if let count = duplicateCounts[preview.proposedURL.path], count > 1 {
@@ -131,7 +131,8 @@ public struct BatchRenamePlanner: Sendable {
         let proposedURL = proposedURL(for: item.url, proposedName: proposedName)
 
         let status: BatchRenamePreviewStatus
-        if proposedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if proposedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            proposedName.contains("/") || proposedName.contains("\0") {
             status = .invalidName
         } else if proposedURL.path == item.url.path {
             status = .unchanged

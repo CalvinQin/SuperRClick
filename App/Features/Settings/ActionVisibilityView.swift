@@ -17,7 +17,7 @@ struct ActionVisibilityView: View {
                 ForEach(coordinator.allDefinitions) { action in
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Label(action.title, systemImage: action.systemImageName ?? "bolt")
+                            RClickLabel(action.title, icon: action.systemImageName ?? "bolt")
                             if let subtitle = action.subtitle {
                                 Text(subtitle)
                                     .font(.caption)

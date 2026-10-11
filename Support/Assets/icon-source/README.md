@@ -1,12 +1,12 @@
-# Icon Source
+# Original icon source
 
-This folder now contains the reusable master source for the app icon pipeline.
+The editable source is the hand-authored Swift vector geometry in:
 
-Primary file:
-- `master-logo.png`
+- `Shared/Design/RClickIcon.swift`: 24-unit UI glyphs, drawn with 1.8-unit rounded strokes.
+- `scripts/render_original_icons.swift`: folded document and pointer app icon, raster exports, and contact sheets.
 
-Current state:
-- The asset catalogs are wired.
-- `master-logo.png` is generated from the local icon builder and can also be replaced by a custom higher-fidelity source later.
-- Running `bash Support/Assets/generate_app_icons.sh` with no arguments regenerates the procedural icon and refreshes both app icon sets.
-- Running `bash Support/Assets/generate_app_icons.sh /path/to/custom-master.png` rasterizes a custom master image into both icon sets.
+`master-logo.png` is a generated preview, not the input to the pipeline. No SF Symbols, emoji, provider logos, third-party icon packs, or downloaded image inputs are used by the pipeline.
+
+Run `bash Support/Assets/generate_app_icons.sh` from the repository. This tracked entry point refreshes both AppIcon catalogs, the ICNS and iconset used by packaging, README artwork, the editable release SVG, and the review contact sheets.
+
+Review `docs/review/icons-design.md`, `icons-light.png`, `icons-dark.png`, and `icons-states.png` for the vocabulary, sizes, and appearance checks.

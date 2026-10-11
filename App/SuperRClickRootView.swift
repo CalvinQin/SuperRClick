@@ -54,19 +54,16 @@ struct SuperRClickRootView: View {
     @Bindable var coordinator: AppCoordinator
     @State private var didCheckSetup = false
     @State private var isPresentingSetup = false
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     var body: some View {
         navigation.frame(minWidth: 800, minHeight: 560)
     }
 
     private var navigation: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             sidebar
-                .toolbar {
-                    ToolbarItem(placement: .navigation) {
-                        Spacer()
-                    }
-                }
+                .toolbar(removing: .sidebarToggle)
         } detail: {
             VStack(spacing: 0) {
                 detailView.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -79,6 +76,18 @@ struct SuperRClickRootView: View {
             .background(Color(nsColor: .windowBackgroundColor))
         }
         .navigationSplitViewStyle(.balanced)
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button {
+                    columnVisibility = columnVisibility == .detailOnly ? .all : .detailOnly
+                } label: {
+                    RClickLabel(L("切换侧栏", "Toggle Sidebar"), icon: "sidebar")
+                }
+                .keyboardShortcut("s", modifiers: [.command, .control])
+                .help(L("显示或隐藏侧栏", "Show or hide the sidebar"))
+                .accessibilityIdentifier("navigation.toggleSidebar")
+            }
+        }
         .sheet(item: $coordinator.actionBeingEdited) { action in
             CreateActionView(coordinator: coordinator, action: action)
         }
@@ -146,9 +155,13 @@ struct SuperRClickRootView: View {
                 }
             }
         } icon: {
-            Image(systemName: section.systemImage)
-                .foregroundStyle(section.iconColor)
-                .symbolRenderingMode(.hierarchical)
+            if coordinator.selectedSection == section {
+                Image(rclick: section.systemImage)
+            } else {
+                Image(rclick: section.systemImage)
+                    .foregroundStyle(section.iconColor)
+            }
+
         }
         .tag(section)
         .accessibilityIdentifier("sidebar.\(section.rawValue)")
@@ -162,7 +175,7 @@ struct SuperRClickRootView: View {
             Button {
                 coordinator.presentActionEditor()
             } label: {
-                Label(L("新建动作", "New Action"), systemImage: "plus.circle.fill")
+                RClickLabel(L("新建动作", "New Action"), icon: "plus.circle.fill")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.callout.weight(.medium))
             }
@@ -174,7 +187,7 @@ struct SuperRClickRootView: View {
 
             if coordinator.isReady {
                 HStack(spacing: 6) {
-                    Image(systemName: coordinator.finderExtensionStatus == .ready ? "checkmark.circle.fill" : "info.circle")
+                    Image(rclick: coordinator.finderExtensionStatus == .ready ? "checkmark.circle.fill" : "info.circle")
                         .foregroundStyle(coordinator.finderExtensionStatus == .ready ? Color.green : .secondary)
                     Text(coordinator.finderExtensionStatus == .ready
                          ? L("Finder 扩展已启用", "Finder extension enabled")

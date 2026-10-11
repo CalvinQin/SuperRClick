@@ -81,10 +81,12 @@ final class AppCoordinator {
     @ObservationIgnored private let externalCommandCenter: Shared.ExternalCommandCenter
     @ObservationIgnored private let platformExecutor: PlatformActionExecutor
     @ObservationIgnored private let aiExecutor: AIActionExecutor
+    @ObservationIgnored private let customExecutor: CustomActionExecutor
     @ObservationIgnored private var externalCommandObserver: NSObjectProtocol?
     @ObservationIgnored private var setupActivationTask: Task<Void, Never>?
     @ObservationIgnored private var activeExternalSecurityScopedURLs: [URL] = []
     @ObservationIgnored private var handledExternalRequestIDs: Set<UUID> = []
+    @ObservationIgnored private var activeProgressTaskID: UUID?
 
     var sampleContext: ActionContext
     var actionSections: [ActionSectionSnapshot] = []
@@ -122,13 +124,15 @@ final class AppCoordinator {
         actionEngine: ActionEngine = ActionEngine(),
         appGroupContainer: AppGroupContainer = AppGroupContainer(groupIdentifier: Constants.appGroupID),
         platformExecutor: PlatformActionExecutor = PlatformActionExecutor(),
-        aiExecutor: AIActionExecutor = AIActionExecutor()
+        aiExecutor: AIActionExecutor = AIActionExecutor(),
+        customExecutor: CustomActionExecutor = CustomActionExecutor()
     ) {
         self.actionEngine = actionEngine
         self.appGroupContainer = appGroupContainer
         self.externalCommandCenter = appGroupContainer.makeExternalCommandCenter()
         self.platformExecutor = platformExecutor
         self.aiExecutor = aiExecutor
+        self.customExecutor = customExecutor
         self.sampleContext = AppCoordinator.makeDefaultContext()
         if Self.isIsolatedPreview { hasCompletedSetup = true }
 
@@ -269,20 +273,37 @@ final class AppCoordinator {
     }
 
     func run(_ action: ActionDefinition) {
+        run(actionID: action.id, context: sampleContext)
+    }
+
+    /// Resolve the current saved definition and freeze the selection for this invocation.
+    func run(actionID: ActionID, context: ActionContext) {
+        if actionID.rawValue.hasPrefix("custom-") {
+            runCustomAction(actionID: actionID, context: context)
+            return
+        }
+
+        guard let action = (BuiltInActionCatalog.all + NewFileCatalog.all).first(where: { $0.id == actionID }) else {
+            statusBanner = StatusBanner(tone: .warning, title: L("动作不可用", "Action unavailable"),
+                                        detail: L("该动作已被移除，请刷新后再试。", "This action was removed. Refresh and try again."))
+            return
+        }
+
         if action.id == BuiltInActionCatalog.batchRename.id {
-            openBatchRename(for: sampleContext)
+            openBatchRename(for: context)
             return
         }
 
         if action.id == BuiltInActionCatalog.convertImage.id {
+            sampleContext = context
             runImageConversionWithFormatPicker()
             return
         }
 
         Task {
             if AIActionCatalog.all.contains(where: { $0.id == action.id }) {
-                let localCount = sampleContext.items.count
-                let localSnapshot = sampleContext.snapshot
+                let localCount = context.items.count
+                let localSnapshot = context.snapshot
                 let localConfig = persistenceState.aiConfig
                 
                 executeWithProgress(title: action.title, totalItems: localCount) { [self] onProgress in
@@ -295,14 +316,42 @@ final class AppCoordinator {
                     }
                 } completion: { [self] result in
                     Task {
-                        await persistInvocation(for: action, result: result, context: sampleContext)
+                        await persistInvocation(for: action, result: result, context: context)
                         await refreshModel()
                         statusBanner = AppCoordinator.statusBanner(for: action, result: result)
                     }
                 }
             } else {
-                let result = await actionEngine.execute(actionID: action.id, context: sampleContext)
-                await persistInvocation(for: action, result: result, context: sampleContext)
+                let result = await actionEngine.execute(actionID: action.id, context: context)
+                await persistInvocation(for: action, result: result, context: context)
+                await refreshModel()
+                statusBanner = AppCoordinator.statusBanner(for: action, result: result)
+            }
+        }
+    }
+
+    private func runCustomAction(actionID: ActionID, context: ActionContext) {
+        guard let custom = persistenceState.customActions.first(where: { $0.toActionDefinition().id == actionID }),
+              custom.isEnabled else {
+            statusBanner = StatusBanner(tone: .warning, title: L("自定义动作不可用", "Custom action unavailable"),
+                                        detail: L("此动作已停用或删除，请刷新菜单后再试。", "This action was disabled or deleted. Refresh the menu and try again."))
+            return
+        }
+        let action = custom.toActionDefinition()
+        guard action.matches(context), !isActionHidden(action) else {
+            statusBanner = StatusBanner(tone: .warning, title: L("选择不满足动作条件", "Selection does not match this action"),
+                                        detail: L("请检查所选文件的数量和扩展名。", "Check the selected file count and extensions."))
+            return
+        }
+
+        executeWithProgress(title: action.title, totalItems: context.items.count) { [customExecutor] onProgress in
+            onProgress?(0, context.items.count, custom.name)
+            let result = await customExecutor.execute(custom, context: context)
+            onProgress?(context.items.count, context.items.count, custom.name)
+            return result
+        } completion: { [self] result in
+            Task {
+                await persistInvocation(for: action, result: result, context: context)
                 await refreshModel()
                 statusBanner = AppCoordinator.statusBanner(for: action, result: result)
             }
@@ -352,6 +401,7 @@ final class AppCoordinator {
     }
 
     func runImageConversionWithFormatPicker() {
+        let selectedContext = sampleContext
         let formats = ["png", "jpeg", "tiff", "heic"]
 
         NSApp.activate(ignoringOtherApps: true)
@@ -372,14 +422,14 @@ final class AppCoordinator {
         let selectedFormat = formats[popup.indexOfSelectedItem]
 
         let enrichedContext = ActionContext.finderSelection(
-            sampleContext.items,
-            sourceApplicationBundleIdentifier: sampleContext.sourceApplicationBundleIdentifier,
-            workspaceIdentifier: sampleContext.workspaceIdentifier,
-            metadata: sampleContext.metadata.merging(["convertImage.format": selectedFormat]) { _, new in new }
+            selectedContext.items,
+            sourceApplicationBundleIdentifier: selectedContext.sourceApplicationBundleIdentifier,
+            workspaceIdentifier: selectedContext.workspaceIdentifier,
+            metadata: selectedContext.metadata.merging(["convertImage.format": selectedFormat]) { _, new in new }
         )
 
         guard let action = BuiltInActionCatalog.definition(for: BuiltInActionCatalog.convertImage.id) else { return }
-        let itemCount = sampleContext.items.count
+        let itemCount = selectedContext.items.count
 
         executeWithProgress(
             title: L("正在转换图片...", "Converting images..."),
@@ -707,7 +757,7 @@ final class AppCoordinator {
         isApplyingBatchRename = true
         let renamableCount = plan.previews.filter { $0.sourceURL.path != $0.proposedURL.path }.count
 
-        executeWithProgress(
+        let didStart = executeWithProgress(
             title: L("正在重命名...", "Renaming files..."),
             totalItems: renamableCount
         ) { [self] onProgress in
@@ -725,22 +775,38 @@ final class AppCoordinator {
                 }
             }
         }
+        if !didStart {
+            isApplyingBatchRename = false
+        }
     }
 
     // MARK: - Progress-tracked execution
 
+    @discardableResult
     func executeWithProgress(
         title: String,
         totalItems: Int,
         operation: @escaping @Sendable (ProgressCallback?) async -> ActionExecutionResult,
         completion: @escaping @MainActor (ActionExecutionResult) -> Void
-    ) {
-        taskProgress = TaskProgressInfo(
+    ) -> Bool {
+        guard activeProgressTaskID == nil else {
+            statusBanner = StatusBanner(
+                tone: .warning,
+                title: L("已有任务正在运行", "Another task is running"),
+                detail: L("请等待当前任务完成后再试。", "Wait for the current task to finish, then try again.")
+            )
+            return false
+        }
+
+        let progress = TaskProgressInfo(
             title: title,
             detail: L("准备中...", "Preparing..."),
             current: 0,
             total: totalItems
         )
+        let taskID = progress.id
+        activeProgressTaskID = taskID
+        taskProgress = progress
 
         let progressBinding = Binding<TaskProgressInfo?>(
             get: { [weak self] in self?.taskProgress },
@@ -748,10 +814,12 @@ final class AppCoordinator {
         )
         TaskProgressWindowController.shared.show(info: progressBinding)
 
-        Task {
+        Task { [self] in
             let onProgress: ProgressCallback = { @Sendable [weak self] current, total, detail in
                 Task { @MainActor [weak self] in
-                    guard var p = self?.taskProgress else { return }
+                    guard self?.activeProgressTaskID == taskID,
+                          var p = self?.taskProgress,
+                          p.id == taskID, !p.isComplete else { return }
                     p.current = current
                     p.total = total
                     p.detail = detail
@@ -780,13 +848,14 @@ final class AppCoordinator {
 
             // Batch all final mutations into a single read-modify-write
             // to avoid Swift runtime exclusivity crash
-            if var p = taskProgress {
+            if var p = taskProgress, p.id == taskID {
                 p.isComplete = true
                 p.isSuccess = isSuccess
                 p.resultMessage = resultMessage
                 p.current = p.total
                 taskProgress = p
             }
+            activeProgressTaskID = nil
 
             // Auto-close after 3 seconds on success
             if isSuccess {
@@ -795,6 +864,7 @@ final class AppCoordinator {
 
             completion(result)
         }
+        return true
     }
 
     func presentBatchRename(with draft: BatchRenameDraft? = nil) {

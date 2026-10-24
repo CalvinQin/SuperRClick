@@ -268,6 +268,36 @@ final class SuperRClickUITests: XCTestCase {
         XCTAssertFalse(try session.readState().aiConfig.isEnabled)
     }
 
+    func testSetupCannotFinishWithoutRealVerificationAndCanBeReopened() throws {
+        let session = try launchSession()
+        let app = session.app
+        element("sidebar.settings", in: app).click()
+        let openSetup = app.buttons["settings.openSetup"]
+        reveal(openSetup, in: app)
+        openSetup.click()
+        for _ in 0..<3 {
+            let next = app.buttons["setup.next"]
+            expect(next, "exists == true AND enabled == true", in: app)
+            next.click()
+        }
+        let finish = app.buttons["setup.finish"]
+        expect(finish, "exists == true AND enabled == false", in: app)
+        element("setup.sawMenu", in: app).click()
+        element("setup.ranAction", in: app).click()
+        // Isolated previews never fake an enabled Finder extension.
+        expect(finish, "enabled == false", in: app)
+        app.buttons["setup.back"].click()
+        app.buttons["setup.next"].click()
+        expect(finish, "enabled == false", in: app)
+        attachWindow(app, named: "setup-real-verification-required")
+        app.buttons["setup.close"].click()
+        expect(app.buttons["setup.finish"], "exists == false", in: app)
+        openSetup.click()
+        expect(app.buttons["setup.next"], "exists == true", in: app)
+        expect(app.buttons["setup.back"], "exists == false", in: app)
+        app.buttons["setup.close"].click()
+    }
+
     // MARK: - Native UI helpers
 
     private func launchSession() throws -> Session {

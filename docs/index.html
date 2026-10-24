@@ -3,450 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Super RClick — macOS Right-Click Menu Enhancer</title>
-  <meta name="description" content="Super RClick supercharges your macOS Finder right-click. Batch rename, local AI OCR, text background removal, image conversion, and custom file templates from one elegant menu.">
+  <title>Super RClick | macOS Finder Right-Click Menu &amp; File Tools</title>
+  <meta name="description" content="Free, open-source macOS Finder right-click tools: batch rename, ZIP compression, 18 new-file templates, image conversion, local OCR and custom actions.">
+  <link rel="canonical" href="https://calvinqin.github.io/SuperRClick/">
+  <link rel="alternate" hreflang="en" href="https://calvinqin.github.io/SuperRClick/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://calvinqin.github.io/SuperRClick/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://calvinqin.github.io/SuperRClick/">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Super RClick">
+  <meta property="og:title" content="Super RClick | Native Finder right-click tools for macOS">
+  <meta property="og:description" content="Batch rename, create files, convert images and build your own right-click actions. Explore the 0.3.0 preview.">
+  <meta property="og:url" content="https://calvinqin.github.io/SuperRClick/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:image" content="https://calvinqin.github.io/SuperRClick/assets/main-app.png">
+  <meta property="og:image:alt" content="Super RClick native action library on macOS">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Super RClick | macOS Finder right-click tools">
+  <meta name="twitter:description" content="A native, customizable Finder context menu. Free and open source.">
+  <meta name="twitter:image" content="https://calvinqin.github.io/SuperRClick/assets/main-app.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Super RClick",
+    "url": "https://calvinqin.github.io/SuperRClick/",
+    "operatingSystem": "macOS 15.0 or later",
+    "applicationCategory": "UtilitiesApplication",
+    "softwareVersion": "0.3.0-beta.1",
+    "releaseNotes": "https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1",
+    "downloadUrl": "https://github.com/CalvinQin/SuperRClick/releases/download/v0.3.0-beta.1/SuperRClick-0.3.0-beta.1.dmg",
+    "image": "https://calvinqin.github.io/SuperRClick/assets/main-app.png",
+    "inLanguage": ["en", "zh-Hans"],
+    "license": "https://github.com/CalvinQin/SuperRClick/blob/main/LICENSE",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "CalvinQin", "url": "https://github.com/CalvinQin" }
+  }
+  </script>
   <meta name="author" content="CalvinQin">
-  <link rel="icon" href="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png">
+  <link rel="icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #050505;
-      --bg-surface: #0a0a0a;
-      --border: rgba(255, 255, 255, 0.1);
-      --border-hover: rgba(255, 255, 255, 0.25);
-      --text: #ffffff;
-      --text-muted: #888888;
-      
-      --accent-1: #6E56CF;
-      --accent-2: #3E63DD;
-      --accent-gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-      
-      --card-bg: rgba(255, 255, 255, 0.02);
-      --card-hover: rgba(255, 255, 255, 0.04);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Ambient Background Glow */
-    .ambient-glow {
-      position: absolute;
-      top: -20vh;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80vw;
-      height: 80vh;
-      background: radial-gradient(ellipse at top, rgba(110, 86, 207, 0.15), transparent 60%);
-      pointer-events: none;
-      z-index: -1;
-      filter: blur(80px);
-    }
-
-    /* Layout & Utilities */
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .glass-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 72px;
-      background: rgba(5, 5, 5, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-    }
-
-    .nav-content {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 1.125rem;
-      letter-spacing: -0.01em;
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    .logo img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 24px;
-      border-radius: 9999px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--text);
-      color: var(--bg);
-      border: 1px solid transparent;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--border-hover);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 180px 0 100px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: rgba(110, 86, 207, 0.1);
-      border: 1px solid rgba(110, 86, 207, 0.3);
-      border-radius: 99px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #9b8af0;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      font-size: clamp(3rem, 6vw, 5.5rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin-bottom: 24px;
-      background: linear-gradient(to bottom right, #ffffff 40%, #888888);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: clamp(1.125rem, 2vw, 1.35rem);
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      letter-spacing: -0.01em;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-    }
-
-    /* Visual Showcase */
-    .visual-showcase {
-      margin: 60px auto 120px;
-      max-width: 900px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--bg-surface);
-      position: relative;
-      border-radius: 24px;
-      padding: 8px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-      transform: perspective(1000px) rotateX(2deg);
-      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .visual-showcase:hover {
-      transform: perspective(1000px) rotateX(0deg);
-    }
-
-    .visual-showcase img {
-      width: 100%;
-      height: auto;
-      border-radius: 16px;
-      display: block;
-    }
-
-    /* Core Features Grid */
-    .section-title {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .section-subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 1.125rem;
-      max-width: 600px;
-      margin: 0 auto 64px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-bottom: 120px;
-    }
-
-    /* Glowing Hover Cards */
-    .card {
-      position: relative;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      transition: all 0.3s ease;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
-    }
-
-    .card:hover::before {
-      opacity: 1;
-    }
-
-    .card-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-icon {
-      font-size: 2rem;
-      margin-bottom: 24px;
-      display: inline-block;
-    }
-
-    .card h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-      color: var(--text);
-    }
-
-    .card p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    /* Highlighted AI Section */
-    .ai-section {
-      background: linear-gradient(180deg, rgba(110, 86, 207, 0.05) 0%, transparent 100%);
-      border: 1px solid rgba(110, 86, 207, 0.2);
-      border-radius: 24px;
-      padding: 60px 40px;
-      margin-bottom: 120px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ai-section::after {
-      content: '';
-      position: absolute;
-      top: -50%; right: -20%;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(62, 99, 221, 0.15) 0%, transparent 70%);
-      filter: blur(40px);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .ai-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .ai-content h2 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      background: var(--accent-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .ai-features {
-      list-style: none;
-      margin-top: 32px;
-    }
-
-    .ai-features li {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-      color: var(--text);
-      font-size: 1rem;
-    }
-
-    .ai-features li svg {
-      color: var(--accent-1);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    /* Stats Grid */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-bottom: 120px;
-    }
-
-    .stat-box {
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
-    }
-
-    .stat-value {
-      font-size: 3rem;
-      font-weight: 800;
-      letter-spacing: -0.05em;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    footer a {
-      color: var(--text);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    footer a:hover {
-      color: var(--accent-1);
-    }
-
-    /* Scroll Animations */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 800px) {
-      .ai-section { grid-template-columns: 1fr; padding: 40px 24px; }
-      .stats { grid-template-columns: 1fr; }
-      .hero-buttons { flex-direction: column; }
-    }
-  </style>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="ambient-glow"></div>
 
-  <nav class="glass-nav">
+  <nav class="glass-nav" aria-label="Main navigation">
     <div class="container nav-content">
-      <a href="#" class="logo">
-        <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png" alt="Super RClick Icon">
+      <a href="./" class="logo">
+        <img src="assets/icon.png" alt="Super RClick Icon">
         Super RClick
       </a>
       <div style="display: flex; gap: 16px;">
+        <a class="language-link" href="zh/" lang="zh-Hans">中文</a>
         <a href="https://github.com/CalvinQin/SuperRClick" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">GitHub</a>
-        <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">Download</a>
+        <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">Download</a>
       </div>
     </div>
   </nav>
 
-  <main class="container">
+  <main class="container" id="main">
     
     <section class="hero reveal">
-      <div class="hero-badge">v0.2.1 Release — Native AI & macOS Integration</div>
-      <h1>Supercharge your<br/>right-click menu.</h1>
-      <p>Transform your macOS Finder. Batch rename, local AI OCR, text background removal, image conversion, and custom file templates from one elegant menu.</p>
+      <div class="hero-badge">0.3.0 Preview · Native actions, safer files, guided setup</div>
+      <h1>A better right-click<br/>for your Mac.</h1>
+      <p>Rename, compress, create files and convert images from your macOS Finder context menu. Make it yours with custom actions and a step-by-step setup guide.</p>
       <div class="hero-buttons">
-        <a href="https://github.com/CalvinQin/SuperRClick/releases/latest" class="btn btn-primary">Download DMG Free</a>
-        <a href="https://github.com/CalvinQin/SuperRClick" class="btn btn-secondary">View Documentation</a>
+        <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1" class="btn btn-primary">Download 0.3.0 Preview</a>
+        <a href="#install" class="btn btn-secondary">Installation Guide</a>
       </div>
     </section>
 
     <section class="visual-showcase reveal">
-      <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/main-app.png" alt="Super RClick UI Showcase">
+      <img src="assets/main-app.png" alt="Super RClick 0.3.0 native macOS action library with visibility and pin controls" width="2224" height="1624" fetchpriority="high">
     </section>
 
     <!-- AI Core Module Highlight -->
@@ -454,61 +89,61 @@
       <div class="ai-content">
         <h2>Intelligence, built-in.</h2>
         <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;">
-          Execute complex machine learning tasks directly from Finder. Unprecedented integration of local neural engines and cloud LLM providers natively within macOS.
+          Extract text and remove image backgrounds locally with Apple Vision. Connect an optional OpenAI-compatible provider for suggested filenames and tags.
         </p>
         <ul class="ai-features">
           <li>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 10 0 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span><strong>Native LLM Providers:</strong> Fully integrated OpenAI, Zhipu, Moonshot, Custom APIs, and Local Ollama servers.</span>
+            <span><strong>Native LLM Providers:</strong> Configure an OpenAI-compatible endpoint, including OpenAI, Zhipu, Moonshot or local Ollama.</span>
           </li>
           <li>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 10 0 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span><strong>Local On-Device AI:</strong> Extract text (OCR) or perfectly remove image backgrounds 100% offline using Apple Vision.</span>
+            <span><strong>Local On-Device AI:</strong> Extract text (OCR) or remove image backgrounds offline using Apple Vision.</span>
           </li>
           <li>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 10 0 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span><strong>Contextual Smart Actions:</strong> AI instantly analyzes your files to rename them logically or auto-tag them based on visual content.</span>
+            <span><strong>Contextual Smart Actions:</strong> Suggest filenames and tags from file text, image metadata and recognized text using your configured provider.</span>
           </li>
         </ul>
       </div>
       <div>
-        <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/finder-context-menu.png" style="width: 100%; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5);" alt="Finder AI Smart Menu">
+        <img src="assets/action-editor.png" style="width: 100%; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5);" alt="Native Super RClick custom action editor in Chinese" loading="lazy">
       </div>
     </section>
 
     <div class="reveal">
       <h2 class="section-title">Everything you need.</h2>
-      <p class="section-subtitle">No bloat, no electron. Just powerful native features that feel like Apple built them.</p>
+      <p class="section-subtitle">SwiftUI, AppKit and Finder Sync, with practical tools for everyday files.</p>
     </div>
 
     <section class="features-grid">
       <div class="card reveal" style="transition-delay: 0.1s">
         <div class="card-content">
-          <div class="card-icon">✏️</div>
+          <div class="card-icon">01</div>
           <h3>Batch Rename</h3>
-          <p>Rename multiple files instantly. Use prefix, suffix, regular expressions, or simple find-and-replace strings with live conflict detection.</p>
+          <p>Rename multiple files instantly. Add a prefix or suffix and optional numbering. Preview names and check conflicts before applying changes.</p>
         </div>
       </div>
       
       <div class="card reveal" style="transition-delay: 0.2s">
         <div class="card-content">
-          <div class="card-icon">📦</div>
+          <div class="card-icon">02</div>
           <h3>One-Click Packing</h3>
-          <p>Compress files and folders quickly to ZIP with a beautiful native progress bar, bypassing standard slow archiving utilities.</p>
+          <p>Compress selected files and folders to ZIP, with progress feedback and unique output names that preserve existing files.</p>
         </div>
       </div>
 
       <div class="card reveal" style="transition-delay: 0.3s">
         <div class="card-content">
-          <div class="card-icon">🖼️</div>
+          <div class="card-icon">03</div>
           <h3>Image Conversion</h3>
-          <p>Seamlessly process and convert imagery between WebP, PNG, JPEG, TIFF, and HEIC natively within the Finder context.</p>
+          <p>Export PNG, JPEG, TIFF and HEIC images beside their originals, with progress and partial-failure feedback.</p>
         </div>
       </div>
 
       <div class="card reveal" style="transition-delay: 0.4s">
         <div class="card-content">
-          <div class="card-icon">📄</div>
+          <div class="card-icon">04</div>
           <h3>Instant File Creation</h3>
           <p>Generate precise code templates (Markdown, Swift, TypeScript, JSON, HTML) and Office documents intuitively without opening terminal.</p>
         </div>
@@ -516,17 +151,17 @@
 
       <div class="card reveal" style="transition-delay: 0.5s">
         <div class="card-content">
-          <div class="card-icon">🚀</div>
+          <div class="card-icon">05</div>
           <h3>Quick Terminal Jump</h3>
-          <p>A true lifesaver for developers. Instantly trigger your default terminal in any directory, or copy the absolute macOS POSIX path.</p>
+          <p>A true lifesaver for developers. Open Apple Terminal in the selected directory, or copy a full, POSIX or shell-escaped path.</p>
         </div>
       </div>
       
       <div class="card reveal" style="transition-delay: 0.6s">
         <div class="card-content">
-          <div class="card-icon">🛠️</div>
+          <div class="card-icon">06</div>
           <h3>Custom Action Builder</h3>
-          <p>Wire up custom powerful terminal scripts as direct custom menu actions and bind them securely within the Action Library.</p>
+          <p>Create and edit Shell, AppleScript or application actions. Choose an icon and file filters, then control menu visibility.</p>
         </div>
       </div>
     </section>
@@ -534,8 +169,8 @@
     <!-- Stats Performance Block -->
     <section class="stats reveal">
       <div class="stat-box">
-        <div class="stat-value">&lt;4MB</div>
-        <div class="stat-label">Total App Bundle Size</div>
+        <div class="stat-value">18</div>
+        <div class="stat-label">New-file templates</div>
       </div>
       <div class="stat-box">
         <div class="stat-value">Swift 6</div>
@@ -547,46 +182,40 @@
       </div>
     </section>
 
+
+    <section class="guide reveal" id="install" aria-labelledby="install-title">
+      <h2 id="install-title">Install, enable, verify.</h2>
+      <p>Super RClick is a native SwiftUI and AppKit app with a Finder Sync extension. The build targets macOS 15+ and includes Apple Silicon and Intel binaries.</p>
+      <ol>
+        <li><a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">Download the 0.3.0 preview DMG</a>, open it, and drag SuperRClick.app into Applications.</li>
+        <li>Launch the app and follow the setup guide. Use <strong>Open Extension Settings</strong> to enable Super RClick under System Settings → General → Login Items &amp; Extensions → Finder.</li>
+        <li>Right-click inside a writable folder in your home directory. Create a TXT file from the Super RClick menu, then confirm the result in the guide.</li>
+        <li>Customize action visibility in the action library. Create or edit a Shell, AppleScript or application action when you need your own command.</li>
+      </ol>
+      <div class="release-note">
+        <p><strong>0.3.0-beta.1 · Community preview · October 24, 2026</strong></p>
+        <p>This preview includes native action editing, original icons, safer file outputs, compatibility fixes and a setup verification step. It is ad-hoc signed and <strong>not Apple notarized</strong>. Gatekeeper may block downloaded apps; only use the per-app Open Anyway option if you trust the source.</p>
+        <p>Built and tested on macOS 27 / Apple Silicon. macOS 15 and Intel runtime checks, real Finder-menu integration and the desktop gesture still need broader device validation. <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">Read validation details and known limits</a>.</p>
+      </div>
+    </section>
+    <section class="guide faq reveal" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">Questions before your first right-click.</h2>
+      <details><summary>Why is the Finder menu missing?</summary><p>Install the app in Applications, open it once, and enable its Finder extension using the setup guide. This version monitors your home folder and its subfolders. External drives and unrelated system directories are not covered by that setting.</p></details>
+      <details><summary>Does it work on the desktop background?</summary><p>The optional desktop feature uses <strong>Option + right-click</strong> while the app is running. It requires separate Accessibility and Input Monitoring permissions. Normal Finder menus do not require those two grants.</p></details>
+      <details><summary>Can I customize the right-click menu?</summary><p>Show or hide built-in actions, pin favorites, and create or edit custom Shell scripts, AppleScript commands or application launchers. Custom actions can restrict file extensions and selection counts. Arbitrary menu ordering and a configurable global monitoring scope are not included in this preview.</p></details>
+      <details><summary>Are OCR and background removal private?</summary><p>Local OCR and background removal use Apple Vision on your Mac. Optional remote AI naming and tagging use the provider you configure and may send file text or recognized text to that provider. Provider fees may apply.</p></details>
+      <details><summary>Is Super RClick free? Is it on the Mac App Store?</summary><p>The source is available under the MIT license and GitHub downloads are free. This is a GitHub preview release; it has not been submitted to the Mac App Store.</p></details>
+      <details><summary>Which image formats and rename modes are supported?</summary><p>Image export supports PNG, JPEG, TIFF and HEIC. Batch rename supports a prefix or suffix with optional numbering and a conflict preview. Regex replacement and WebP export are not implemented.</p></details>
+    </section>
+
   </main>
 
   <footer>
     <div class="container">
-      <p style="margin-bottom: 8px;">Super RClick — macOS right-click menu enhancer. Built for macOS 15.0+ Core OS Extensions.</p>
-      <p>Made with ❤️ by <a href="https://github.com/CalvinQin" target="_blank">@CalvinQin</a>. <a href="https://github.com/CalvinQin/SuperRClick" target="_blank">Source Code</a></p>
+      <p style="margin-bottom: 8px;">Super RClick · macOS Finder right-click tools · macOS 15+ build target · 0.3.0 community preview</p>
+      <p>Built by <a href="https://github.com/CalvinQin" target="_blank" rel="noopener noreferrer">@CalvinQin</a>. <a href="https://github.com/CalvinQin/SuperRClick" target="_blank" rel="noopener noreferrer">Source Code</a></p>
     </div>
   </footer>
 
-  <script>
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.reveal').forEach((el) => {
-      observer.observe(el);
-    });
-
-    // Mouse tracking for glowing cards
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      });
-    });
-  </script>
 </body>
 </html>

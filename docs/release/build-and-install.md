@@ -13,6 +13,10 @@ What it does:
 - Builds `SuperRClick.app` in `Release`
 - Verifies the Finder Sync extension is embedded in the app bundle
 - Stages the app and creates a compressed DMG in `output/release`
+- Requires arm64 and x86_64 in the app, extension and shared framework; checks minimum macOS 15.0 and matching bundle versions
+- Applies local ad-hoc signing, verifies the DMG and writes a `.dmg.sha256` sidecar
+
+For the current community preview use `RELEASE_VERSION=0.3.0-beta.1 bash scripts/build_release_dmg.sh`. This is not a Developer ID signed or notarized distribution. macOS 15 / Intel runtime and real Finder integration remain pending; see [0.3.0-beta.1 release notes](0.3.0-beta.1.md).
 
 ## Minimum macOS Version
 
@@ -23,7 +27,7 @@ The app and extension source plists inherit `LSMinimumSystemVersion` from `$(MAC
 Before distributing a build, verify the staged app:
 
 ```bash
-./scripts/verify_compatibility.sh "output/release/staging/SuperRClick.app"
+./scripts/verify_compatibility.sh "build/release/DerivedData/Build/Products/Release/SuperRClick.app"
 ```
 
 The verifier checks `LSMinimumSystemVersion` and the Mach-O minimum version for every architecture present in the app, embedded Finder Sync extension, and shared framework. It also accepts a directly built `.app` path, so a Debug build can be checked without creating a DMG. A universal release should contain both `arm64` and `x86_64`; the verifier prints the architectures it inspected but does not require both in a local Debug build.
@@ -42,7 +46,9 @@ Successful compilation and bundle checks establish API availability and packagin
 
 Expected output:
 - `output/release/SuperRClick-<version>.dmg`
-- `output/release/staging/INSTALL.txt`
+- `output/release/SuperRClick-<version>.dmg.sha256`
+
+The DMG contains the app, an Applications shortcut, bilingual `INSTALL.txt` and `LICENSE.txt`. Its temporary staging directory is removed after packaging.
 
 ## Install
 
@@ -50,7 +56,9 @@ Expected output:
 2. Drag `SuperRClick.app` into `Applications`.
 3. Launch the app once.
 4. If the Finder extension is not active yet, use **Open Extension Settings** in the app's setup guide. The button opens macOS's native extension management interface. On macOS 15–27, the manual path is `System Settings -> General -> Login Items & Extensions`; enable the Super RClick Finder extension there.
-5. If Finder still shows no Super RClick menu, relaunch Finder once.
+5. Complete the guide's actual menu check in a writable folder under your home folder. Setup completion requires extension enablement and confirmation that the menu appeared and an action succeeded. Use Continue Later to leave it unfinished; reopen it from Settings.
+
+For the optional desktop background feature, keep the app running and use **Option + right-click** after granting its separate Accessibility and Input Monitoring permissions. Monitoring your home folder does not grant Full Disk Access or coverage of external drives.
 
 ## Notes
 

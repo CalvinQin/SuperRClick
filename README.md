@@ -1,160 +1,108 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/icon.png" width="128" alt="Super RClick Icon"/>
+  <img src="assets/icon.png" width="112" alt="Super RClick original app icon">
 </p>
 
 <h1 align="center">Super RClick</h1>
 
 <p align="center">
-  <strong>The most powerful Finder right-click menu enhancer for macOS</strong><br/>
-  Batch rename, compress, convert images, create files, open terminal — all from one elegant right-click.
+  Native macOS Finder right-click tools. Rename, compress, create files and build your own menu actions.<br>
+  原生 Mac 右键助手：批量重命名、压缩、新建文件、图片转换与自定义动作。
 </p>
 
 <p align="center">
-  <a href="https://github.com/CalvinQin/SuperRClick/releases/latest"><img src="https://img.shields.io/github/v/release/CalvinQin/SuperRClick?style=flat-square&color=blue" alt="Latest Release"/></a>
-  <a href="https://github.com/CalvinQin/SuperRClick/releases"><img src="https://img.shields.io/github/downloads/CalvinQin/SuperRClick/total?style=flat-square&color=green" alt="Downloads"/></a>
-  <img src="https://img.shields.io/badge/platform-macOS%2015+-black?style=flat-square" alt="macOS 15+"/>
-  <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat-square" alt="Swift"/>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/CalvinQin/SuperRClick?style=flat-square" alt="License"/></a>
-  <img src="https://img.shields.io/badge/language-English-brightgreen?style=flat-square" alt="English"/>
+  <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">Download 0.3.0 Preview</a> ·
+  <a href="https://calvinqin.github.io/SuperRClick/">Website</a> ·
+  <a href="https://calvinqin.github.io/SuperRClick/zh/">中文官网与安装说明</a> ·
+  <a href="https://github.com/CalvinQin/SuperRClick/issues">Report a problem</a>
 </p>
 
-<p align="center">
-  <a href="#features">Features</a> ·
-  <a href="#installation">Install</a> ·
-  <a href="#screenshots">Screenshots</a> ·
-  <a href="#contributing">Contributing</a>
-</p>
+## 0.3.0 Community Preview
 
----
+The October 24, 2026 preview brings a native action library and editor, original icons, safer file outputs, corrected macOS deployment targets and a four-step setup guide.
 
-## Why Super RClick?
+**This is a GitHub preview, not a Mac App Store release.** The DMG is ad-hoc signed and is not Developer ID signed or Apple notarized. Gatekeeper may block Internet downloads. Use the per-app **Open Anyway** option only if you trust the source; do not disable system security globally.
 
-macOS Finder's right-click menu is limited. **Super RClick** transforms it into a productivity powerhouse — batch rename files, compress archives, convert images, create new files, open terminal, and more. All from one elegant right-click.
+The app, embedded Finder extension and shared framework target **macOS 15.0+**, with both **Apple Silicon and Intel** binaries. Local verification uses **macOS 27 / Apple Silicon**. macOS 15 and Intel runtime behavior, real Finder integration and the desktop gesture still need wider device testing. See [release notes](docs/release/0.3.0-beta.1.md).
 
-> 🆓 **Free & Open Source** — No subscriptions, no tracking, no nonsense.
+## What It Does
 
----
+| Feature | Available behavior |
+| --- | --- |
+| Paths and Terminal | Copy full, POSIX or shell-escaped paths; open Apple Terminal in the selected directory. |
+| ZIP compression | Compress files and folders, report progress and preserve existing outputs. |
+| Batch rename | Prefix or suffix, optional sequential numbering, live preview, conflict checks and rollback on errors. |
+| Image conversion | Export PNG, JPEG, TIFF and HEIC beside the originals; report partial failures. |
+| New files | 18 templates: TXT, Markdown, RTF, DOCX, XLSX, PPTX, Swift, Python, JavaScript, TypeScript, Shell, Java, C++, HTML, CSS, XML, JSON and CSV. |
+| Custom actions | Create and edit Shell, AppleScript or application actions, with icons, extension filters and selection conditions. |
+| Menu controls | Show/hide actions and pin favorites; persistence errors retain the editor draft for retry. |
+| Local image tools | OCR and background removal through Apple Vision on your Mac. |
+| Optional remote AI | Suggested names and tags using a configured OpenAI-compatible endpoint or local Ollama. |
+| Setup guide | Enable the Finder extension, customize actions, review optional desktop permissions and confirm a real menu operation. |
 
-## Features
+Custom actions can execute code. Review scripts before running them. Remote AI can send file text, metadata or recognized text to your selected provider and may incur provider charges. Local OCR and background removal do not require cloud processing.
 
-### 🗂️ File Operations
-- **Copy Path** — Copy full path, POSIX path, or shell-escaped path with one click
-- **Open Terminal Here** — Open Terminal directly in any Finder folder
-- **Compress Items** — Archive selected files and folders to ZIP, with progress feedback in the main app
-- **Quick Jump to Directory** — Enter any path and jump directly in Finder
+Regex renaming, find-and-replace, WebP export, arbitrary drag-to-reorder menus and configurable global directory monitoring are **not included**. Services and the placeholder AppIntent are not completed features.
 
-### 🤖 AI Smart Actions
-- **AI File Processing** — Generate image filenames and file tags from text, image metadata, and recognized text
-- **LLM Provider Settings** — Configure OpenAI-compatible providers with presets for OpenAI, Zhipu, Moonshot, custom endpoints, and local Ollama servers
-- **Local On-Device AI** — Run OCR and background removal offline with the built-in macOS Vision framework
-- **Local Image OCR** — Extract text directly from images securely without uploading to the cloud
-- **Local Background Removal** — Effortlessly extract objects from images with transparent backgrounds completely offline
+## Install And Verify
 
-### ✏️ Batch Rename
-- Two rename modes: **prefix** and **suffix**
-- Sequential numbering with customizable start and zero-padding
-- Real-time preview with conflict detection
-- Works from Finder right-click or MenuBar with file picker
+1. Download [SuperRClick-0.3.0-beta.1.dmg](https://github.com/CalvinQin/SuperRClick/releases/download/v0.3.0-beta.1/SuperRClick-0.3.0-beta.1.dmg) and its adjacent SHA-256 checksum from the [release](https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1).
+2. Open the DMG and drag **SuperRClick.app** into **Applications**, then launch it.
+3. Follow the setup guide and select **Open Extension Settings**. Enable Super RClick in **System Settings → General → Login Items & Extensions → Finder**.
+4. In a writable folder inside your home directory, right-click the background and create a TXT file from the Super RClick menu.
+5. Return to the guide and confirm that the menu appeared and the action succeeded. You can leave setup unfinished and reopen it from **Settings → Open Setup Wizard**.
 
-### 🖼️ Image Conversion
-- Convert between **PNG / JPEG / TIFF / HEIC** formats
-- One-click format selection via Finder submenu
-- Progress and completion feedback in the main app
-- Output saved alongside original files
+The current Finder extension monitors your home folder and its subfolders. External drives and unrelated system directories are outside that scope. Monitoring does not grant Full Disk Access.
 
-### 📄 New File Templates
-- Create files instantly: `.txt`, `.md`, `.rtf`, `.docx`, `.xlsx`, `.pptx`, `.swift`, `.py`, `.js`, `.ts`, `.sh`, `.java`, `.cpp`, `.html`, `.css`, `.xml`, `.json`, and `.csv`
-- Supports **18 file types** including Office documents, code files, and config files
-- Organized submenu — no more creating files from Terminal
+**Desktop background:** keep the main app running and use **Option + right-click**. This optional feature requires separate Accessibility and Input Monitoring grants. Ordinary Finder menus do not require those two grants.
 
-### ⚙️ Customization
-- **Custom Actions** — Create your own right-click menu commands
-- **Toggle Visibility** — Show/hide menu items as needed
-- **Finder Coverage** — Monitor the current user's home directory
-- **MenuBar Quick Access** — Access batch rename, compression, image conversion, Terminal, and directory navigation
-- **Multilingual UI** — English and Chinese support
+### 中文安装指引
 
----
+1. 下载上面的预览版 DMG，将应用拖进“应用程序”，然后启动。
+2. 跟随“使用向导”，打开系统扩展设置，启用 Super RClick。
+3. 在个人文件夹中的可写目录右键，尝试新建 TXT 文件。
+4. 确认菜单出现、动作成功后，再完成向导。以后可从“设置 → 打开向导中心”重新检查。
+5. 桌面空白处使用 **Option + 右键**，需要主应用运行及单独的两项权限。
 
-## Installation
+当前没有“授权一次就接管全盘”的功能。下载包尚未公证，macOS 15 / Intel 真机兼容性仍待验证。详细说明见[中文官网](https://calvinqin.github.io/SuperRClick/zh/)。
 
-### Option 1: Download DMG (Recommended)
+## Screenshots
 
-1. Go to [**Releases**](https://github.com/CalvinQin/SuperRClick/releases/latest) and download the `.dmg` file
-2. Open the DMG and drag **Super RClick** into **Applications**
-3. Launch the app
-4. Enable the Finder extension: **System Settings → Privacy & Security → Extensions → Finder Extensions → Super RClick**
+Real captures from the native action library and custom-action editor:
 
-### Option 2: Build from Source
+![Super RClick native action library with visibility and pin controls](docs/assets/main-app.png)
+![Super RClick Chinese custom action editor](docs/assets/action-editor.png)
+
+## Build And Check
+
+Requires Xcode with Swift 6 and XcodeGen:
 
 ```bash
 git clone https://github.com/CalvinQin/SuperRClick.git
 cd SuperRClick
+xcodegen generate
 open SuperRClick.xcodeproj
-# Build & Run with Xcode (⌘R)
 ```
 
----
+Build a universal preview DMG, validate embedded bundles and generate a checksum:
 
-## Requirements
+```bash
+RELEASE_VERSION=0.3.0-beta.1 bash scripts/build_release_dmg.sh
+```
 
-- **macOS 15.0 (Sequoia)** or later
-- Enable Finder extension in System Settings after first launch
+Core tests:
 
----
+```bash
+xcodebuild -project SuperRClick.xcodeproj -scheme SuperRClick \
+  -configuration Debug -destination 'platform=macOS' \
+  -derivedDataPath build/review CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  CODE_SIGN_ENTITLEMENTS= DEVELOPMENT_TEAM= \
+  -only-testing:SuperRClickCoreTests test
+```
 
-## Screenshots
+[Packaging and installation](docs/release/build-and-install.md) · [File operation checks](Tests/Functional/CORE_FILE_ACTIONS.md) · [Finder checks and limits](Tests/Functional/FINDER.md) · [Detailed October verification](docs/review/2026-10-11-native-ui-macos27.md)
 
-### Finder Right-Click Menu
-> All your power tools, one right-click away.
+## Contributing And License
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/finder-context-menu.png" width="720" alt="Finder Context Menu with Super RClick"/>
-</p>
+Bug reports should include the app version, macOS version, processor, affected folder and action, and whether Finder or the desktop gesture was used. Please avoid attaching private files or credentials.
 
-### MenuBar Quick Actions
-> Quick access to batch rename, compress, convert, jump, and terminal — without opening Finder.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/menubar-quick-actions.png" width="300" alt="MenuBar Quick Actions"/>
-</p>
-
-### Batch Rename
-> Rename multiple files with prefix, suffix, or replace mode. Real-time preview with conflict detection.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/batch-rename.png" width="600" alt="Batch Rename Panel"/>
-</p>
-
-### Main App
-> Manage all actions, create custom commands, and configure your workspace.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/CalvinQin/SuperRClick/main/assets/screenshots/main-app.png" width="720" alt="Super RClick Main Window"/>
-</p>
-
----
-
-## Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-## Star History
-
-If you find Super RClick useful, please ⭐ star this repo — it helps others discover it!
-
----
-
-## License
-
-[MIT License](LICENSE)
-
----
-
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/CalvinQin">@CalvinQin</a>
-</p>
-
-<!-- SEO keywords: macOS right click menu, mac finder extension, finder context menu, mac file manager, batch rename mac, image converter mac, macos productivity tool, finder right click enhancer, mac context menu tool, create new file finder, mac zip compress, office template finder -->
+Contributions are welcome. Source code is distributed under the [MIT License](LICENSE).

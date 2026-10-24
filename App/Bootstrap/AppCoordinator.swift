@@ -1544,6 +1544,7 @@ final class AppCoordinator {
 
     func setSetupCompleted(_ completed: Bool) {
         hasCompletedSetup = completed
+        guard !Self.isIsolatedPreview else { return }
         UserDefaults.standard.set(completed, forKey: Constants.setupCompletedDefaultsKey)
     }
 

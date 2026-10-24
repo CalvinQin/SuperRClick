@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super RClick | Mac 右键菜单增强工具与 Finder 文件助手</title>
+  <meta name="description" content="免费的原生 Mac 右键助手：Finder 批量重命名、ZIP 压缩、18 种新建文件模板、图片转换、本地 OCR 和自定义脚本。下载 0.3.0 预览版，跟随向导完成启用与验证。">
+  <link rel="canonical" href="https://calvinqin.github.io/SuperRClick/zh/">
+  <link rel="alternate" hreflang="en" href="https://calvinqin.github.io/SuperRClick/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://calvinqin.github.io/SuperRClick/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://calvinqin.github.io/SuperRClick/">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Super RClick">
+  <meta property="og:title" content="Super RClick | 原生 Mac 右键菜单增强工具">
+  <meta property="og:description" content="批量重命名、新建文件、图片转换、自定义右键动作。下载 0.3.0 预览版，按步骤启用 Finder 扩展。">
+  <meta property="og:url" content="https://calvinqin.github.io/SuperRClick/zh/">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:image" content="https://calvinqin.github.io/SuperRClick/assets/main-app.png">
+  <meta property="og:image:alt" content="Super RClick native action library on macOS">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Super RClick | Mac 右键助手">
+  <meta name="twitter:description" content="免费开源、原生界面、可自定义动作的 Finder 右键菜单工具。">
+  <meta name="twitter:image" content="https://calvinqin.github.io/SuperRClick/assets/main-app.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Super RClick",
+    "url": "https://calvinqin.github.io/SuperRClick/",
+    "operatingSystem": "macOS 15.0 or later",
+    "applicationCategory": "UtilitiesApplication",
+    "softwareVersion": "0.3.0-beta.1",
+    "releaseNotes": "https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1",
+    "downloadUrl": "https://github.com/CalvinQin/SuperRClick/releases/download/v0.3.0-beta.1/SuperRClick-0.3.0-beta.1.dmg",
+    "image": "https://calvinqin.github.io/SuperRClick/assets/main-app.png",
+    "inLanguage": ["en", "zh-Hans"],
+    "license": "https://github.com/CalvinQin/SuperRClick/blob/main/LICENSE",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "CalvinQin", "url": "https://github.com/CalvinQin" }
+  }
+  </script>
+  <meta name="author" content="CalvinQin">
+  <link rel="icon" href="../assets/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳转到正文</a>
+  <div class="ambient-glow"></div>
+  <nav class="glass-nav" aria-label="主导航">
+    <div class="container nav-content">
+      <a href="./" class="logo"><img src="../assets/icon.png" width="32" height="32" alt="Super RClick 图标">Super RClick</a>
+      <div style="display:flex;gap:16px;">
+        <a class="language-link" href="../" lang="en">English</a>
+        <a class="btn btn-secondary" style="padding:8px 16px;font-size:.85rem" href="https://github.com/CalvinQin/SuperRClick">GitHub</a>
+        <a class="btn btn-primary" style="padding:8px 16px;font-size:.85rem" href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">下载</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container" id="main">
+    <section class="hero">
+      <div class="hero-badge">0.3.0 预览版 · 原生动作库、安全文件操作、分步引导</div>
+      <h1>让 Mac 右键，<br>更懂你的工作。</h1>
+      <p>在 Finder 里批量重命名、压缩、新建文件和转换图片。用自定义动作整理自己的右键菜单，跟着向导一步步确认能用。</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">免费下载 0.3.0 预览版</a>
+        <a class="btn btn-secondary" href="#install">查看安装步骤</a>
+      </div>
+    </section>
+    <section class="visual-showcase">
+      <img src="../assets/main-app-zh.png" width="2224" height="1624" fetchpriority="high" alt="Super RClick 中文原生动作库，包含动作搜索、固定、显示与编辑控制">
+    </section>
+    <section class="ai-section">
+      <div class="ai-content">
+        <h2>常用操作，<br>留在右键里。</h2>
+        <p style="color:var(--text-muted)">采用 SwiftUI、AppKit 与 Finder Sync。文件工具、本地图片处理和可选的远程 AI，都可以从动作库管理。</p>
+        <ul class="ai-features">
+          <li><span><strong>本地文字识别与抠图：</strong>通过 Apple Vision 在 Mac 上处理，使用这两项功能无需上传到云端。</span></li>
+          <li><span><strong>可选的 AI 命名与标签：</strong>配置 OpenAI 兼容服务、智谱、Moonshot 或本地 Ollama。远程功能会把相关文本发送到所选服务商，可能产生费用。</span></li>
+          <li><span><strong>自己的右键动作：</strong>创建、编辑 Shell、AppleScript 或打开应用动作，设置图标、文件类型及选择数量条件。</span></li>
+        </ul>
+      </div>
+      <img src="../assets/action-editor.png" loading="lazy" style="width:100%;border-radius:16px;border:1px solid var(--border)" alt="Super RClick 中文自定义动作编辑器">
+    </section>
+    <h2 class="section-title">把重复操作，变成顺手一步。</h2>
+    <p class="section-subtitle">按需要显示和隐藏动作，把常用功能固定下来。</p>
+    <section class="features-grid">
+      <div class="card"><div class="card-content"><div class="card-icon">01</div><h3>批量重命名</h3><p>添加前缀、后缀或编号。执行前预览新名称，检查重名和路径冲突。</p></div></div>
+      <div class="card"><div class="card-content"><div class="card-icon">02</div><h3>ZIP 压缩</h3><p>压缩选中的文件与文件夹，显示处理进度。已有输出保留，新输出使用独立文件名。</p></div></div>
+      <div class="card"><div class="card-content"><div class="card-icon">03</div><h3>图片格式转换</h3><p>导出 PNG、JPEG、TIFF 或 HEIC，保留原图，准确显示部分成功和失败结果。</p></div></div>
+      <div class="card"><div class="card-content"><div class="card-icon">04</div><h3>18 种新建模板</h3><p>在当前目录创建 TXT、Markdown、Word、Excel、PowerPoint 以及常用代码和配置文件。</p></div></div>
+      <div class="card"><div class="card-content"><div class="card-icon">05</div><h3>终端与路径</h3><p>在当前目录打开 Apple Terminal，或复制完整路径、POSIX 路径和经过 Shell 转义的路径。</p></div></div>
+      <div class="card"><div class="card-content"><div class="card-icon">06</div><h3>自定义菜单动作</h3><p>编辑名称、图标、脚本和文件条件；取消编辑保留原配置，保存失败时留下草稿供重试。</p></div></div>
+    </section>
+    <section class="guide" id="install" aria-labelledby="install-title">
+      <h2 id="install-title">安装后，按步骤确认可用。</h2>
+      <ol>
+        <li><a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">下载 DMG</a>，打开后将 SuperRClick.app 拖入“应用程序”。</li>
+        <li>启动应用，跟随“使用向导”。点击“打开扩展设置”，在“系统设置 → 通用 → 登录项与扩展 → Finder”中启用 Super RClick。</li>
+        <li>进入个人文件夹中的可写目录，在空白处右键找到 Super RClick，尝试新建 TXT 文件。成功后回向导确认。</li>
+        <li>在动作库调整菜单显隐、固定常用动作，或创建自己的脚本动作。以后可从“设置 → 打开向导中心”重新检查。</li>
+      </ol>
+      <div class="release-note">
+        <p><strong>0.3.0-beta.1 · 社区预览版 · 2026 年 10 月 24 日</strong></p>
+        <p>包含新版原生动作库、原创图标、文件安全与兼容性修复，以及实际操作验证步骤。安装包采用本地临时签名，<strong>尚无 Developer ID 分发签名与 Apple 公证</strong>。系统可能拦截网络下载的应用；确认信任来源后，可使用“隐私与安全性”中针对该应用的“仍要打开”，请勿关闭全局安全保护。</p>
+        <p>构建目标为 macOS 15+，包含 Apple Silicon 和 Intel 二进制。目前本机验证环境为 macOS 27 / Apple Silicon；macOS 15、Intel 真机、真实 Finder 菜单及桌面手势仍需更多设备验证。<a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">查看发布说明与验证边界</a>。</p>
+      </div>
+    </section>
+    <section class="guide faq" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">右键前，你可能想知道。</h2>
+      <details><summary>安装后为什么看不到菜单？</summary><p>先把应用放进“应用程序”并启动一次，再通过向导启用 Finder 扩展。当前版本监控个人文件夹及其子目录，外接硬盘和其他系统目录尚不在该范围内。</p></details>
+      <details><summary>桌面空白处也支持吗？</summary><p>桌面增强是可选功能：保持主应用运行，在桌面空白处使用 <strong>Option + 右键</strong>。这需要单独授权“辅助功能”和“输入监控”；普通 Finder 菜单无需这两项授权。</p></details>
+      <details><summary>可以完全自定义哪些内容？</summary><p>可以控制动作显隐、固定常用项，以及创建和编辑自定义 Shell、AppleScript 或打开应用动作，设置文件类型与选择数量条件。本预览版尚不支持任意拖拽排序和自由配置全盘监控范围，也不会授予全磁盘访问权限。</p></details>
+      <details><summary>AI 会把我的文件上传吗？</summary><p>本地 OCR 和抠图使用 Apple Vision，不依赖云端。可选的远程 AI 命名和标签会把文件文本或识别出的文字发送到你配置的服务商；费用与数据处理以该服务商为准。</p></details>
+      <details><summary>是否收费？什么时候上架 Mac App Store？</summary><p>GitHub 下载免费，源码采用 MIT 许可。目前发布渠道是 GitHub 预览版，尚未提交 Mac App Store，暂无确定的商店上架日期。</p></details>
+      <details><summary>是否支持正则重命名或 WebP 导出？</summary><p>目前批量重命名支持前缀、后缀和可选编号；图片导出支持 PNG、JPEG、TIFF、HEIC。正则替换和 WebP 导出尚未实现。</p></details>
+    </section>
+    <section class="stats">
+      <div class="stat-box"><div class="stat-value">18</div><div class="stat-label">新建文件模板</div></div>
+      <div class="stat-box"><div class="stat-value">Swift 6</div><div class="stat-label">原生 macOS 应用</div></div>
+      <div class="stat-box"><div class="stat-value">MIT</div><div class="stat-label">免费开源</div></div>
+    </section>
+  </main>
+  <footer><div class="container"><p>Super RClick · Mac 右键助手与 Finder 文件工具 · 0.3.0 社区预览版</p><p><a href="../" lang="en">English</a> · <a href="https://github.com/CalvinQin/SuperRClick">源码与问题反馈</a> · <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">下载与发布说明</a></p></div></footer>
+</body>
+</html>

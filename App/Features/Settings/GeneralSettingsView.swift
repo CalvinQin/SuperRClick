@@ -134,6 +134,7 @@ struct GeneralSettingsView: View {
                 Button(L("打开向导中心", "Open Setup Wizard")) {
                     coordinator.presentSetupCenter()
                 }
+                .accessibilityIdentifier("settings.openSetup")
             }
             .padding(.vertical, 4)
 

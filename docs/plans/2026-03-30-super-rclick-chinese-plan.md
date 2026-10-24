@@ -1,5 +1,17 @@
 # Super RClick 中文规划
 
+## 当前执行基线（2026-10-24）
+
+以下 3 月内容保留为历史规划；当前交付与验证以 [0.3.0-beta.1 发布说明](../release/0.3.0-beta.1.md) 和 [10 月验证报告](../review/2026-10-11-native-ui-macos27.md) 为准。
+
+- 本次交付 GitHub 社区预览版，最低构建目标已调整为 macOS 15.0，包含 Apple Silicon 与 Intel 二进制；尚未提交 Mac App Store。
+- 已实现原生动作库、自定义动作编辑、原创图标、文件安全保护、四步向导和真实操作的用户确认步骤；向导可从设置反复进入。
+- Finder 当前固定覆盖个人文件夹。桌面增强使用应用运行时的 Option + 右键，并依赖独立权限。监控范围不是全磁盘访问授权。
+- 下一阶段优先：macOS 15.6.1 / Intel 真机与真实 Finder 集成验证、Developer ID 签名和公证、可配置目录与菜单排序。Services / AppIntent 仍有占位，不能记为完成。
+- 中英文官网、安装说明、FAQ、canonical / hreflang / 分享元数据与 sitemap 同步更新。搜索收录和排名由搜索引擎决定，未假称已提交 Search Console 或收录成功。
+
+---
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **目标：** 做一个面向 `macOS 26+` 的原生右键助手，让用户在 Finder、选中文本、菜单栏、快捷指令等系统允许的入口里，获得接近 Windows 风格的高效率右键体验。

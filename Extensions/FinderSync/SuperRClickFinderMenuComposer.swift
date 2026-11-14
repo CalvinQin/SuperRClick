@@ -259,11 +259,7 @@ public final class SuperRClickFinderMenuComposer {
 
     static func setImage(_ image: NSImage?, on item: NSMenuItem) {
         item.image = image
-        if #available(macOS 27.0, *), image != nil {
-            // These original glyphs identify actions; preserve them under macOS
-            // 27's automatic menu-image policy. Earlier systems retain defaults.
-            item.preferredImageVisibility = .visible
-        }
+        // Use the SDK-stable image property; newer image-policy APIs are optional.
     }
 
     private func menuImage(for definition: ActionDefinition) -> NSImage? {

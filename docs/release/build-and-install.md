@@ -91,3 +91,26 @@ pluginkit -e use -p com.apple.FinderSync -i com.haoqiqin.SuperRClick.FinderSync
 ```bash
 killall Finder
 ```
+
+## macOS 15 startup fix (issue #3)
+
+The community-preview packaging script signs ad-hoc without the Hardened Runtime
+flag: ad-hoc code has no Team ID, so runtime library validation can reject the
+embedded `Shared.framework` before the app starts. This change is limited to the
+existing unsigned/community-preview packaging path. Project defaults retain
+Hardened Runtime for development with a proper signing identity. A future
+Developer ID distribution must sign the framework, extension and app with the
+same Developer ID identity, retain Hardened Runtime, and complete notarization.
+Do not disable global macOS security or add a broad library-validation entitlement.
+
+`verify_preview_signatures.sh` checks the final staged signatures and rejects
+accidental runtime flags. The macOS validation workflow builds the universal DMG,
+runs core tests, and checks the mounted package. It does not establish interactive
+Finder acceptance or Apple Silicon/macOS 15.6 coverage by itself.
+
+If Finder still uses an older extension, quit old copies, install one copy in
+`/Applications`, and inspect `pluginkit -m -A -D -p com.apple.FinderSync` for duplicate
+paths. Move obsolete app copies out of active install/build locations, then restart
+Finder and re-enable the installed extension if needed. Preserve backups rather
+than deleting them automatically. Do not treat registration alone as a successful
+Finder menu/action test.

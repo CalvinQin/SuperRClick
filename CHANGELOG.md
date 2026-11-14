@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Fix community-preview ad-hoc signing to avoid incompatible Hardened Runtime library validation (issue #3); retain project hardening defaults.
+- Use the SDK-stable Finder menu image API for Xcode 26 compatibility.
+- Add staged-signature checks and a macOS package/test workflow; runtime acceptance remains required before release.
+
 ## 0.3.0-beta.1 - 2026-10-24
 
 - Publish the native action library, editable custom actions and original icon system.

@@ -11,12 +11,15 @@ APP_ENTITLEMENTS="$ROOT_DIR/Config/SuperRClick.entitlements"
 FINDERSYNC_ENTITLEMENTS="$ROOT_DIR/Config/SuperRClickFinderSync.entitlements"
 
 sign_release_bundle() {
+    # Ad-hoc identities have no Team ID. Runtime library validation rejects
+    # their embedded framework. This is a community-preview signing path only;
+    # Developer ID builds must retain Hardened Runtime and use one identity.
     local app_bundle="$1"
     local framework_path="$app_bundle/Contents/Frameworks/Shared.framework"
     local finder_sync_path="$app_bundle/Contents/PlugIns/SuperRClickFinderSync.appex"
 
     if [ -d "$framework_path" ]; then
-        codesign --force --sign - --timestamp=none --options runtime "$framework_path"
+        codesign --force --sign - --timestamp=none "$framework_path"
     else
         echo "Missing shared framework: $framework_path" >&2
         exit 1
@@ -27,7 +30,6 @@ sign_release_bundle() {
             --force \
             --sign - \
             --timestamp=none \
-            --options runtime \
             --entitlements "$FINDERSYNC_ENTITLEMENTS" \
             "$finder_sync_path"
     else
@@ -39,7 +41,6 @@ sign_release_bundle() {
         --force \
         --sign - \
         --timestamp=none \
-        --options runtime \
         --entitlements "$APP_ENTITLEMENTS" \
         "$app_bundle"
 
@@ -92,6 +93,7 @@ ditto "$APP_PATH" "$STAGING_DIR/SuperRClick.app"
 
 echo "Signing staged app bundle for local Finder Sync registration..."
 sign_release_bundle "$STAGING_DIR/SuperRClick.app"
+"$ROOT_DIR/scripts/verify_preview_signatures.sh" "$STAGING_DIR/SuperRClick.app"
 
 "$ROOT_DIR/scripts/verify_compatibility.sh" "$STAGING_DIR/SuperRClick.app" 15.0
 for binary in \

@@ -1,0 +1,48 @@
+name: Publish verified 0.3.0-beta.2 preview
+on:
+  push:
+    branches: [fix/macos15-startup-signing]
+    paths: [.github/workflows/publish-preview.yml]
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: CalvinQin/SuperRClick
+      VERIFIED_SHA: 5b5b762f9ca5ba36699d9c7c71321c754c0844e8
+      VERIFIED_RUN: '43555141909'
+    steps:
+      - name: Verify source and download tested artifact
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$VERIFIED_RUN" > run.json
+          jq -e --arg sha "$VERIFIED_SHA" '.head_sha == $sha and .conclusion == "success" and .event == "push" and .head_repository.full_name == "CalvinQin/SuperRClick"' run.json
+          gh run download "$VERIFIED_RUN" --name SuperRClick-0.3.0-beta.2 --dir release
+          cd release
+          sha256sum -c SuperRClick-0.3.0-beta.2.dmg.sha256
+      - name: Publish immutable tested preview
+        run: |
+          cat > notes.md <<'NOTES'
+          Fixes the community preview's macOS 15 startup failure reported in #3.
+
+          - The existing ad-hoc packaging path no longer enables incompatible runtime library validation. Project hardening defaults remain enabled for properly signed builds.
+          - Uses the SDK-stable Finder menu image API and increments the bundle build to 5.
+          - Thanks to @ittqqzz for the detailed report and local repair record.
+
+          Verified on GitHub's macOS 15.8.2 Apple Silicon runner with Xcode 26.3: universal arm64/x86_64 build, bundle signature and minimum macOS 15.0 checks, DMG verification, 27 core tests, 4 signing-policy tests, and a 10-second startup smoke test of the app from the mounted DMG.
+
+          Limitations: ad-hoc signed, NOT Developer ID signed or Apple-notarized. Exact macOS 15.6, Intel runtime, interactive Finder actions, and desktop gesture/permissions were not tested. Do not disable global macOS security. Keep only the intended installed app active if Finder has stale duplicate extension registrations.
+
+          修复 issue #3 报告的 macOS 15 社区预览版启动签名问题，构建号更新为 5。已在 macOS 15.8.2 / Apple Silicon 完成通用包、签名、DMG、27 项核心测试和实际安装包启动检查。仍为未公证的 ad-hoc 预览版；未宣称完成 15.6、Intel 真机或全部 Finder 动作验证。
+          NOTES
+          gh release create v0.3.0-beta.2 \
+            --target "$VERIFIED_SHA" --prerelease \
+            --title 'Super RClick 0.3.0-beta.2: macOS 15 startup fix' \
+            --notes-file notes.md \
+            release/SuperRClick-0.3.0-beta.2.dmg \
+            release/SuperRClick-0.3.0-beta.2.dmg.sha256

@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Signing policy regression tests
+        run: python3 -m unittest discover -s Tests/Packaging -v
       - name: Record toolchain
         run: |
           sw_vers
@@ -28,11 +30,21 @@ jobs:
           -only-testing:SuperRClickCoreTests CODE_SIGNING_ALLOWED=NO test
       - name: Validate ad-hoc signature policy
         run: |
-          APP=build/release/DerivedData/Build/Products/Release/SuperRClick.app
           # Validate the distributed copy, not Xcode's unsigned build product.
           mkdir -p /tmp/superrclick-dmg
           hdiutil attach output/release/SuperRClick-0.3.0-beta.2.dmg -mountpoint /tmp/superrclick-dmg -nobrowse -readonly
           bash scripts/verify_preview_signatures.sh /tmp/superrclick-dmg/SuperRClick.app
+          # Exercise dyld loading from the actual signed distribution on this runner.
+          /tmp/superrclick-dmg/SuperRClick.app/Contents/MacOS/SuperRClick > /tmp/superrclick-launch.log 2>&1 &
+          app_pid=$!
+          sleep 10
+          if ! kill -0 "$app_pid" 2>/dev/null; then
+            cat /tmp/superrclick-launch.log
+            echo "Packaged app exited during startup" >&2
+            exit 1
+          fi
+          kill "$app_pid"
+          wait "$app_pid" || true
           hdiutil detach /tmp/superrclick-dmg
       - uses: actions/upload-artifact@v4
         with:

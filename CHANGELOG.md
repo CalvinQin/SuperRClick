@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.3.0-beta.2 - 2026-11-14
 
 - Fix community-preview ad-hoc signing to avoid incompatible Hardened Runtime library validation (issue #3); retain project hardening defaults.
 - Use the SDK-stable Finder menu image API for Xcode 26 compatibility.
-- Add staged-signature checks and a macOS package/test workflow; runtime acceptance remains required before release.
+- Add staged-signature checks and a macOS package/test workflow; 27 core tests and packaged startup passed on macOS 15.8.2 / Apple Silicon. Interactive Finder, exact 15.6 and Intel runtime remain unverified.
 
 ## 0.3.0-beta.1 - 2026-10-24
 

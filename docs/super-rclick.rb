@@ -1,6 +1,6 @@
 cask "super-rclick" do
-  version "0.3.0-beta.1"
-  sha256 "8bce64c5ef6b9c01ae8a0c1b413977e04cee5496db1c750296cf2fe9ae0baabc"
+  version "0.3.0-beta.2"
+  sha256 "4c4a45a84a74b07ab7319775d475c91648faede235074a8cf5dc9ddc9a1fd8b1"
 
   url "https://github.com/CalvinQin/SuperRClick/releases/download/v#{version}/SuperRClick-#{version}.dmg"
   name "Super RClick"

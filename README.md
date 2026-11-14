@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1">Download 0.3.0 Preview</a> ·
+  <a href="https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.2">Download 0.3.0 Preview</a> ·
   <a href="https://calvinqin.github.io/SuperRClick/">Website</a> ·
   <a href="https://calvinqin.github.io/SuperRClick/zh/">中文官网与安装说明</a> ·
   <a href="https://github.com/CalvinQin/SuperRClick/issues">Report a problem</a>
@@ -18,11 +18,11 @@
 
 ## 0.3.0 Community Preview
 
-The October 24, 2026 preview brings a native action library and editor, original icons, safer file outputs, corrected macOS deployment targets and a four-step setup guide.
+The November 14, 2026 preview brings a native action library and editor, original icons, safer file outputs, corrected macOS deployment targets and a four-step setup guide.
 
 **This is a GitHub preview, not a Mac App Store release.** The DMG is ad-hoc signed and is not Developer ID signed or Apple notarized. Gatekeeper may block Internet downloads. Use the per-app **Open Anyway** option only if you trust the source; do not disable system security globally.
 
-The app, embedded Finder extension and shared framework target **macOS 15.0+**, with both **Apple Silicon and Intel** binaries. Local verification uses **macOS 27 / Apple Silicon**. macOS 15 and Intel runtime behavior, real Finder integration and the desktop gesture still need wider device testing. See [release notes](docs/release/0.3.0-beta.1.md).
+The app, embedded Finder extension and shared framework target **macOS 15.0+**, with both **Apple Silicon and Intel** binaries. The packaged app passes a startup smoke test on **macOS 15.8.2 / Apple Silicon**. Exact macOS 15.6, Intel runtime, real Finder integration and the desktop gesture still need wider device testing. See [release notes](docs/release/0.3.0-beta.2.md).
 
 ## What It Does
 
@@ -45,7 +45,7 @@ Regex renaming, find-and-replace, WebP export, arbitrary drag-to-reorder menus a
 
 ## Install And Verify
 
-1. Download [SuperRClick-0.3.0-beta.1.dmg](https://github.com/CalvinQin/SuperRClick/releases/download/v0.3.0-beta.1/SuperRClick-0.3.0-beta.1.dmg) and its adjacent SHA-256 checksum from the [release](https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.1).
+1. Download [SuperRClick-0.3.0-beta.2.dmg](https://github.com/CalvinQin/SuperRClick/releases/download/v0.3.0-beta.2/SuperRClick-0.3.0-beta.2.dmg) and its adjacent SHA-256 checksum from the [release](https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.2).
 2. Open the DMG and drag **SuperRClick.app** into **Applications**, then launch it.
 3. Follow the setup guide and select **Open Extension Settings**. Enable Super RClick in **System Settings → General → Login Items & Extensions → Finder**.
 4. In a writable folder inside your home directory, right-click the background and create a TXT file from the Super RClick menu.
@@ -86,7 +86,7 @@ open SuperRClick.xcodeproj
 Build a universal preview DMG, validate embedded bundles and generate a checksum:
 
 ```bash
-RELEASE_VERSION=0.3.0-beta.1 bash scripts/build_release_dmg.sh
+RELEASE_VERSION=0.3.0-beta.2 bash scripts/build_release_dmg.sh
 ```
 
 Core tests:

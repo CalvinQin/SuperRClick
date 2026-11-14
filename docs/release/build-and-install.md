@@ -16,7 +16,7 @@ What it does:
 - Requires arm64 and x86_64 in the app, extension and shared framework; checks minimum macOS 15.0 and matching bundle versions
 - Applies local ad-hoc signing, verifies the DMG and writes a `.dmg.sha256` sidecar
 
-For the current community preview use `RELEASE_VERSION=0.3.0-beta.1 bash scripts/build_release_dmg.sh`. This is not a Developer ID signed or notarized distribution. macOS 15 / Intel runtime and real Finder integration remain pending; see [0.3.0-beta.1 release notes](0.3.0-beta.1.md).
+For the current community preview use `RELEASE_VERSION=0.3.0-beta.2 bash scripts/build_release_dmg.sh`. This is not a Developer ID signed or notarized distribution. Packaged startup passed on macOS 15.8.2 / Apple Silicon; exact 15.6, Intel runtime and real Finder integration remain pending; see [0.3.0-beta.2 release notes](0.3.0-beta.2.md).
 
 ## Minimum macOS Version
 

@@ -1,0 +1,17 @@
+name: Cancel superseded update validation runs
+on:
+  push:
+    branches: [ci/cleanup-update-validation]
+permissions:
+  actions: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: CalvinQin/SuperRClick
+        run: |
+          for run in 43678925321 43678840640 43678836976 43678790074 43678786234 43678628883; do
+            gh run cancel "$run" || true
+          done

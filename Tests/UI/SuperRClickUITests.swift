@@ -329,7 +329,7 @@ final class SuperRClickUITests: XCTestCase {
             ("pinned", textPredicate(["Quickly run your favorite actions", "No pinned actions"])),
             ("recent", textPredicate(["No activity yet"])),
             ("tools", textPredicate(["Frequently used file tools. Also available via Finder right-click menu."])),
-            ("workspaces", textPredicate(["No workspace-specific rules configured"]))
+            ("workspaces", textPredicate(["Workspace Profiles"]))
         ]
         for (section, predicate) in destinations {
             let row = element("sidebar.\(section)", in: app)

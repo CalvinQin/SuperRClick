@@ -2,50 +2,46 @@ import AppKit
 import Foundation
 import Shared
 
-struct GitHubRelease: Codable {
-    let tag_name: String
-    let html_url: String
-    let name: String
-    let body: String?
-}
-
 @MainActor
 final class GitHubUpdater: ObservableObject {
     static let shared = GitHubUpdater()
-    private let repoURL = "https://api.github.com/repos/CalvinQin/SuperRClick/releases/latest"
+    private let service = GitHubUpdateService()
 
     @Published var isChecking = false
+    @Published var statusText = ""
+    var versionLabel: String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let version = info["SuperRClickReleaseVersion"] as? String ?? info["CFBundleShortVersionString"] as? String ?? "?"
+        let build = info["CFBundleVersion"] as? String ?? "?"
+        return "\(version) (\(L("构建", "build")) \(build))"
+    }
 
     private init() {}
 
     func checkForUpdates(manual: Bool = false) {
         guard !isChecking else { return }
         isChecking = true
+        statusText = L("正在检查更新…", "Checking for updates…")
 
         Task {
+            defer { isChecking = false }
             do {
-                guard let url = URL(string: repoURL) else { throw URLError(.badURL) }
-                let (data, response) = try await URLSession.shared.data(from: url)
-
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                    if manual { showUpToDateAlert() }
-                    isChecking = false
-                    return
-                }
-
-                let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
-                let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-
-                let latestVersionStr = release.tag_name.replacingOccurrences(of: "v", with: "")
-
-                if latestVersionStr.compare(currentVersion, options: .numeric) == .orderedDescending {
-                    // Update available
+                let info = Bundle.main.infoDictionary ?? [:]
+                let marketing = info["CFBundleShortVersionString"] as? String ?? ""
+                let build = Int(info["CFBundleVersion"] as? String ?? "") ?? 0
+                guard let current = UpdatePolicy.installedVersion(
+                    explicit: info["SuperRClickReleaseVersion"] as? String,
+                    marketing: marketing, build: build
+                ) else { throw UpdateCheckError.invalidInstalledVersion }
+                if let release = try await service.newestUpdate(current: current, currentBuild: build) {
+                    statusText = L("发现新版本：", "Update available: ") + release.tag_name
                     showUpdateAlert(release: release)
                 } else {
+                    statusText = L("当前更新渠道没有更新版本。", "No newer release in your update channel.")
                     if manual { showUpToDateAlert() }
                 }
-
             } catch {
+                statusText = L("检查更新失败，请稍后重试。", "Update check failed. Please try again.")
                 if manual {
                     let alert = NSAlert()
                     alert.messageText = L("检查更新失败", "Update check failed")
@@ -54,22 +50,20 @@ final class GitHubUpdater: ObservableObject {
                     alert.runModal()
                 }
             }
-
-            self.isChecking = false
         }
     }
 
     private func showUpToDateAlert() {
         let alert = NSAlert()
         alert.messageText = L("已是最新版本", "You're up to date")
-        alert.informativeText = L("您当前使用的是最新版 Super RClick。", "You are running the latest version of Super RClick.")
+        alert.informativeText = L("当前更新渠道没有更新版本。", "No newer release is available in your update channel.")
         alert.alertStyle = .informational
         alert.runModal()
     }
 
-    private func showUpdateAlert(release: GitHubRelease) {
+    private func showUpdateAlert(release: UpdateRelease) {
         let alert = NSAlert()
-        alert.messageText = L("发现新版本：", "New version available:") + " \(release.name)"
+        alert.messageText = L("发现新版本：", "New version available:") + " \(release.name ?? release.tag_name)"
         alert.informativeText = L("是否立即前往 GitHub 下载最新版本？\n\n更新内容：\n", "Would you like to download it from GitHub?\n\nRelease notes:\n") + (release.body ?? "")
         alert.alertStyle = .informational
         alert.addButton(withTitle: L("去下载", "Download"))

@@ -298,14 +298,78 @@ final class SuperRClickUITests: XCTestCase {
         app.buttons["setup.close"].click()
     }
 
+    /// The DEBUG appearance override is scoped to this isolated app process, not the host OS.
+    /// Screenshots are review evidence, not pixel-perfect or macOS-version certification.
+    func testLightAppearanceNavigationAndKeyboardRecovery() throws {
+        try exerciseNavigation(appearance: "light")
+    }
+
+    func testDarkAppearanceNavigationAndKeyboardRecovery() throws {
+        try exerciseNavigation(appearance: "dark")
+    }
+
+    private func exerciseNavigation(appearance: String) throws {
+        let session = try launchSession(appearance: appearance)
+        let app = session.app
+        attachWindow(app, named: "navigation-\(appearance)-actions")
+
+        // Assert detail content, not just the sidebar label, after every selection.
+        let destinations: [(String, NSPredicate)] = [
+            ("pinned", NSPredicate(format: "label == %@ OR label == %@",
+                                  "Quickly run your favorite actions", "No pinned actions")),
+            ("recent", NSPredicate(format: "label == %@", "No activity yet")),
+            ("tools", NSPredicate(format: "label == %@",
+                                 "Frequently used file tools. Also available via Finder right-click menu.")),
+            ("workspaces", NSPredicate(format: "label == %@", "No workspace-specific rules configured"))
+        ]
+        for (section, predicate) in destinations {
+            let row = element("sidebar.\(section)", in: app)
+            expect(row, "exists == true AND hittable == true", in: app)
+            row.click()
+            let content = app.staticTexts.matching(predicate).firstMatch
+            expect(content, "exists == true", in: app)
+            attachWindow(app, named: "navigation-\(appearance)-\(section)")
+        }
+
+        let settings = element("sidebar.settings", in: app)
+        settings.click()
+        expect(app.buttons["settings.openSetup"], "exists == true", in: app)
+        attachWindow(app, named: "navigation-\(appearance)-settings")
+        element("sidebar.actionLibrary", in: app).click()
+        waitForLibrary(in: app)
+
+        // The app's own toolbar must remain reachable with its sidebar hidden.
+        let toggle = app.buttons["navigation.toggleSidebar"]
+        expect(toggle, "exists == true AND hittable == true", in: app)
+        toggle.click()
+        expect(settings, "exists == false OR hittable == false", in: app)
+        expect(toggle, "exists == true AND hittable == true", in: app)
+        attachWindow(app, named: "navigation-\(appearance)-sidebar-hidden")
+
+        // Settings must be reachable without relying on a visible sidebar.
+        app.typeKey(",", modifierFlags: .command)
+        expect(app.buttons["settings.openSetup"], "exists == true", in: app)
+        attachWindow(app, named: "navigation-\(appearance)-keyboard-settings")
+        app.typeKey("s", modifierFlags: [.command, .control])
+        expect(settings, "exists == true AND hittable == true", in: app)
+        element("sidebar.actionLibrary", in: app).click()
+        waitForLibrary(in: app)
+        attachWindow(app, named: "navigation-\(appearance)-sidebar-restored")
+        XCTAssertTrue(try session.readState().customActions.isEmpty,
+                      "Navigation must not create an action.")
+    }
+
     // MARK: - Native UI helpers
 
-    private func launchSession() throws -> Session {
+    private func launchSession(appearance: String? = nil) throws -> Session {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("SuperRClick-UITests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let app = XCUIApplication()
         app.launchEnvironment["SUPERRCLICK_TEST_STORAGE"] = directory.path
+        if let appearance {
+            app.launchEnvironment["SUPERRCLICK_TEST_APPEARANCE"] = appearance
+        }
         app.launchArguments = ["-app_selected_language", "en", "-AppleLanguages", "(en)", "-showInDock", "YES"]
         addTeardownBlock {
             await MainActor.run { app.terminate() }

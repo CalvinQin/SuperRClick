@@ -115,13 +115,26 @@ struct GeneralSettingsView: View {
                 HStack {
                     RClickLabel(L("应用更新", "App Updates"), icon: "arrow.down.app")
                     Spacer()
+                    if githubUpdater.isChecking {
+                        ProgressView().controlSize(.small)
+                            .accessibilityLabel(L("正在检查更新", "Checking for updates"))
+                    }
                     Button(L("检查更新", "Check for Updates")) {
                         githubUpdater.checkForUpdates(manual: true)
                     }
                     .disabled(githubUpdater.isChecking)
+                    .accessibilityIdentifier("settings.checkUpdates")
                 }
                 
-                Text(L("从 GitHub 安全、快速地获取最新版本。", "Get the latest version from GitHub."))
+                Text(githubUpdater.versionLabel)
+                    .font(.caption.monospacedDigit())
+                    .accessibilityIdentifier("settings.releaseVersion")
+                if !githubUpdater.statusText.isEmpty {
+                    Text(githubUpdater.statusText)
+                        .font(.caption)
+                        .accessibilityIdentifier("settings.updateStatus")
+                }
+                Text(L("预览版接收预览及正式更新；正式版仅接收正式更新。", "Preview builds receive preview and stable updates; stable builds receive stable updates only."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

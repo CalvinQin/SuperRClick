@@ -4,6 +4,7 @@ import SwiftUI
 
 struct SetupCenterView: View {
     @Bindable var coordinator: AppCoordinator
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @State private var selectedTab = 0
@@ -36,7 +37,7 @@ struct SetupCenterView: View {
                 default: welcomePage
                 }
             }
-            .animation(.easeInOut, value: selectedTab)
+            .animation(reduceMotion ? nil : .easeInOut, value: selectedTab)
             
             Divider()
             

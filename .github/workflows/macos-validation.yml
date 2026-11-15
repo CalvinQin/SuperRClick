@@ -1,7 +1,7 @@
 name: macOS package validation
 on:
   push:
-    branches: [fix/macos15-startup-signing]
+    branches: [fix/update-detection]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -24,7 +24,7 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Package universal preview
-        run: RELEASE_VERSION=0.3.0-beta.2 bash scripts/build_release_dmg.sh
+        run: RELEASE_VERSION=0.3.0-beta.3 bash scripts/build_release_dmg.sh
       - name: Core unit and integration tests
         run: >-
           xcodebuild -project SuperRClick.xcodeproj -scheme SuperRClick
@@ -34,7 +34,7 @@ jobs:
         run: |
           # Validate the distributed copy, not Xcode's unsigned build product.
           mkdir -p /tmp/superrclick-dmg
-          hdiutil attach output/release/SuperRClick-0.3.0-beta.2.dmg -mountpoint /tmp/superrclick-dmg -nobrowse -readonly
+          hdiutil attach output/release/SuperRClick-0.3.0-beta.3.dmg -mountpoint /tmp/superrclick-dmg -nobrowse -readonly
           bash scripts/verify_preview_signatures.sh /tmp/superrclick-dmg/SuperRClick.app
           # Exercise dyld loading from the actual signed distribution on this runner.
           /tmp/superrclick-dmg/SuperRClick.app/Contents/MacOS/SuperRClick > /tmp/superrclick-launch.log 2>&1 &
@@ -50,6 +50,30 @@ jobs:
           hdiutil detach /tmp/superrclick-dmg
       - uses: actions/upload-artifact@v4
         with:
-          name: SuperRClick-0.3.0-beta.2
-          path: output/release/SuperRClick-0.3.0-beta.2.dmg*
+          name: SuperRClick-0.3.0-beta.3
+          path: |
+            output/release/SuperRClick-0.3.0-beta.3.dmg*
+            output/release/SuperRClick-update.json
           if-no-files-found: error
+
+  modern-ui:
+    runs-on: xcode-27
+    timeout-minutes: 35
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - run: sw_vers && uname -m && xcodebuild -version
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Modern macOS UI tests (not exact 27.3 validation)
+        run: >-
+          xcodebuild -project SuperRClick.xcodeproj -scheme SuperRClick
+          -configuration Debug -destination 'platform=macOS'
+          -only-testing:SuperRClickUITests CODE_SIGNING_ALLOWED=NO
+          -resultBundlePath output/ui-tests.xcresult test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: modern-macos-ui-results
+          path: output/ui-tests.xcresult

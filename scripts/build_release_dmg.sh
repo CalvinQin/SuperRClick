@@ -78,11 +78,12 @@ if [ ! -d "$APP_PATH" ]; then
 fi
 
 APP_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")"
-RELEASE_VERSION="${RELEASE_VERSION:-$APP_VERSION}"
-case "$RELEASE_VERSION" in
-    "$APP_VERSION"|"$APP_VERSION"-beta.*|"$APP_VERSION"-rc.*) ;;
-    *) echo "Release version does not match app version $APP_VERSION" >&2; exit 1 ;;
-esac
+BUNDLE_RELEASE_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :SuperRClickReleaseVersion' "$APP_PATH/Contents/Info.plist")"
+RELEASE_VERSION="${RELEASE_VERSION:-$BUNDLE_RELEASE_VERSION}"
+if [ "$RELEASE_VERSION" != "$BUNDLE_RELEASE_VERSION" ]; then
+    echo "Release version must match bundle channel identity: $BUNDLE_RELEASE_VERSION" >&2
+    exit 1
+fi
 DMG_NAME="SuperRClick-${RELEASE_VERSION}.dmg"
 DMG_PATH="$OUTPUT_DIR/$DMG_NAME"
 
@@ -150,5 +151,15 @@ hdiutil create \
 
 hdiutil verify "$DMG_PATH"
 (cd "$OUTPUT_DIR" && shasum -a 256 "$DMG_NAME" > "$DMG_NAME.sha256")
+
+APP_BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Contents/Info.plist")"
+python3 - "$RELEASE_VERSION" "$APP_BUILD" "$OUTPUT_DIR/SuperRClick-update.json" <<'PYMETA'
+import json, sys
+version, build, path = sys.argv[1:]
+assert int(build) > 0
+with open(path, "w") as f:
+    json.dump({"schema": 1, "version": version, "build": int(build)}, f)
+    f.write("\n")
+PYMETA
 
 echo "Release DMG created at: $DMG_PATH"

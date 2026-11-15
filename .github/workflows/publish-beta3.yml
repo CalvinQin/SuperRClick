@@ -1,0 +1,71 @@
+name: Publish verified 0.3.0-beta.3 preview
+on:
+  push:
+    branches: [release/beta3-publication]
+    paths: [.github/workflows/publish-beta3.yml]
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: CalvinQin/SuperRClick
+      VERIFIED_SHA: d13963af52652678f02347a047c03af2f83699f5
+      VERIFIED_RUN: '43680498053'
+    steps:
+      - name: Verify source and download tested artifact
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$VERIFIED_RUN" > run.json
+          jq -e --arg sha "$VERIFIED_SHA" '.head_sha == $sha and .conclusion == "success" and .event == "push" and .head_repository.full_name == "CalvinQin/SuperRClick"' run.json
+          gh run download "$VERIFIED_RUN" --name SuperRClick-0.3.0-beta.3 --dir release
+          cd release
+          sha256sum -c SuperRClick-0.3.0-beta.3.dmg.sha256
+          jq -e '.schema == 1 and .version == "0.3.0-beta.3" and .build == 6' SuperRClick-update.json
+      - name: Publish immutable tested preview
+        run: |
+          cat > notes.md <<'NOTES'
+          Fixes update detection for preview releases and improves native UI behavior. Build 6.
+
+          - Uses the release list rather than the stable-only latest endpoint; compares semantic preview/stable versions and builds. No downgrade offers.
+          - Preview installs can discover previews and stable releases. Stable installs never silently opt into previews.
+          - Displays release/build, checking and error states. Publishes validated update metadata for future same-version build comparison.
+          - Corrects sidebar label truncation and respects Reduce Motion in setup.
+
+          **Existing beta.1/beta.2 users: manually download and install beta.3 once. Your installed old updater cannot repair itself remotely.** Quit the old app and replace it in Applications.
+
+          Verified: 45 core tests, 4 signing-policy tests, universal arm64/x86_64 DMG and 10-second mounted-app startup on macOS 15.8.2 / Apple Silicon / Xcode 26.3. Ten native UI tests passed on macOS 27.0.1 / Apple Silicon / Xcode 27.2, covering light/dark navigation, sidebar and keyboard recovery, edit/cancel/retry, search/pin visibility, AI-setting persistence and setup verification.
+
+          Limits: exact macOS 27.3 and 15.6, Intel runtime, real Finder actions, desktop permissions/gestures and VoiceOver were not tested. This is an ad-hoc signed community preview, NOT Developer ID signed or Apple-notarized. Do not disable global macOS security.
+
+          修复预览版更新检测，按语义版本与构建号比较，避免降级；补充当前版本、检查中和失败状态。修复侧栏截断并尊重“减少动态效果”。beta.1／beta.2 用户需先手动安装一次新版。已通过 45 项核心、4 项签名策略及 10 项原生 UI 测试；不宣称完整适配或已验证 macOS 27.3，仍为未公证的社区预览版。
+
+          Verification: https://github.com/CalvinQin/SuperRClick/actions/runs/43680498053
+          NOTES
+          gh release create v0.3.0-beta.3 --target "$VERIFIED_SHA" --prerelease \
+            --title 'Super RClick 0.3.0-beta.3: reliable preview updates' --notes-file notes.md \
+            release/SuperRClick-0.3.0-beta.3.dmg \
+            release/SuperRClick-0.3.0-beta.3.dmg.sha256 \
+            release/SuperRClick-update.json
+      - name: Keep beta.1 superseded notice current without changing channel or assets
+        run: |
+          gh api "repos/$GH_REPO/releases/tags/v0.3.0-beta.1" > beta1.json
+          python3 - <<'PY'
+          import json
+          release=json.load(open('beta1.json'))
+          body=release['body']
+          old='https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.2'
+          new='https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.3'
+          # Only the prominent existing superseded notice is updated; retain historical notes.
+          first, separator, rest = body.partition('\n\n')
+          assert separator and 'superseded' in first.lower() and old in first
+          first=first.replace(old,new).replace('beta.2','beta.3')
+          json.dump({'body': first+separator+rest},open('beta1-patch.json','w'))
+          PY
+          id=$(jq -r .id beta1.json)
+          gh api --method PATCH "repos/$GH_REPO/releases/$id" --input beta1-patch.json > updated.json
+          jq -e --slurpfile old beta1.json '.draft == $old[0].draft and .prerelease == $old[0].prerelease and ([.assets[].id] == [$old[0].assets[].id])' updated.json

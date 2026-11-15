@@ -87,6 +87,10 @@
 		F9A594C167DF4DB39EF0021B /* SharedCoreIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F141E51C50B34D1BDF59C652 /* SharedCoreIntegrationTests.swift */; };
 		FCABC163DB7CF355521E294F /* ActionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A88ED992DBAB61AD3B2B20 /* ActionContextTests.swift */; };
 		FD5292708C4BDFD625997170 /* BatchRenameDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE7B5E15C74E38D57A01CA7 /* BatchRenameDraft.swift */; };
+		B9A14C5A67C5845937A2966D /* ReleaseVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6FE50E6F48DD5DEE273406 /* ReleaseVersion.swift */; };
+		F6BBC021A2BE208360C0B5D6 /* GitHubUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522CE5497E60935CC027B094 /* GitHubUpdateService.swift */; };
+		F50F8FA731595AD9E1D43A86 /* ReleaseVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D808658B13F5FC066BA218 /* ReleaseVersionTests.swift */; };
+		031B2C5741E53765C7B5AAB4 /* GitHubUpdateServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DEC32D5C344E37701B2771 /* GitHubUpdateServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,6 +247,10 @@
 		FB66C064CCC2893EE51B5996 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		FDA7C69B6BC579CD02F1EAE4 /* PersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceControllerTests.swift; sourceTree = "<group>"; };
 		FE1343BF33B12A6DA8255499 /* DesktopBridgeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopBridgeManager.swift; sourceTree = "<group>"; };
+		7F6FE50E6F48DD5DEE273406 /* ReleaseVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Updates/ReleaseVersion.swift"; sourceTree = "<group>"; };
+		522CE5497E60935CC027B094 /* GitHubUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Updates/GitHubUpdateService.swift"; sourceTree = "<group>"; };
+		D3D808658B13F5FC066BA218 /* ReleaseVersionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReleaseVersionTests.swift"; sourceTree = "<group>"; };
+		41DEC32D5C344E37701B2771 /* GitHubUpdateServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GitHubUpdateServiceTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +294,8 @@
 		02DAE502C1ACFF5FFDC2493B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				522CE5497E60935CC027B094 /* GitHubUpdateService.swift */,
+				7F6FE50E6F48DD5DEE273406 /* ReleaseVersion.swift */,
 				360367E609252C4E456AE693 /* Actions */,
 				39BE53670324D1776DBB4F37 /* AI */,
 				0D0EDD402D1A7073D65062AC /* BatchRename */,
@@ -311,6 +321,8 @@
 		0D0EDD402D1A7073D65062AC /* BatchRename */ = {
 			isa = PBXGroup;
 			children = (
+				41DEC32D5C344E37701B2771 /* GitHubUpdateServiceTests.swift */,
+				D3D808658B13F5FC066BA218 /* ReleaseVersionTests.swift */,
 				6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */,
 				48F2F0ED4771C8642872E510 /* BatchRenamePlanner.swift */,
 			);
@@ -749,6 +761,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				031B2C5741E53765C7B5AAB4 /* GitHubUpdateServiceTests.swift in Sources */,
+				F50F8FA731595AD9E1D43A86 /* ReleaseVersionTests.swift in Sources */,
+				F6BBC021A2BE208360C0B5D6 /* GitHubUpdateService.swift in Sources */,
+				B9A14C5A67C5845937A2966D /* ReleaseVersion.swift in Sources */,
 				A0F4890B741BBC49F34E0F75 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

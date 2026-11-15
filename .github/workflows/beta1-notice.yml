@@ -1,0 +1,43 @@
+name: Add beta.1 superseded notice
+on:
+  push:
+    branches: [release/beta1-superseded-notice]
+    paths: [.github/workflows/beta1-notice.yml]
+permissions:
+  contents: read
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: CalvinQin/SuperRClick
+    steps:
+      - name: Prepend notice while preserving release data
+        run: |
+          gh api repos/$GH_REPO/releases/tags/v0.3.0-beta.1 > before.json
+          python3 - <<'PY'
+          import json
+          before = json.load(open("before.json"))
+          assert before["id"] == 422738074 and before["tag_name"] == "v0.3.0-beta.1"
+          notice = "> **Superseded / 已有修复版：** Please download [0.3.0-beta.2](https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.2) instead of this older preview. It addresses the reported macOS 15 startup signing problem. Exact macOS 15.6 and interactive Finder validation remain unverified. 请下载 beta.2 修复预览版；未宣称完成 macOS 15.6 或真实 Finder 操作验证。\n\n"
+          body = before.get("body") or ""
+          new_body = body if body.startswith(notice) else notice + body
+          json.dump({"body": new_body}, open("patch.json", "w"))
+          PY
+          gh api --method PATCH repos/$GH_REPO/releases/422738074 --input patch.json > after.json
+          python3 - <<'PY'
+          import json
+          before = json.load(open("before.json"))
+          after = json.load(open("after.json"))
+          patch = json.load(open("patch.json"))
+          assert after["body"] == patch["body"]
+          for key in ("id", "tag_name", "name", "target_commitish", "draft", "prerelease", "published_at"):
+              assert before[key] == after[key], key
+          def assets(release):
+              return [(a["id"], a["name"], a["size"], a.get("digest"), a["browser_download_url"]) for a in release["assets"]]
+          assert assets(before) == assets(after)
+          print("Verified: superseded notice saved; existing notes, assets and release flags preserved.")
+          PY

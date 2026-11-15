@@ -84,6 +84,13 @@ if [ "$RELEASE_VERSION" != "$BUNDLE_RELEASE_VERSION" ]; then
     echo "Release version must match bundle channel identity: $BUNDLE_RELEASE_VERSION" >&2
     exit 1
 fi
+python3 - "$RELEASE_VERSION" "$APP_VERSION" <<'PYVERSION'
+import re, sys
+version, marketing = sys.argv[1:]
+pattern = r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+assert re.fullmatch(pattern, version), "Invalid release version"
+assert version.split("-", 1)[0].split("+", 1)[0] == marketing, "Release core and marketing version differ"
+PYVERSION
 DMG_NAME="SuperRClick-${RELEASE_VERSION}.dmg"
 DMG_PATH="$OUTPUT_DIR/$DMG_NAME"
 

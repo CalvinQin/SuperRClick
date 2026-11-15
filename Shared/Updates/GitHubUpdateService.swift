@@ -55,13 +55,20 @@ public struct GitHubUpdateService: Sendable {
             if page == 10 { throw UpdateCheckError.tooManyPages }
         }
         var best: (release: UpdateRelease, version: ReleaseVersion, build: Int)?
-        for release in releases {
+        let ordered = releases.sorted {
+            guard let a = ReleaseVersion($0.tag_name) else { return false }
+            guard let b = ReleaseVersion($1.tag_name) else { return true }
+            return a > b
+        }
+        for release in ordered {
             guard !release.draft,
                   let version = ReleaseVersion(release.tag_name),
                   version >= current,
                   UpdatePolicy.allows(version, flaggedPreview: release.prerelease, current: current),
                   let page = URL(string: release.html_url), page.scheme == "https", page.host == "github.com",
                   page.path.hasPrefix("/CalvinQin/SuperRClick/releases/tag/") else { continue }
+            // Once a valid newer release is found, older manifests cannot block it.
+            if let best, version < best.version { continue }
             var build: Int?
             if let asset = release.assets.first(where: { $0.name == "SuperRClick-update.json" }) {
                 guard let url = URL(string: asset.browser_download_url), url.scheme == "https", url.host == "github.com",

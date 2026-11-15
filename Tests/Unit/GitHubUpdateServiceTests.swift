@@ -60,4 +60,40 @@ final class GitHubUpdateServiceTests: XCTestCase {
         let result = try await service.newestUpdate(current: ReleaseVersion("0.3.0")!, currentBuild: 6)
         XCTAssertEqual(result?.tag_name, "v0.3.1")
     }
+    func testTransportFailurePropagates() async {
+        let service = GitHubUpdateService { _ in throw URLError(.notConnectedToInternet) }
+        do { _ = try await service.newestUpdate(current: ReleaseVersion("0.3.0")!, currentBuild: 6); XCTFail("Transport failure accepted") }
+        catch { XCTAssertTrue(error is URLError) }
+    }
+    func testMissingManifestAtEqualVersionDoesNotOfferUpdate() async throws {
+        let data = Data("[\(payload("v0.3.0-beta.3", preview: true))]".utf8)
+        let service = GitHubUpdateService { _ in (data, 200) }
+        let result = try await service.newestUpdate(current: ReleaseVersion("0.3.0-beta.3")!, currentBuild: 6)
+        XCTAssertNil(result)
+    }
+    func testUntrustedManifestURLFailsWithoutFetchingIt() async {
+        let data = Data("[\(payload("v0.3.0-beta.3", preview: true, manifest: true))]".replacingOccurrences(of: "https://github.com/CalvinQin/SuperRClick/releases/download/", with: "https://example.com/").utf8)
+        let service = GitHubUpdateService { url in
+            XCTAssertEqual(url.host, "api.github.com")
+            return (data, 200)
+        }
+        do { _ = try await service.newestUpdate(current: ReleaseVersion("0.3.0-beta.3")!, currentBuild: 6); XCTFail("Untrusted URL accepted") }
+        catch { XCTAssertTrue(error is UpdateCheckError) }
+    }
+    func testPaginationLimitReportsFailure() async {
+        let page = Data("[\(Array(repeating: payload("v0.1.0"), count: 100).joined(separator: ","))]".utf8)
+        let service = GitHubUpdateService { _ in (page, 200) }
+        do { _ = try await service.newestUpdate(current: ReleaseVersion("0.3.0")!, currentBuild: 6); XCTFail("Incomplete list accepted") }
+        catch { XCTAssertTrue(error is UpdateCheckError) }
+    }
+    func testOlderBrokenManifestDoesNotHideNewerRelease() async throws {
+        let data = Data("[\(payload("v0.3.0-beta.3", preview: true, manifest: true)),\(payload("v0.3.0"))]".utf8)
+        let service = GitHubUpdateService { url in
+            XCTAssertEqual(url.host, "api.github.com", "Older manifest should not be fetched")
+            return (data, 200)
+        }
+        let result = try await service.newestUpdate(current: ReleaseVersion("0.3.0-beta.3")!, currentBuild: 6)
+        XCTAssertEqual(result?.tag_name, "v0.3.0")
+    }
+
 }

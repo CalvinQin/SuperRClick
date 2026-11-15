@@ -761,10 +761,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				031B2C5741E53765C7B5AAB4 /* GitHubUpdateServiceTests.swift in Sources */,
-				F50F8FA731595AD9E1D43A86 /* ReleaseVersionTests.swift in Sources */,
-				F6BBC021A2BE208360C0B5D6 /* GitHubUpdateService.swift in Sources */,
-				B9A14C5A67C5845937A2966D /* ReleaseVersion.swift in Sources */,
 				A0F4890B741BBC49F34E0F75 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -794,6 +790,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F50F8FA731595AD9E1D43A86 /* ReleaseVersionTests.swift in Sources */,
+				031B2C5741E53765C7B5AAB4 /* GitHubUpdateServiceTests.swift in Sources */,
 				FCABC163DB7CF355521E294F /* ActionContextTests.swift in Sources */,
 				7AB6F10613BA57AB52688FEC /* ActionEngineTests.swift in Sources */,
 				83E8AB6554380DFB5BC2B29D /* BatchRenamePlannerTests.swift in Sources */,
@@ -817,6 +815,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A14C5A67C5845937A2966D /* ReleaseVersion.swift in Sources */,
+				F6BBC021A2BE208360C0B5D6 /* GitHubUpdateService.swift in Sources */,
 				1A3242D746968ACF5A1223D4 /* AIActionCatalog.swift in Sources */,
 				D1329AEAEC8CCC71E5054765 /* AIKeychainStore.swift in Sources */,
 				EB7CF90C4A636D85283F1AC3 /* ActionAvailability.swift in Sources */,

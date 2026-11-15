@@ -164,7 +164,11 @@ final class SuperRClickUITests: XCTestCase {
         replaceText(search, with: "no-results-\(UUID().uuidString)", in: app)
         expect(element("library.emptyState", in: app), "exists == true", in: app)
         attachWindow(app, named: "07-library-search-empty-state")
-        let clearFilters = app.buttons["library.clearFilters"]
+        // ContentUnavailableView can propagate its identifier to action children.
+        // The exact accessible label still selects the same real Clear action.
+        let clearFilters = app.buttons.matching(NSPredicate(
+            format: "identifier == %@ OR label == %@", "library.clearFilters", "Clear Search & Filters"
+        )).firstMatch
         expect(clearFilters, "exists == true", in: app)
         reveal(clearFilters, in: app)
         clearFilters.click()

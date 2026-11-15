@@ -321,8 +321,6 @@
 		0D0EDD402D1A7073D65062AC /* BatchRename */ = {
 			isa = PBXGroup;
 			children = (
-				41DEC32D5C344E37701B2771 /* GitHubUpdateServiceTests.swift */,
-				D3D808658B13F5FC066BA218 /* ReleaseVersionTests.swift */,
 				6B61C6E2D7C8655D2A7C51C6 /* BatchRenameModels.swift */,
 				48F2F0ED4771C8642872E510 /* BatchRenamePlanner.swift */,
 			);
@@ -464,6 +462,8 @@
 		896861E7CA35FBDEB17CBD5A /* Unit */ = {
 			isa = PBXGroup;
 			children = (
+				D3D808658B13F5FC066BA218 /* ReleaseVersionTests.swift */,
+				41DEC32D5C344E37701B2771 /* GitHubUpdateServiceTests.swift */,
 				F5A88ED992DBAB61AD3B2B20 /* ActionContextTests.swift */,
 				92C0A0E067D55231E9D219A1 /* ActionEngineTests.swift */,
 				A8932CF96F9E47075902887D /* BatchRenamePlannerTests.swift */,

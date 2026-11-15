@@ -63,6 +63,7 @@ struct SuperRClickRootView: View {
     private var navigation: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             sidebar
+                .frame(minWidth: 180)
                 .toolbar(removing: .sidebarToggle)
         } detail: {
             VStack(spacing: 0) {
@@ -132,10 +133,10 @@ struct SuperRClickRootView: View {
             }
         }
         .listStyle(.sidebar)
-        .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
         .safeAreaInset(edge: .bottom) {
             sidebarFooter
         }
+        .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
     }
 
     private func sidebarRow(_ section: SidebarSection) -> some View {

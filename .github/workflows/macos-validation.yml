@@ -72,8 +72,14 @@ jobs:
           -configuration Debug -destination 'platform=macOS'
           -only-testing:SuperRClickUITests CODE_SIGNING_ALLOWED=NO
           -resultBundlePath output/ui-tests.xcresult test
+      - name: Export UI screenshots
+        if: always()
+        continue-on-error: true
+        run: xcrun xcresulttool export attachments --path output/ui-tests.xcresult --output-path output/screenshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: modern-macos-ui-results
-          path: output/ui-tests.xcresult
+          path: |
+            output/ui-tests.xcresult
+            output/screenshots

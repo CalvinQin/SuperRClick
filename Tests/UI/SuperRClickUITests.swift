@@ -164,7 +164,10 @@ final class SuperRClickUITests: XCTestCase {
         replaceText(search, with: "no-results-\(UUID().uuidString)", in: app)
         expect(element("library.emptyState", in: app), "exists == true", in: app)
         attachWindow(app, named: "07-library-search-empty-state")
-        app.buttons["library.clearFilters"].click()
+        let clearFilters = app.buttons["library.clearFilters"]
+        expect(clearFilters, "exists == true", in: app)
+        reveal(clearFilters, in: app)
+        clearFilters.click()
         expect(search, "value == ''", in: app)
         let pin = app.buttons["pin.\(actionID)"]
         expect(pin, "exists == true", in: app)
@@ -314,13 +317,15 @@ final class SuperRClickUITests: XCTestCase {
         attachWindow(app, named: "navigation-\(appearance)-actions")
 
         // Assert detail content, not just the sidebar label, after every selection.
+        // AppKit-backed SwiftUI Text exposes its content as AXValue on newer macOS.
+        func textPredicate(_ texts: [String]) -> NSPredicate {
+            NSPredicate(format: "label IN %@ OR value IN %@", texts as NSArray, texts as NSArray)
+        }
         let destinations: [(String, NSPredicate)] = [
-            ("pinned", NSPredicate(format: "label == %@ OR label == %@",
-                                  "Quickly run your favorite actions", "No pinned actions")),
-            ("recent", NSPredicate(format: "label == %@", "No activity yet")),
-            ("tools", NSPredicate(format: "label == %@",
-                                 "Frequently used file tools. Also available via Finder right-click menu.")),
-            ("workspaces", NSPredicate(format: "label == %@", "No workspace-specific rules configured"))
+            ("pinned", textPredicate(["Quickly run your favorite actions", "No pinned actions"])),
+            ("recent", textPredicate(["No activity yet"])),
+            ("tools", textPredicate(["Frequently used file tools. Also available via Finder right-click menu."])),
+            ("workspaces", textPredicate(["No workspace-specific rules configured"]))
         ]
         for (section, predicate) in destinations {
             let row = element("sidebar.\(section)", in: app)
@@ -435,23 +440,30 @@ final class SuperRClickUITests: XCTestCase {
     }
 
     private func reveal(_ target: XCUIElement, in app: XCUIApplication) {
-        // Bounded native scrolling and accessibility hit-testing, never arbitrary sleeps.
-        let fallbackScroll = app.sheets.firstMatch.exists
-            ? app.sheets.firstMatch.scrollViews.firstMatch : app.windows.firstMatch.scrollViews.firstMatch
+        // macOS may report a partially clipped button as hittable, then click its
+        // off-viewport center. Require its frame inside the owning viewport too.
         for _ in 0..<10 {
-            if target.exists && target.isHittable { return }
+            let container = app.sheets.firstMatch.exists ? app.sheets.firstMatch : app.windows.firstMatch
+            let enclosing = container.scrollViews.containing(.any, identifier: target.identifier).firstMatch
             let scroll: XCUIElement
-            if target.exists {
-                let enclosing = app.scrollViews.containing(.any, identifier: target.identifier).firstMatch
-                scroll = enclosing.exists ? enclosing : fallbackScroll
+            if target.exists && enclosing.exists {
+                scroll = enclosing
             } else {
-                scroll = fallbackScroll
+                // The first scroll view may be the sidebar. Prefer the detail viewport.
+                scroll = container.scrollViews.allElementsBoundByIndex.max {
+                    $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height
+                } ?? container.scrollViews.firstMatch
+            }
+            if target.exists && target.isHittable {
+                if !enclosing.exists { return } // Toolbar or sheet footer, outside a scroll view.
+                let viewport = enclosing.frame.intersection(container.frame).insetBy(dx: 1, dy: 4)
+                if viewport.contains(target.frame) { return }
             }
             guard scroll.exists else { break }
             let deltaY: CGFloat = target.exists && target.frame.midY < scroll.frame.midY ? 220 : -220
             scroll.scroll(byDeltaX: 0, deltaY: deltaY)
         }
-        expect(target, "exists == true AND hittable == true", in: app)
+        XCTFail("Could not fully reveal \(target).\n\(app.debugDescription)")
     }
 
     private func expectToggle(_ toggle: XCUIElement, isOn: Bool, in app: XCUIApplication) {

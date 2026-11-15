@@ -1,0 +1,37 @@
+name: Update beta.2 superseded notice
+on:
+  push:
+    branches: [release/beta2-superseded-notice]
+    paths: [.github/workflows/beta2-notice.yml]
+permissions:
+  contents: read
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: CalvinQin/SuperRClick
+    steps:
+      - name: Preserve release and prepend notice
+        run: |
+          gh api "repos/$GH_REPO/releases/tags/v0.3.0-beta.2" > before.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('before.json'))
+          notice="> **Superseded / 已有新版：** [0.3.0-beta.3](https://github.com/CalvinQin/SuperRClick/releases/tag/v0.3.0-beta.3) fixes update detection. Existing beta.1/beta.2 installs require a one-time manual upgrade because the old updater cannot repair itself. beta.3 已修复更新检测；beta.1／beta.2 用户需手动升级一次，旧版更新器无法自行修复。\n\n"
+          assert r['id'] == 445005796 and not r['draft'] and r['prerelease']
+          assert 'Superseded' not in r['body'], 'Notice already present; inspect rather than duplicate'
+          json.dump({'body':notice+r['body']},open('patch.json','w'))
+          PY
+          gh api --method PATCH "repos/$GH_REPO/releases/445005796" --input patch.json > after.json
+          python3 - <<'PY'
+          import json
+          before=json.load(open('before.json')); after=json.load(open('after.json'))
+          expected=json.load(open('patch.json'))['body']
+          assert after['body'] == expected
+          for key in ['draft','prerelease','tag_name','target_commitish','assets']:
+              assert after[key] == before[key], key
+          print('Verified exact notice, original notes, assets and channel flags.')
+          PY
